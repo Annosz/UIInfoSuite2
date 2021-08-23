@@ -279,7 +279,7 @@ namespace UIInfoSuite.UIElements
             {
                 try
                 {
-                    bool shouldDrawCharacter = Game1.player.friendshipData.ContainsKey(character.Name) && _options.ShowLocationOfFriends.SafeGet(character.Name, true);
+                    bool shouldDrawCharacter = Game1.player.friendshipData.ContainsKey(character.Name) && _options.ShowLocationOfFriends.SafeGet(character.Name, true) && _friendNames.Contains(character.Name);
                     if (shouldDrawCharacter)
                     {
                         DrawNPC(character, namesToShow);
