@@ -1,14 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UIInfoSuite2.Infrastructure;
 
 namespace UIInfoSuite2.UIElements
@@ -24,26 +19,14 @@ namespace UIInfoSuite2.UIElements
             _helper = helper;
         }
 
-        private readonly ClickableTextureComponent _shippingTopIcon =
-            new(
-                "",
-                new Rectangle(0, 0, Game1.tileSize, Game1.tileSize),
-                "",
-                "",
-                Game1.mouseCursors,
-                new Rectangle(134, 236, 30, 15),
-                Game1.pixelZoom);
-
         public void ToggleOption(bool showItemHoverInformation)
         {
-            //_helper.Events.Display.MenuChanged -= OnMenuChanged;
             _helper.Events.Display.Rendering -= OnRendering;
             _helper.Events.Display.Rendered -= OnRendered;
 
 
             if (showItemHoverInformation)
             {
-                //_helper.Events.Display.MenuChanged += OnMenuChanged;
                 _helper.Events.Display.Rendering += OnRendering;
                 _helper.Events.Display.Rendered += OnRendered;
             }
@@ -72,8 +55,6 @@ namespace UIInfoSuite2.UIElements
                 {
                     if (recipe.isCookingRecipe && !Game1.player.recipesCooked.ContainsKey(recipe.getIndexOfMenuView()))
                     {
-                        ModEntry.MonitorObject.Log($"Player has not cooked {recipe.name}", LogLevel.Debug);
-
                         int windowHeight = 80;
 
                         int windowY = Game1.getMouseY() + 20;
@@ -93,14 +74,10 @@ namespace UIInfoSuite2.UIElements
                         }
 
                         Vector2 windowPos = new Vector2(windowX, windowY);
-
-                        int num1 = (int)windowPos.X + 22;
+                        
+                        // +22 centers the image in the box
+                        int num1 = (int)windowPos.X + 22; 
                         int num2 = (int)windowPos.Y + 22;
-
-                        //_shippingTopIcon.bounds.X = num1;
-                        //_shippingTopIcon.bounds.Y = num2;
-                        //_shippingTopIcon.scale = 1.2f;
-                        //_shippingTopIcon.draw(Game1.spriteBatch)
 
                         IClickableMenu.drawTextureBox(
                             Game1.spriteBatch,
@@ -111,7 +88,6 @@ namespace UIInfoSuite2.UIElements
                             windowWidth,
                             windowHeight,
                             Color.White);
-
 
                         var _icon = new ClickableTextureComponent(
                             new Rectangle(num1, num2, 40, 40),
