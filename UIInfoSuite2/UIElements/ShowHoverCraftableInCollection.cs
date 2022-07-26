@@ -51,10 +51,9 @@ namespace UIInfoSuite2.UIElements
         {
             if(Game1.activeClickableMenu != null)
             {
-                if(_hoverRecipe.Value != null)
+                if(_hoverRecipe.Value is StardewValley.CraftingRecipe recipe)
                 {
-                    var recipe = _hoverRecipe.Value;
-                    if (recipe.isCookingRecipe && Game1.player.recipesCooked.Keys.Contains(recipe.getIndexOfMenuView()))
+                    if (recipe.isCookingRecipe && Game1.player.recipesCooked.ContainsKey(recipe.getIndexOfMenuView()))
                     {
                         ModEntry.MonitorObject.Log($"Player has cooked {recipe.name}", LogLevel.Debug);
                     }
