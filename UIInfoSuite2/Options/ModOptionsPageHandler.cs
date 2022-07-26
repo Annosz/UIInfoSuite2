@@ -38,6 +38,7 @@ namespace UIInfoSuite2.Options
             var showScarecrowAndSprinklerRange = new ShowItemEffectRanges(helper);
             var experienceBar = new ExperienceBar(helper);
             var showItemHoverInformation = new ShowItemHoverInformation(helper);
+            var showHoverCraftableInCollection = new ShowHoverCraftableInCollection(helper);
             var shopHarvestPrices = new ShopHarvestPrices(helper);
             var showQueenOfSauceIcon = new ShowQueenOfSauceIcon(helper);
             var showTravelingMerchant = new ShowTravelingMerchant(helper);
@@ -91,7 +92,7 @@ namespace UIInfoSuite2.Options
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.DisplayCalendarAndBillboard)), whichOption++, showCalendarAndBillboardOnGameMenuButton.ToggleOption, () => options.DisplayCalendarAndBillboard, v => options.DisplayCalendarAndBillboard = v));
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowCropAndBarrelTooltip)), whichOption++, showCropAndBarrelTime.ToggleOption, () => options.ShowCropAndBarrelTooltip, v => options.ShowCropAndBarrelTooltip = v));
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowItemEffectRanges)), whichOption++, showScarecrowAndSprinklerRange.ToggleOption, () => options.ShowItemEffectRanges, v => options.ShowItemEffectRanges = v));
-            _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowExtraItemInformation)), whichOption++, showItemHoverInformation.ToggleOption, () => options.ShowExtraItemInformation, v => options.ShowExtraItemInformation = v));
+            _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowExtraItemInformation)), whichOption++, toggleHoverStuff, () => options.ShowExtraItemInformation, v => options.ShowExtraItemInformation = v));
             var travellingMerchantIcon = new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowTravelingMerchant)), whichOption++, showTravelingMerchant.ToggleOption, () => options.ShowTravelingMerchant, v => options.ShowTravelingMerchant = v);
             _optionsElements.Add(travellingMerchantIcon);
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.HideMerchantWhenVisited)), whichOption++, showTravelingMerchant.ToggleHideWhenVisitedOption, () => options.HideMerchantWhenVisited, v => options.HideMerchantWhenVisited = v, travellingMerchantIcon));
@@ -104,6 +105,14 @@ namespace UIInfoSuite2.Options
             _optionsElements.Add(seasonalBerryIcon);
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowSeasonalBerryHazelnut)), whichOption++, showSeasonalBerry.ToggleHazelnutOption, () => options.ShowSeasonalBerryHazelnut, v => options.ShowSeasonalBerryHazelnut = v, seasonalBerryIcon));
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowTodaysGifts)), whichOption++, showTodaysGift.ToggleOption, () => options.ShowTodaysGifts, v => options.ShowTodaysGifts = v));
+        
+        
+            void toggleHoverStuff(bool isChecked)
+            {
+                showHoverCraftableInCollection.ToggleOption(isChecked);
+                showItemHoverInformation.ToggleOption(isChecked);
+            }
+
         }
 
 

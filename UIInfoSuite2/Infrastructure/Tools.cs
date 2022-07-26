@@ -115,6 +115,19 @@ namespace UIInfoSuite2.Infrastructure
             return hoverItem;
         }
 
+        public static CraftingRecipe GetHoveredCraftingRecipe()
+        {
+            CraftingRecipe hoverRecipe = null;
+
+            if(Game1.activeClickableMenu is CraftingPage craftingPage)
+            {
+                FieldInfo hoveredCraftingRecipeField = typeof(CraftingPage).GetField("hoverRecipe", BindingFlags.Instance | BindingFlags.NonPublic);
+                hoverRecipe = hoveredCraftingRecipeField.GetValue(craftingPage) as CraftingRecipe;
+            }
+
+            return hoverRecipe;
+        }
+
         public static void GetSubTexture(Color[] output, Color[] originalColors, Rectangle sourceBounds, Rectangle clipArea)
         {
             if (output.Length < clipArea.Width * clipArea.Height)
