@@ -18,13 +18,15 @@ namespace UIInfoSuite2.UIElements
 {
     internal class ShowCropAndBarrelTime : IDisposable
     {
-        private readonly Dictionary<int, string> _indexOfCropNames = new();
-        private readonly PerScreen<StardewValley.Object> _currentTile = new();
-        private readonly PerScreen<TerrainFeature> _terrain = new();
-        private readonly PerScreen<Building> _currentTileBuilding = new();
+        private readonly Dictionary<int, string> _indexOfItemNames = new();
+        private readonly PerScreen<StardewValley.Object?> _currentTile = new();
+        private readonly PerScreen<TerrainFeature?> _terrain = new();
+        private readonly PerScreen<Building?> _currentTileBuilding = new();
         private readonly IModHelper _helper;
 
         private readonly Dictionary<string, string> _indexOfDgaCropNames = new();
+        private readonly List<string> _tooltipLines = new();
+        private Vector2 _tooltipPosition;
 
         public ShowCropAndBarrelTime(IModHelper helper)
         {
@@ -99,19 +101,32 @@ namespace UIInfoSuite2.UIElements
             var currentTile = _currentTile.Value;
             var terrain = _terrain.Value;
 
-            int overrideX = -1;
-            int overrideY = -1;
-
             // draw hover tooltip
-            if (currentTileBuilding != null && currentTileBuilding is Mill millBuilding && millBuilding.input.Value != null && !millBuilding.input.Value.isEmpty())
+            if (currentTileBuilding != null)
+                HandleBuildingTooltip(currentTileBuilding);
+            else if (currentTile != null)
+                HandleTileTooltip(currentTile);
+            else if (terrain != null)
+                HandleTerrainTooltip(terrain);
+
+            if (_tooltipLines.Count > 0)
+                DisplayInfoHUD(String.Join(Environment.NewLine, _tooltipLines), _tooltipPosition);
+
+            _tooltipLines.Clear();
+        }
+
+        void HandleBuildingTooltip(Building building)
+        {
+            _tooltipPosition = new Vector2(building.tileX, building.tileY);
+
+            if (building is Mill millBuilding && millBuilding.input.Value != null && !millBuilding.input.Value.isEmpty())
             {
                 int wheatCount = 0;
                 int beetCount = 0;
 
                 foreach (Item item in millBuilding.input.Value.items)
                 {
-                    if (item != null &&
-                        !string.IsNullOrEmpty(item.Name))
+                    if (item != null && !String.IsNullOrEmpty(item.Name))
                     {
                         switch (item.Name)
                         {
@@ -121,56 +136,39 @@ namespace UIInfoSuite2.UIElements
                     }
                 }
 
-                StringBuilder builder = new StringBuilder();
-
                 if (wheatCount > 0)
-                    builder.Append(wheatCount + " wheat");
+                    _tooltipLines.Add(wheatCount + " wheat");
 
                 if (beetCount > 0)
-                {
-                    if (wheatCount > 0)
-                        builder.Append(Environment.NewLine);
-                    builder.Append(beetCount + " beets");
-                }
-
-                if (builder.Length > 0)
-                {
-                    if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
-                    {
-                        var tilePosition = Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(new Vector2(currentTileBuilding.tileX.Value, currentTileBuilding.tileY.Value) * Game1.tileSize));
-                        overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
-                        overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
-                    }
-
-                    IClickableMenu.drawHoverText(
-                        Game1.spriteBatch,
-                        builder.ToString(),
-                        Game1.smallFont, overrideX: overrideX, overrideY: overrideY);
-                }
+                    _tooltipLines.Add(beetCount + " beets");
             }
-            else if (currentTile != null &&
-                (!currentTile.bigCraftable.Value ||
-                currentTile.MinutesUntilReady > 0))
+        }
+
+        void HandleTileTooltip(StardewValley.Object tile)
+        {
+            _tooltipPosition = tile.TileLocation;
+
+            if (!tile.bigCraftable.Value ||
+                tile.MinutesUntilReady > 0)
             {
-                if (currentTile.bigCraftable.Value &&
-                    currentTile.MinutesUntilReady > 0 &&
-                    currentTile.heldObject.Value != null &&
-                    currentTile.Name != "Heater")
+                if (tile.bigCraftable.Value &&
+                    tile.MinutesUntilReady > 0 &&
+                    tile.heldObject.Value != null &&
+                    tile.Name != "Heater")
                 {
-                    StringBuilder hoverText = new StringBuilder();
+                    StringBuilder hoverText = new();
 
-                    hoverText.AppendLine(currentTile.heldObject.Value.DisplayName);
+                    hoverText.AppendLine(tile.heldObject.Value.DisplayName);
 
-                    if (currentTile is Cask)
+                    if (tile is Cask currentCask)
                     {
-                        Cask currentCask = currentTile as Cask;
                         hoverText.Append((int)(currentCask.daysToMature.Value / currentCask.agingRate.Value))
                             .Append(" " + _helper.SafeGetString(
                             LanguageKeys.DaysToMature));
                     }
                     else
                     {
-                        int timeLeft = currentTile.MinutesUntilReady;
+                        int timeLeft = tile.MinutesUntilReady;
                         int longTime = timeLeft / 60;
                         string longText = LanguageKeys.Hours;
                         int shortTime = timeLeft % 60;
@@ -208,124 +206,102 @@ namespace UIInfoSuite2.UIElements
                             .Append(_helper.SafeGetString(shortText));
                     }
 
-                    if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
-                    {
-                        var tilePosition = Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(new Vector2(currentTile.TileLocation.X, currentTile.TileLocation.Y) * Game1.tileSize));
-                        overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
-                        overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
-                    }
-
-                    IClickableMenu.drawHoverText(
-                        Game1.spriteBatch,
-                        hoverText.ToString(),
-                        Game1.smallFont, overrideX: overrideX, overrideY: overrideY);
+                    _tooltipLines.Add(hoverText.ToString());
                 }
             }
-            else if (terrain != null)
-            {
-                if (terrain is HoeDirt)
-                {
-                    HoeDirt hoeDirt = terrain as HoeDirt;
-                    if (hoeDirt.crop != null &&
-                        !hoeDirt.crop.dead.Value)
-                    {
-                        int num = 0;
+        }
 
-                        if (hoeDirt.crop.fullyGrown.Value &&
-                            hoeDirt.crop.dayOfCurrentPhase.Value > 0)
+        void HandleTerrainTooltip(TerrainFeature terrain)
+        {
+            _tooltipPosition = terrain.currentTileLocation;
+
+            if (terrain is HoeDirt hoeDirt)
+            {
+                if (hoeDirt.crop != null && !hoeDirt.crop.dead.Value)
+                {
+                    int num = 0;
+
+                    if (hoeDirt.crop.fullyGrown.Value &&
+                        hoeDirt.crop.dayOfCurrentPhase.Value > 0)
+                    {
+                        num = hoeDirt.crop.dayOfCurrentPhase.Value;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < hoeDirt.crop.phaseDays.Count - 1; ++i)
                         {
-                            num = hoeDirt.crop.dayOfCurrentPhase.Value;
+                            if (hoeDirt.crop.currentPhase.Value == i)
+                                num -= hoeDirt.crop.dayOfCurrentPhase.Value;
+
+                            if (hoeDirt.crop.currentPhase.Value <= i)
+                                num += hoeDirt.crop.phaseDays[i];
+                        }
+                    }
+
+                    string? harvestName = this.GetCropHarvestName(hoeDirt.crop);
+                    if (!String.IsNullOrEmpty(harvestName))
+                    {
+                        StringBuilder hoverText = new(harvestName);
+                        hoverText.Append(": ");
+
+                        if (num > 0)
+                        {
+                            hoverText.Append(num).Append(" ")
+                                .Append(_helper.SafeGetString(
+                                    LanguageKeys.Days));
                         }
                         else
                         {
-                            for (int i = 0; i < hoeDirt.crop.phaseDays.Count - 1; ++i)
-                            {
-                                if (hoeDirt.crop.currentPhase.Value == i)
-                                    num -= hoeDirt.crop.dayOfCurrentPhase.Value;
-
-                                if (hoeDirt.crop.currentPhase.Value <= i)
-                                    num += hoeDirt.crop.phaseDays[i];
-                            }
+                            hoverText.Append(_helper.SafeGetString(
+                                LanguageKeys.ReadyToHarvest));
                         }
 
-                        string? harvestName = this.GetCropHarvestName(hoeDirt.crop);
-                        if (!String.IsNullOrEmpty(harvestName))
-                        {
-                            StringBuilder hoverText = new StringBuilder(harvestName).Append(": ");
-                            if (num > 0)
-                            {
-                                hoverText.Append(num).Append(" ")
-                                    .Append(_helper.SafeGetString(
-                                        LanguageKeys.Days));
-                            }
-                            else
-                            {
-                                hoverText.Append(_helper.SafeGetString(
-                                    LanguageKeys.ReadyToHarvest));
-                            }
-
-                            if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
-                            {
-                                var tilePosition = Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(new Vector2(terrain.currentTileLocation.X, terrain.currentTileLocation.Y) * Game1.tileSize));
-                                overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
-                                overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
-                            }
-
-                            IClickableMenu.drawHoverText(
-                                Game1.spriteBatch,
-                                hoverText.ToString(),
-                                Game1.smallFont, overrideX: overrideX, overrideY: overrideY);
-                        }
+                        _tooltipLines.Add(hoverText.ToString());
                     }
                 }
-                else if (terrain is FruitTree)
+
+                if (hoeDirt.fertilizer != HoeDirt.noFertilizer)
                 {
-                    FruitTree tree = terrain as FruitTree;
-                    var text = new StardewValley.Object(new Debris(tree.indexOfFruit.Value, Vector2.Zero, Vector2.Zero).chunkType.Value, 1).DisplayName;
-                    if (tree.daysUntilMature.Value > 0)
-                    {
-                        text += Environment.NewLine + tree.daysUntilMature.Value + " " +
-                                _helper.SafeGetString(
-                                    LanguageKeys.DaysToMature);
-
+                    int fertilizerId = hoeDirt.fertilizer;
+                    if (!_indexOfItemNames.TryGetValue(fertilizerId, out string? fertilizerName)) {
+                        fertilizerName = new StardewValley.Object(fertilizerId, 1).DisplayName;
+                        _indexOfItemNames.Add(fertilizerId, fertilizerName);
                     }
 
-                    if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
+                    if (!String.IsNullOrEmpty(fertilizerName))
                     {
-                        var tilePosition = Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(new Vector2(terrain.currentTileLocation.X, terrain.currentTileLocation.Y) * Game1.tileSize));
-                        overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
-                        overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
+                        _tooltipLines.Add(fertilizerName);
                     }
-
-                    IClickableMenu.drawHoverText(
-                            Game1.spriteBatch,
-                            text,
-                            Game1.smallFont, overrideX: overrideX, overrideY: overrideY);
                 }
-                else if (terrain is Bush bush)
+            }
+            else if (terrain is FruitTree)
+            {
+                FruitTree tree = (terrain as FruitTree)!;
+
+                var text = new StardewValley.Object(new Debris(tree.indexOfFruit.Value, Vector2.Zero, Vector2.Zero).chunkType.Value, 1).DisplayName;
+                if (tree.daysUntilMature.Value > 0)
                 {
-                    // Tea saplings (which are actually bushes)
-                    if (bush.size.Value == Bush.greenTeaBush)
+                    text += Environment.NewLine + tree.daysUntilMature.Value + " " +
+                            _helper.SafeGetString(
+                                LanguageKeys.DaysToMature);
+
+                }
+
+                _tooltipLines.Add(text);
+            }
+            else if (terrain is Bush bush)
+            {
+                // Tea saplings (which are actually bushes)
+                if (bush.size.Value == Bush.greenTeaBush)
+                {
+                    int teaAge = bush.getAge();
+                    if (teaAge < 20)
                     {
-                        int teaAge = bush.getAge();
-                        if (teaAge < 20)
-                        {
-                            string text = new StardewValley.Object(251, 1).DisplayName
-                                + $"\n{20 - teaAge} "
-                                + _helper.SafeGetString(LanguageKeys.DaysToMature);
+                        string text = new StardewValley.Object(251, 1).DisplayName
+                            + $"\n{20 - teaAge} "
+                            + _helper.SafeGetString(LanguageKeys.DaysToMature);
 
-                            if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
-                            {
-                                var tilePosition = Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(new Vector2(terrain.currentTileLocation.X, terrain.currentTileLocation.Y) * Game1.tileSize));
-                                overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
-                                overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
-                            }
-
-                            IClickableMenu.drawHoverText(
-                                Game1.spriteBatch,
-                                text,
-                                Game1.smallFont, overrideX: overrideX, overrideY: overrideY);
-                        }
+                        _tooltipLines.Add(text);
                     }
                 }
             }
@@ -336,9 +312,9 @@ namespace UIInfoSuite2.UIElements
             if (crop.indexOfHarvest.Value > 0)
             {
                 int itemId = crop.isWildSeedCrop() ? crop.whichForageCrop.Value : crop.indexOfHarvest.Value;
-                if (!_indexOfCropNames.TryGetValue(itemId, out string? harvestName)) {
+                if (!_indexOfItemNames.TryGetValue(itemId, out string? harvestName)) {
                     harvestName = new StardewValley.Object(itemId, 1).DisplayName;
-                    _indexOfCropNames.Add(itemId, harvestName);
+                    _indexOfItemNames.Add(itemId, harvestName);
                 }
                 return harvestName;
             }
@@ -369,6 +345,22 @@ namespace UIInfoSuite2.UIElements
             {
                 return null;
             }
+        }
+
+        void DisplayInfoHUD(string text, Vector2 pos)
+        {
+            int overrideX = -1, overrideY = -1;
+            if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
+            {
+                var tilePosition = Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(pos * Game1.tileSize));
+                overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
+                overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
+            }
+
+            IClickableMenu.drawHoverText(
+                Game1.spriteBatch,
+                text,
+                Game1.smallFont, overrideX: overrideX, overrideY: overrideY);
         }
     }
 }
