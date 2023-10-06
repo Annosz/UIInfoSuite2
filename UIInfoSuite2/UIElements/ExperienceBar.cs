@@ -44,7 +44,8 @@ namespace UIInfoSuite2.UIElements
             { SkillType.Fishing , new Rectangle(20, 428, 10, 10)},
             { SkillType.Foraging , new Rectangle(60, 428, 10, 10)},
             { SkillType.Mining , new Rectangle(30, 428, 10, 10)},
-            { SkillType.Combat , new Rectangle(120, 428, 10, 10)}
+            { SkillType.Combat , new Rectangle(120, 428, 10, 10)},
+            { SkillType.Luck , new Rectangle(50, 428, 10, 10)}
         };
 
         private static readonly Dictionary<SkillType, Color> ExperienceFillColor = new()
@@ -53,7 +54,8 @@ namespace UIInfoSuite2.UIElements
             { SkillType.Fishing , new Color(17, 84, 252, 0.63f)},
             { SkillType.Foraging , new Color(0, 234, 0, 0.63f)},
             { SkillType.Mining , new Color(145, 104, 63, 0.63f)},
-            { SkillType.Combat , new Color(204, 0, 3, 0.63f)}
+            { SkillType.Combat , new Color(204, 0, 3, 0.63f)},
+            { SkillType.Luck , new Color(232, 223, 42, 0.63f)}
         };
 
         private readonly PerScreen<Rectangle> _experienceIconRectangle = new(createNewState: () => SkillIconRectangles[SkillType.Farming]);
