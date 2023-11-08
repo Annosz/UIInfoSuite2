@@ -73,12 +73,12 @@ namespace UIInfoSuite2.Compatibility
                 this.DgaHelper = dgaHelper;
             }
 
-            public int GetId(SObject dgaItem)
+            public string GetId(SObject dgaItem)
             {   
                 if (deterministicHashCodeIsCorrect == null)
                 {
-                    int hashedId = this.GetIdByDeterministicHashCode(dgaItem);
-                    int shippedId = this.GetIdByShippingIt(dgaItem);
+                    string hashedId = this.GetIdByDeterministicHashCode(dgaItem);
+                    string shippedId = this.GetIdByShippingIt(dgaItem);
                     deterministicHashCodeIsCorrect = (hashedId == shippedId);
                     
                     if ((bool) deterministicHashCodeIsCorrect)
@@ -98,12 +98,12 @@ namespace UIInfoSuite2.Compatibility
                 }
             }
 
-            private int GetIdByDeterministicHashCode(SObject dgaItem)
+            private string GetIdByDeterministicHashCode(SObject dgaItem)
             {
                 return this.GetDeterministicHashCode(DgaHelper.GetFullId(dgaItem)!);
             }
 
-            private int GetIdByShippingIt(SObject dgaItem)
+            private string GetIdByShippingIt(SObject dgaItem)
             {
                 DgaHelper.Monitor.Log($"{this.GetType().Name}: Retrieving the fake DGA item ID for {dgaItem.Name} by shipping it.", LogLevel.Trace);
 
@@ -111,7 +111,7 @@ namespace UIInfoSuite2.Compatibility
 
                 // Record previous state
                 uint oldCropsShipped = Game1.stats.CropsShipped;
-                var oldBasicShipped = new Dictionary<int, int>(Game1.player.basicShipped.FieldDict.Select(x => KeyValuePair.Create(x.Key, x.Value.Value)));
+                var oldBasicShipped = new Dictionary<string, int>(Game1.player.basicShipped.FieldDict.Select(x => KeyValuePair.Create(x.Key, x.Value.Value)));
                 
                 // Ship the item to observe side-effects
                 shippingMenu.parseItems(new List<Item>{ dgaItem });
@@ -121,7 +121,7 @@ namespace UIInfoSuite2.Compatibility
                 var basicShipped = Game1.player.basicShipped;
 
                 // Find the new item
-                List<int> newItems = new();
+                List<string> newItems = new();
                 foreach (var shipped in basicShipped.Keys)
                 {
                     if (oldBasicShipped.TryGetValue(shipped, out int oldValue))
@@ -145,7 +145,7 @@ namespace UIInfoSuite2.Compatibility
             }
 
             // Copied from SpaceShared.CommonExtensions
-            private int GetDeterministicHashCode(string str)
+            private string GetDeterministicHashCode(string str)
             {
                 unchecked
                 {
@@ -160,7 +160,7 @@ namespace UIInfoSuite2.Compatibility
                         hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
                     }
 
-                    return hash1 + (hash2 * 1566083941);
+                    return (hash1 + (hash2 * 1566083941)).ToString();
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace UIInfoSuite2.Compatibility
             return modFind.Invoke<object?>(fullId);
         }
 
-        public int GetDgaObjectFakeId(SObject dgaItem)
+        public string GetDgaObjectFakeId(SObject dgaItem)
         {
             return DgaFakeId.GetId(dgaItem);
         }
@@ -252,7 +252,7 @@ namespace UIInfoSuite2.Compatibility
             if (dropItemType == "DGAItem")
                 return (StardewValley.Object) this.Api.SpawnDGAItem(dropItemValue);
             else if (dropItemType == "VanillaItem")
-                return new StardewValley.Object(int.Parse(dropItemValue), 1);
+                return new StardewValley.Object(dropItemValue, 1);
             else
                 throw new Exception("Harvest types other than DGAItem and VanillaItem are not supported");
         }

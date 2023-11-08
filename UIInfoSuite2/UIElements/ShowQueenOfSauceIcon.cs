@@ -165,7 +165,8 @@ namespace UIInfoSuite2.UIElements
         private void CheckForNewRecipe()
         {
             int recipiesKnownBeforeTvCall = Game1.player.cookingRecipes.Count();
-            string[] dialogue = typeof(TV).GetMethod("getWeeklyRecipe", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(new TV(), null) as string[];
+
+            string[] dialogue = typeof(TV).GetMethod("getWeeklyRecipe",BindingFlags.Instance | BindingFlags.NonPublic,null,Type.EmptyTypes,null).Invoke(new TV(), null) as string[];
             _todaysRecipe = new CraftingRecipe(_recipesByDescription.SafeGet(dialogue[0]), true);
 
             if (Game1.player.cookingRecipes.Count() > recipiesKnownBeforeTvCall)

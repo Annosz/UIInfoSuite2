@@ -6,7 +6,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.GameData.Crops;
+using StardewValley.GameData.FruitTrees;
+using StardewValley.GameData.Machines;
 using StardewValley.Menus;
+using StardewValley.TerrainFeatures;
 using SObject = StardewValley.Object;
 
 namespace UIInfoSuite2.Infrastructure
@@ -24,7 +28,7 @@ namespace UIInfoSuite2.Infrastructure
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
                 while (Game1.activeClickableMenu is GameMenu);
-                Game1.setDialogue(dialogue, true);
+                //Game1.setDialogue(dialogue, true);
             });
         }
 
@@ -57,15 +61,18 @@ namespace UIInfoSuite2.Infrastructure
         }
 
         public static SObject? GetHarvest(Item item)
-        {
+        { 
             if (item is SObject seedsObject
                 && seedsObject.Category == StardewValley.Object.SeedsCategory
-                && seedsObject.ParentSheetIndex != Crop.mixedSeedIndex)
+                && seedsObject.QualifiedItemId != Crop.mixedSeedsQId)
             {
                 if (seedsObject.isSapling())
                 {
-                    var tree = new StardewValley.TerrainFeatures.FruitTree(seedsObject.ParentSheetIndex);
-                    return new SObject(tree.indexOfFruit.Value, 1);
+                    if (FruitTree.TryGetData(seedsObject.itemId.Value, out FruitTreeData data))
+                        return new SObject(data.Fruit[0].ItemId, 1);
+                    else
+                        return null;
+                    
                 }
                 else if (ModEntry.DGA.IsCustomObject(item, out var dgaHelper))
                 {
@@ -91,7 +98,7 @@ namespace UIInfoSuite2.Infrastructure
                 }
                 else
                 {
-                    var crop = new Crop(seedsObject.ParentSheetIndex, 0, 0);
+                    var crop = new Crop(seedsObject.itemId.Value, 0, 0,Game1.getFarm());
                     return new SObject(crop.indexOfHarvest.Value, 1);
                 }
             } else {
@@ -142,8 +149,10 @@ namespace UIInfoSuite2.Infrastructure
 
             if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.GetCurrentPage() is InventoryPage inventory)
             {
-                FieldInfo hoveredItemField = typeof(InventoryPage).GetField("hoveredItem", BindingFlags.Instance | BindingFlags.NonPublic);
-                hoverItem = hoveredItemField.GetValue(inventory) as Item;
+                
+                //FieldInfo hoveredItemField = typeof(InventoryPage).GetField("hoveredItem", BindingFlags.Instance | BindingFlags.NonPublic);
+                //hoverItem = hoveredItemField.GetValue(inventory) as Item;
+                hoverItem = inventory.hoveredItem;
             }
 
             if (Game1.activeClickableMenu is ItemGrabMenu itemMenu)

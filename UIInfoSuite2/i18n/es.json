@@ -23,6 +23,7 @@
   "ToolIsFinishedBeingUpgraded": "¡{0} está terminado!",
   "NpcBirthday": "Cumpleaños de {0}",
   "RobinBuildingStatus": "Robin terminará tu nuevo edificio en {0} día(s)",
+  "RobinHouseUpgradeStatus": "Robin terminará la actualización de tu casa en {0} día(s)",
   // Display icons - Foragables
   "CanFindSalmonberry": "Hoy puedes encontrar Frambuesas",
   "CanFindBlackberry": "Hoy puedes encontrar Moras",
@@ -69,5 +70,7 @@
   "ShowSeasonalBerry": "Mostrar recolectables de temporada",
   "ShowSeasonalBerryHazelnut": "Mostrar avellanas en los árboles",
   //Others
-  "LevelUp": "Subida de nivel"
+  "LevelUp": "Subida de nivel",
+  //Mill
+  "Capacity": "Capacidad: {0} de {1}"
 }

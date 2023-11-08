@@ -8,6 +8,7 @@ using StardewValley.Buildings;
 using StardewValley.Locations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace UIInfoSuite2.UIElements
@@ -110,17 +111,17 @@ namespace UIInfoSuite2.UIElements
             List<StardewValley.Object> similarObjects;
 
             // Junimo Hut is handled differently, because it is a building
-            if (Game1.currentLocation is BuildableGameLocation buildableLocation)
+            if (Game1.currentLocation.IsBuildableLocation())
             {
-                Building building = buildableLocation.getBuildingAt(Game1.GetPlacementGrabTile());
+                Building building = Game1.currentLocation.getBuildingAt(Game1.GetPlacementGrabTile());
 
                 if (building is JunimoHut)
                 {
-                    arrayToUse = GetDistanceArray(ObjectsWithDistance.JunimoHut);
-                    foreach (var nextBuilding in buildableLocation.buildings)
+                    foreach (Building nextbuilding in Game1.currentLocation.buildings)
                     {
-                        if (nextBuilding is JunimoHut nextHut)
+                        if (nextbuilding is JunimoHut nextHut)
                         {
+                            arrayToUse = GetDistanceArray(ObjectsWithDistance.JunimoHut);
                             AddTilesToHighlightedArea(arrayToUse, nextHut.tileX.Value + 1, nextHut.tileY.Value + 1);
                         }
                     }
@@ -131,12 +132,11 @@ namespace UIInfoSuite2.UIElements
             if (Game1.player.CurrentItem is StardewValley.Object currentItem && currentItem.isPlaceable())
             {
                 string itemName = currentItem.Name;
-
+                
                 Vector2 currentTile = Game1.GetPlacementGrabTile();
                 Game1.isCheckingNonMousePlacement = !Game1.IsPerformingMousePlacement();
                 Vector2 validTile = Utility.snapToInt(Utility.GetNearbyValidPlacementPosition(Game1.player, Game1.currentLocation, currentItem, (int)currentTile.X * Game1.tileSize, (int)currentTile.Y * Game1.tileSize)) / Game1.tileSize;
                 Game1.isCheckingNonMousePlacement = false;
-
                 if (itemName.IndexOf("arecrow", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     arrayToUse = itemName.Contains("eluxe") ? 
@@ -155,9 +155,14 @@ namespace UIInfoSuite2.UIElements
                 }
                 else if (itemName.IndexOf("sprinkler", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
+                    ModEntry.MonitorObject.Log($"sprinkler paso 1", LogLevel.Info);
                     // Relative tile positions to the placable items locations - need to pass coordinates
-                    AddTilesToHighlightedArea(currentItem.GetSprinklerTiles(), (int)validTile.X, (int)validTile.Y);
-
+                     //List<Vector2> test = currentItem.GetSprinklerTiles();
+                     StardewValley.Object test2 = new StardewValley.Object(currentItem.itemId,1);
+                     AddTilesToHighlightedArea(test2.GetSprinklerTiles(), (int)validTile.X, (int)validTile.Y);
+                    //arrayToUse = GetDistanceArray(ObjectsWithDistance.IridiumSprinkler);
+                    //AddTilesToHighlightedArea(arrayToUse, (int)validTile.X, (int)validTile.Y);
+                    //ModEntry.MonitorObject.Log($"Count:{currentItem.GetSprinklerTiles().Count}", LogLevel.Info);
                     similarObjects = GetSimilarObjectsInLocation("sprinkler");
                     foreach (StardewValley.Object next in similarObjects)
                     {

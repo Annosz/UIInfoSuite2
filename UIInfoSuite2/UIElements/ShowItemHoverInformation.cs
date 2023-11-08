@@ -223,13 +223,14 @@ namespace UIInfoSuite2.UIElements
 
         private void DrawAdvancedTooltip()
         {
-
+            
             if (_hoverItem.Value != null
                 && !(_hoverItem.Value is StardewValley.Tools.MeleeWeapon weapon && weapon.isScythe())
                 && !(_hoverItem.Value is StardewValley.Tools.FishingRod))
             {
+                ModEntry.MonitorObject.Log($"Type:{_hoverItem.Value}",LogLevel.Info);
+                ModEntry.MonitorObject.Log($"Name:{_hoverItem.Value.DisplayName} DefinitionId:{_hoverItem.Value.TypeDefinitionId}",LogLevel.Info);
                 var hoveredObject = _hoverItem.Value as StardewValley.Object;
-
                 int itemPrice = Tools.GetSellToStorePrice(_hoverItem.Value);
 
                 int stackPrice = 0;
@@ -240,10 +241,9 @@ namespace UIInfoSuite2.UIElements
 
                 bool notDonatedYet = _libraryMuseum.isItemSuitableForDonation(_hoverItem.Value);
 
-
                 bool notShippedYet = (hoveredObject != null
                     && hoveredObject.countsForShippedCollection()
-                    && !Game1.player.basicShipped.ContainsKey(hoveredObject.ParentSheetIndex)
+                    && !Game1.player.basicShipped.ContainsKey(hoveredObject.QualifiedItemId)
                     && hoveredObject.Type != "Fish");
                 if (notShippedYet && hoveredObject != null && ModEntry.DGA.IsCustomObject(hoveredObject, out var dgaHelper))
                 {
@@ -260,10 +260,10 @@ namespace UIInfoSuite2.UIElements
                         // This means that DGA items do not (yet) count for the "Full Shipment" achievement even though they appear in the collections page.
                         
                         // Nonetheless, show the icon if that item is still hidden in the collections page.
-                        int dgaId = dgaHelper.GetDgaObjectFakeId(hoveredObject);
+                        string dgaId = dgaHelper.GetDgaObjectFakeId(hoveredObject);
                         string t = hoveredObject.Type;
                         bool inCollectionsPage = !(t.Contains("Arch") || t.Contains("Fish") || t.Contains("Mineral") || t.Contains("Cooking"))
-                            && StardewValley.Object.isPotentialBasicShippedCategory(dgaId, hoveredObject.Category.ToString());
+                            && StardewValley.Object.isPotentialBasicShippedCategory(dgaId, hoveredObject.Category);
                             
                         notShippedYet = inCollectionsPage && !Game1.player.basicShipped.ContainsKey(dgaId);
                     }
@@ -337,6 +337,7 @@ namespace UIInfoSuite2.UIElements
                     windowX = Game1.getMouseX() + 350;
 
                 Vector2 windowPos = new Vector2(windowX, windowY);
+                //ModEntry.MonitorObject.Log($"Mouse:{Game1.getMouseX()},{Game1.getMouseY()} WindPos:{windowPos.X},{windowPos.Y} ", LogLevel.Info);
                 Vector2 drawPosition = windowPos + new Vector2(16, 20) + drawPositionOffset;
 
                 // Icons are drawn in 32x40 cells. The small font has a cap height of 18 and an offset of (2, 6)
@@ -370,7 +371,7 @@ namespace UIInfoSuite2.UIElements
                         SpriteEffects.None,
                         0.95f);
                     
-                    this.DrawSmallTextWithShadow(Game1.spriteBatch, itemPrice.ToString(), drawPosition + textOffset);
+                    this.DrawSmallTextWithShadow(Game1.spriteBatch,itemPrice.ToString(), drawPosition + textOffset);
 
                     drawPosition.Y += rowHeight;
                 }
@@ -399,7 +400,7 @@ namespace UIInfoSuite2.UIElements
                         SpriteEffects.None,
                         0.95f);
 
-                    this.DrawSmallTextWithShadow(Game1.spriteBatch, stackPrice.ToString(), drawPosition + textOffset);
+                    this.DrawSmallTextWithShadow(Game1.spriteBatch,stackPrice.ToString(), drawPosition + textOffset);
 
                     drawPosition.Y += rowHeight;
                 }
