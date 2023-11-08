@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.GameData.Crops;
+using StardewValley.GameData.Machines;
 using StardewValley.Menus;
 using SObject = StardewValley.Object;
 
@@ -24,7 +26,8 @@ namespace UIInfoSuite2.Infrastructure
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
                 while (Game1.activeClickableMenu is GameMenu);
-                Game1.setDialogue(dialogue, true);
+                //cambio
+                //Game1.setDialogue(dialogue, true);
             });
         }
 
@@ -58,14 +61,24 @@ namespace UIInfoSuite2.Infrastructure
 
         public static SObject? GetHarvest(Item item)
         {
+             //cambio   
             if (item is SObject seedsObject
                 && seedsObject.Category == StardewValley.Object.SeedsCategory
-                && seedsObject.ParentSheetIndex != Crop.mixedSeedIndex)
+                && seedsObject.QualifiedItemId != Crop.mixedSeedsQId)
             {
                 if (seedsObject.isSapling())
                 {
-                    var tree = new StardewValley.TerrainFeatures.FruitTree(seedsObject.ParentSheetIndex);
-                    return new SObject(tree.indexOfFruit.Value, 1);
+                    //var tree = new StardewValley.TerrainFeatures.FruitTree(seedsObject.ItemId);
+                    if (StardewValley.TerrainFeatures.FruitTree.TryGetData(seedsObject.itemId.Value, out StardewValley.GameData.FruitTrees.FruitTreeData data))
+                    {
+                        //ModEntry.MonitorObject.Log(data.Fruit.Count > 0 ? $"Count:{data.Fruit.Count}  ID:{data.Fruit[0].ItemId}" :$"Count:{data.Fruit.Count}" ,LogLevel.Info);
+                        return new SObject(data.Fruit[0].ItemId, 1);
+                    }
+                    else
+                        return null;
+                    //ModEntry.MonitorObject.Log("Arbol:" + tree.GetData().Fruit[0].ObjectDisplayName,LogLevel.Info);
+                    //ModEntry.MonitorObject.Log("Arbol:"+new SObject(tree.fruit/*.indexOfFruit.Value*/, 1).DisplayName,LogLevel.Info);
+                    
                 }
                 else if (ModEntry.DGA.IsCustomObject(item, out var dgaHelper))
                 {
@@ -91,7 +104,7 @@ namespace UIInfoSuite2.Infrastructure
                 }
                 else
                 {
-                    var crop = new Crop(seedsObject.ParentSheetIndex, 0, 0);
+                    var crop = new Crop(seedsObject.itemId.Value, 0, 0,Game1.getFarm());
                     return new SObject(crop.indexOfHarvest.Value, 1);
                 }
             } else {
@@ -142,8 +155,10 @@ namespace UIInfoSuite2.Infrastructure
 
             if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.GetCurrentPage() is InventoryPage inventory)
             {
-                FieldInfo hoveredItemField = typeof(InventoryPage).GetField("hoveredItem", BindingFlags.Instance | BindingFlags.NonPublic);
-                hoverItem = hoveredItemField.GetValue(inventory) as Item;
+                
+                //FieldInfo hoveredItemField = typeof(InventoryPage).GetField("hoveredItem", BindingFlags.Instance | BindingFlags.NonPublic);
+                //hoverItem = hoveredItemField.GetValue(inventory) as Item;
+                hoverItem = inventory.hoveredItem;
             }
 
             if (Game1.activeClickableMenu is ItemGrabMenu itemMenu)
