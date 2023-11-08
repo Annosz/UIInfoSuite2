@@ -61,9 +61,6 @@ namespace UIInfoSuite2.UIElements
 
             var tile = (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0) ? gamepadTile : mouseTile;
 
-            //cambio
-            /*if (Game1.currentLocation is BuildableGameLocation buildableLocation)
-                _currentTileBuilding.Value = buildableLocation.getBuildingAt(tile);*/
             if (Game1.currentLocation.IsBuildableLocation())
                 _currentTileBuilding.Value = Game1.currentLocation.getBuildingAt(tile);
 
@@ -106,9 +103,6 @@ namespace UIInfoSuite2.UIElements
             int overrideY = -1;
 
             // draw hover tooltip
-            //cambio
-            /*if(currentTileBuilding is not null)
-              ModEntry.MonitorObject.Log($"Tipo:{currentTileBuilding.buildingType}",LogLevel.Info);*/
             if (currentTileBuilding != null && currentTileBuilding.buildingType.Value == "Mill" && currentTileBuilding.GetBuildingChest("Input") != null && !currentTileBuilding.GetBuildingChest("Input").isEmpty())
             {
                 int wheatCount = 0;
@@ -130,7 +124,7 @@ namespace UIInfoSuite2.UIElements
                 }
 
                 StringBuilder builder = new StringBuilder();
-                builder.AppendLine($"Limite:{currentTileBuilding.GetBuildingChest("Input").Items.Sum(x=> x.Stack)} de {currentTileBuilding.GetBuildingChest("Input").GetActualCapacity() * 999}");
+                builder.AppendLine(String.Format(_helper.SafeGetString("Capacity"),currentTileBuilding.GetBuildingChest("Input").Items.Sum(x=> x.Stack),currentTileBuilding.GetBuildingChest("Input").GetActualCapacity() * 999));
 
                 if (wheatCount > 0)
                     builder.Append($"{ItemRegistry.GetData("(O)262").DisplayName}:{wheatCount}");

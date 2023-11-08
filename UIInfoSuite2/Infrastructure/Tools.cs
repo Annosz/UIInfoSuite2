@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.GameData.Crops;
+using StardewValley.GameData.FruitTrees;
 using StardewValley.GameData.Machines;
 using StardewValley.Menus;
+using StardewValley.TerrainFeatures;
 using SObject = StardewValley.Object;
 
 namespace UIInfoSuite2.Infrastructure
@@ -26,7 +28,6 @@ namespace UIInfoSuite2.Infrastructure
                     Thread.Sleep(TimeSpan.FromSeconds(1));
                 }
                 while (Game1.activeClickableMenu is GameMenu);
-                //cambio
                 //Game1.setDialogue(dialogue, true);
             });
         }
@@ -60,24 +61,17 @@ namespace UIInfoSuite2.Infrastructure
         }
 
         public static SObject? GetHarvest(Item item)
-        {
-             //cambio   
+        { 
             if (item is SObject seedsObject
                 && seedsObject.Category == StardewValley.Object.SeedsCategory
                 && seedsObject.QualifiedItemId != Crop.mixedSeedsQId)
             {
                 if (seedsObject.isSapling())
                 {
-                    //var tree = new StardewValley.TerrainFeatures.FruitTree(seedsObject.ItemId);
-                    if (StardewValley.TerrainFeatures.FruitTree.TryGetData(seedsObject.itemId.Value, out StardewValley.GameData.FruitTrees.FruitTreeData data))
-                    {
-                        //ModEntry.MonitorObject.Log(data.Fruit.Count > 0 ? $"Count:{data.Fruit.Count}  ID:{data.Fruit[0].ItemId}" :$"Count:{data.Fruit.Count}" ,LogLevel.Info);
+                    if (FruitTree.TryGetData(seedsObject.itemId.Value, out FruitTreeData data))
                         return new SObject(data.Fruit[0].ItemId, 1);
-                    }
                     else
                         return null;
-                    //ModEntry.MonitorObject.Log("Arbol:" + tree.GetData().Fruit[0].ObjectDisplayName,LogLevel.Info);
-                    //ModEntry.MonitorObject.Log("Arbol:"+new SObject(tree.fruit/*.indexOfFruit.Value*/, 1).DisplayName,LogLevel.Info);
                     
                 }
                 else if (ModEntry.DGA.IsCustomObject(item, out var dgaHelper))

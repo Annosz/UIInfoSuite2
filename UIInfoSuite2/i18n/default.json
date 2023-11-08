@@ -70,5 +70,7 @@
   "ShowSeasonalBerry": "Show seasonal forageables",
   "ShowSeasonalBerryHazelnut": "Show hazelnuts on trees",
   //Others
-  "LevelUp": "Level Up"
+  "LevelUp": "Level Up",
+  //Mill
+  "Capacity": "Capacity: {0} of {1}"
 }

@@ -223,11 +223,13 @@ namespace UIInfoSuite2.UIElements
 
         private void DrawAdvancedTooltip()
         {
-
+            
             if (_hoverItem.Value != null
                 && !(_hoverItem.Value is StardewValley.Tools.MeleeWeapon weapon && weapon.isScythe())
                 && !(_hoverItem.Value is StardewValley.Tools.FishingRod))
             {
+                ModEntry.MonitorObject.Log($"Type:{_hoverItem.Value}",LogLevel.Info);
+                ModEntry.MonitorObject.Log($"Name:{_hoverItem.Value.DisplayName} DefinitionId:{_hoverItem.Value.TypeDefinitionId}",LogLevel.Info);
                 var hoveredObject = _hoverItem.Value as StardewValley.Object;
                 int itemPrice = Tools.GetSellToStorePrice(_hoverItem.Value);
 

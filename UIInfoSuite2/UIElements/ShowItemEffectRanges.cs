@@ -111,7 +111,6 @@ namespace UIInfoSuite2.UIElements
             List<StardewValley.Object> similarObjects;
 
             // Junimo Hut is handled differently, because it is a building
-            //cambio
             if (Game1.currentLocation.IsBuildableLocation())
             {
                 Building building = Game1.currentLocation.getBuildingAt(Game1.GetPlacementGrabTile());
@@ -128,23 +127,6 @@ namespace UIInfoSuite2.UIElements
                     }
                 }
             }
-
-             /*if (Game1.currentLocation is BuildableGameLocation buildableLocation)
-            {
-                Building building = buildableLocation.getBuildingAt(Game1.GetPlacementGrabTile());
-
-                if (building is JunimoHut)
-                {
-                    arrayToUse = GetDistanceArray(ObjectsWithDistance.JunimoHut);
-                    foreach (var nextBuilding in buildableLocation.buildings)
-                    {
-                        if (nextBuilding is JunimoHut nextHut)
-                        {
-                            AddTilesToHighlightedArea(arrayToUse, nextHut.tileX.Value + 1, nextHut.tileY.Value + 1);
-                        }
-                    }
-                }
-            }*/
 
             // Every other item is here
             if (Game1.player.CurrentItem is StardewValley.Object currentItem && currentItem.isPlaceable())
