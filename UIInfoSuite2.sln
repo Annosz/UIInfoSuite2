@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIInfoSuite2", "UIInfoSuite2\UIInfoSuite2.csproj", "{B6DD0C36-999B-44FD-9316-C0AA6D5A6E7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIInfoSuite2", "UIInfoSuite2\UIInfoSuite2.csproj", "{B6DD0C36-999B-44FD-9316-C0AA6D5A6E7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
