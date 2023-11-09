@@ -7,6 +7,7 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
 using System;
+using System.Linq;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Infrastructure.Extensions;
 
@@ -96,7 +97,7 @@ namespace UIInfoSuite2.UIElements
 
             if (remainingDays <= 0)
             {
-                Building b = Game1.getFarm().getBuildingUnderConstruction();
+                Building? b = Game1.getFarm().buildings.Where(build => (int)build.daysOfConstructionLeft.Value > 0 || (int)build.daysUntilUpgrade.Value > 0).FirstOrDefault();//*.getBuildingUnderConstruction()*/;
 
                 if (b is not null)
                 {

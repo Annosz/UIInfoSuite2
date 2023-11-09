@@ -178,9 +178,7 @@ namespace UIInfoSuite2.UIElements
                     if (menu is SocialPage socialPage)
                     {
                         _socialPage = socialPage;
-                        _friendNames = _socialPage.names
-                            .Select(name => name.ToString())
-                            .ToArray();
+                        _friendNames = _socialPage.SocialEntries.Select(x => x.InternalName).ToArray();
                         break;
                     }
                 }

@@ -13,7 +13,6 @@ namespace UIInfoSuite2.UIElements
     internal class ShowTodaysGifts : IDisposable
     {
         #region Properties
-        private string[] _friendNames;
         private SocialPage _socialPage;
         private readonly IModHelper _helper;
         #endregion
@@ -79,9 +78,6 @@ namespace UIInfoSuite2.UIElements
                     if (menu is SocialPage page)
                     {
                         _socialPage = page;
-                        _friendNames = _socialPage.names
-                            .Select(name => name.ToString())
-                            .ToArray();
                         break;
                     }
                 }
@@ -97,12 +93,12 @@ namespace UIInfoSuite2.UIElements
                                     .GetValue(_socialPage);
             int yOffset = 25;
 
-            for (int i = slotPosition; i < slotPosition + 5 && i < _friendNames.Length; ++i)
+            for (int i = slotPosition; i < slotPosition + 5 && i < _socialPage.SocialEntries.Count; ++i)
             {
                 int yPosition = Game1.activeClickableMenu.yPositionOnScreen + 130 + yOffset;
                 yOffset += 112;
-                string nextName = _friendNames[i];
-                if (_socialPage.getFriendship(nextName).GiftsToday != 0 && _socialPage.getFriendship(nextName).GiftsThisWeek < 2)
+
+                if (_socialPage.GetSocialEntry(i).Friendship != null && _socialPage.GetSocialEntry(i).Friendship.GiftsToday != 0  && _socialPage.GetSocialEntry(i).Friendship.GiftsThisWeek < 2)
                 {
                     Game1.spriteBatch.Draw(
                         Game1.mouseCursors,
