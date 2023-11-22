@@ -21,8 +21,9 @@
   "IslandThunderstormNextDay": "Завтра будет гроза",
   "DaysUntilToolIsUpgraded": "{1} будет улучшено через {0} дней",
   "ToolIsFinishedBeingUpgraded": "{0} улучшено!",
-  "NpcBirthday": "Сегодня день рождение {0}",
+  "NpcBirthday": "Сегодня день рождения {0}",
   "RobinBuildingStatus": "Робин завершит строительство через {0} дн.",
+  "RobinHouseUpgradeStatus": "Робин расширит дом через {0} дн.",
   // Display icons - Foragables
   "CanFindSalmonberry": "Сегодня ты можешь найти морошку",
   "CanFindBlackberry": "Сегодня ты можешь найти ежевику",
