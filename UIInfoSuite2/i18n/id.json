@@ -1,0 +1,76 @@
+{
+  // GUI - Game Menu
+  "OptionsTabTooltip": "Pengaturan UI Info Suite 2",
+  //GUI - Billboard
+  "Billboard": "Billboard",
+  "Calendar": "Kalender",
+  //GUI - Seed shop
+  "HarvestPrice": "Harga panen",
+  //Production
+  "Days": "hari",
+  "Hours": "jam",
+  "Minutes": "menit",
+  //Harvest
+  "DaysToMature": "hari untuk siap panen",
+  "ReadyToHarvest": "Siap Untuk Dipanen!",
+  //Display icons - General
+  "TodaysRecipe": "Resep Hari Ini: ",
+  "TravelingMerchantIsInTown": "Pedagang keliling ada di kota!",
+  "RainNextDay": "Besok akan hujan",
+  "ThunderstormNextDay": "Besok akan badai petir",
+  "SnowNextDay": "Besok akan turun salju",
+  "IslandRainNextDay": "Besok akan hujan di pulau",
+  "IslandThunderstormNextDay": "Besok akan badai petir di pulau",
+  "DaysUntilToolIsUpgraded": "{0} hari hingga {1} selesai di tingkatkan",
+  "ToolIsFinishedBeingUpgraded": "{0} telah selesai!",
+  "NpcBirthday": "Ulang tahun {0}",
+  "RobinBuildingStatus": "Robin akan selesai membangun dalam {0} hari",
+  "RobinHouseUpgradeStatus": "Robin akan selesai meningkatkan rumahmu dalam {0} hari",
+  // Display icons - Foragables
+  "CanFindSalmonberry": "Kamu akan menemukan Salmonberry hari ini",
+  "CanFindBlackberry": "Kamu akan menemukan Blackberry hari ini",
+  "CanFindHazelnut": "Kamu akan menemukan Kacang Hazel di pohon hari ini",
+  //Display icons - Luck
+  "DailyLuckValue": "Keberuntungan harianmu adalah {0}",
+  "FeelingLucky": "Kamu merasa beruntung!!",
+  "LuckyButNotTooLucky": "Kamu merasa beruntung... tapi ga terlalu",
+  "NotFeelingLuckyAtAll": "Kamu tidak merasa beruntung sama sekali hari ini...",
+  "MaybeStayHome": "Mungkin kamu tetap berada di rumah hari ini...",
+  "LuckStatus1": "Merasa beruntung!",
+  "LuckStatus2": "Merasa sedikit beruntung hari ini!",
+  "LuckStatus3": "Hari ini ada di tanganmu",
+  "LuckStatus4": "Roh merasa benar-benar netral hari ini",
+  "LuckStatus5": "Keberuntungan tidak memihakmu hari ini",
+  "LuckStatus6": "Mungkin kamu tetap berada di rumah hari ini...",
+  //Settings - General
+  "ShowLevelUpAnimation": "Tampilkan animasi naik level",
+  "ShowExperienceBar": "Tampilkan EXP bar",
+  "AllowExperienceBarToFadeOut": "Izinkan EXP bar untuk meredup",
+  "ShowExperienceGain": "Tampilkan EXP yang didapat",
+  "ShowLocationOfTownsPeople": "Tampilkan penduduk kota di peta",
+  "ShowAnimalsNeedPets": "Tampilkan hewan yang butuh di interaksi",
+  "HideAnimalPetOnMaxFriendship": "Sembunyikan pada hewan dengan hati maks",
+  "ShowCropAndBarrelTooltip": "Tampilkan waktu tanaman dan barel",
+  "ShowItemEffectRanges": "Tampilkan jarak orang-orangan sawah dan sprinkler",
+  "ShowExtraItemInformation": "Tampilkan informasi melayang item",
+  "ShowHarvestPricesInShop": "Tampilkan harga panen di toko",
+  //Settings - Tabs info
+  "DisplayCalendarAndBillboard": "Tampilkan tombol kalender/billboard",
+  "ShowHeartFills": "Tampilkan jumlah hati",
+  "ShowTodaysGifts": "Tampilkan hadiah hari ini",
+  //Settings - Show icons
+  "ShowBirthdayIcon": "Tampilkan ikon ulang tahun",
+  "HideBirthdayIfFullFriendShip": "Sembunyikan pada NPC dengan hati maks",
+  "ShowTravelingMerchant": "Tampilkan Pedagang Keliling",
+  "HideMerchantWhenVisited": "Sembunyikan ketika telah dikunjungi",
+  "ShowRainyDay": "Tampilkan hari hujan",
+  "ShowWhenNewRecipesAreAvailable": "Tampilkan resep baru saat tersedia",
+  "ShowToolUpgradeStatus": "Tampilkan status peningkatan alat",
+  "ShowRobinBuildingStatusIcon": "Tampilkan status bangunan Robin",
+  "ShowLuckIcon": "Tampilkan ikon keberuntungan",
+  "ShowExactValue": "Tampilkan nilai sebenarnya",
+  "ShowSeasonalBerry": "Tampilkan sumber daya liar (forageable) musiman",
+  "ShowSeasonalBerryHazelnut": "Tampilkan Kacang Hazel di pohon",
+  //Others
+  "LevelUp": "Naik level"
+}
