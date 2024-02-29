@@ -17,26 +17,27 @@
   "RainNextDay": "내일은 비가 올 것입니다",
   "ThunderstormNextDay": "내일은 뇌우가 올 것입니다",
   "SnowNextDay": "내일은 눈이 올 것입니다",
-  "IslandRainNextDay": "내일은 비가 올 것입니다",
-  "IslandThunderstormNextDay": "내일은 뇌우가 올 것입니다",
+  "IslandRainNextDay": "내일은 섬에 비가 올 것입니다",
+  "IslandThunderstormNextDay": "내일은 섬에 뇌우가 올 것입니다",
   "DaysUntilToolIsUpgraded": "{1} 완성까지 {0}일 남았습니다",
   "ToolIsFinishedBeingUpgraded": "{0}이(가) 완성됐습니다!",
-  "NpcBirthday": "{0}의 생일입니다！",
+  "NpcBirthday": "{0}의 생일입니다!",
   "RobinBuildingStatus": "새 건물 완성까지 {0}일 남았습니다",
+  "RobinHouseUpgradeStatus": "집 확장 공사가 끝날 때까지 {0}일 남았습니다",
   // Display icons - Foragables
-  "CanFindSalmonberry": "You can find Salmonberries today", // TODO
-  "CanFindBlackberry": "You can find Blackberries today", // TODO
-  "CanFindHazelnut": "You can find Hazelnuts on trees today", // TODO
+  "CanFindSalmonberry": "오늘은 새먼베리를 찾을 수 있습니다",
+  "CanFindBlackberry": "오늘은 블랙베리를 찾을 수 있습니다",
+  "CanFindHazelnut": "오늘은 헤이즐넛을 찾을 수 있습니다",
   //Display icons - Luck
   "DailyLuckValue": "오늘의 행운 수치: {0}",
   "FeelingLucky": "운이 좋은 것 같습니다!!",
-  "LuckyButNotTooLucky": "운이 좋은 것 같지만... 아주 좋은 것은 아닙니다.",
-  "NotFeelingLuckyAtAll": "오늘은 운이 좋지 않은것 같습니다...",
+  "LuckyButNotTooLucky": "운이 좋은 것 같지만... 아주 좋은 것은 아닙니다",
+  "NotFeelingLuckyAtAll": "오늘은 운이 전혀 좋지 않은것 같습니다...",
   "MaybeStayHome": "아마도 오늘은 집에 있어야 할 것 같습니다...",
   "LuckStatus1": "오늘은 운이 좋은 것 같다!",
   "LuckStatus2": "오늘은 운이 약간 좋은 것 같다!",
-  "LuckStatus3": "오늘은 스스로 하기에 달려있다",
-  "LuckStatus4": "오늘은 정령들의 기분이 완벽히 중립적이다",
+  "LuckStatus3": "오늘은 스스로 하기 나름이다",
+  "LuckStatus4": "오늘은 정령들이 완전히 무심해 보인다",
   "LuckStatus5": "오늘은 운이 따라주지 않는 것 같다",
   "LuckStatus6": "오늘은 집에 있는 편이 좋을 것 같다...",
   //Settings - General
@@ -53,8 +54,8 @@
   "ShowHarvestPricesInShop": "상점에서 수확 가격 표시",
   //Settings - Tabs info
   "DisplayCalendarAndBillboard": "소지품 창에 달력 및 게시판 버튼 표시",
-  "ShowHeartFills": "관계 창에 자세한 하트 단계 표시",
-  "ShowTodaysGifts": "관계 창에 오늘 선물 보낸 여부 표시",
+  "ShowHeartFills": "관계 창에 호감도 상세 표시",
+  "ShowTodaysGifts": "관계 창에 금일 선물 횟수 표시",
   //Settings - Show icons
   "ShowBirthdayIcon": "생일 아이콘 표시",
   "HideBirthdayIfFullFriendShip": "친밀도 최대 시 숨김",
@@ -66,8 +67,8 @@
   "ShowRobinBuildingStatusIcon": "건물 건설 현황 아이콘 표시",
   "ShowLuckIcon": "행운 아이콘 표시",
   "ShowExactValue": "정확한 수치 표시",
-  "ShowSeasonalBerry": "Show seasonal forageables", // TODO
-  "ShowSeasonalBerryHazelnut": "Show hazelnuts on trees", // TODO
+  "ShowSeasonalBerry": "계절별 채집 식물 아이콘 표시",
+  "ShowSeasonalBerryHazelnut": "헤이즐넛 아이콘 표시",
   //Others
   "LevelUp": "레벨 업"
 }
