@@ -1,4 +1,11 @@
 # If you are here to install the mod
+
+
+
+
+
+
+
 **Go to the [Releases page](https://github.com/Annosz/UIInfoSuite2/releases) on the side, where you can always find the latest release. Download the UIInfoSuite2.zip file and copy it's content to the mod folder.**
 ![image](https://user-images.githubusercontent.com/10620868/145580465-5dc6cd97-e4da-4830-a639-8f3fb94a1001.png)
 _Do **NOT** download the Source code (zip) or Source code (tar.gz). Also, do **NOT**  use the green Code > Download ZIP button on the main page. These methods will only give you the source code but you will not be able to run the mod and use it with Stardew Valley!_
