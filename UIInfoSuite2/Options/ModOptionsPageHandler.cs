@@ -15,7 +15,7 @@ namespace UIInfoSuite2.Options
     {
         private readonly IModHelper _helper;
         private readonly bool _showPersonalConfigButton;
-        
+
         private List<ModOptionsElement> _optionsElements = new();
         private readonly List<IDisposable> _elementsToDispose;
 
@@ -23,7 +23,7 @@ namespace UIInfoSuite2.Options
         private ModOptionsPageButton _modOptionsPageButton;
         private int _modOptionsTabPageNumber;
 
-        private PerScreen<IClickableMenu> _lastMenu = new();        
+        private PerScreen<IClickableMenu> _lastMenu = new();
         private List<int> _instancesWithOptionsPageOpen = new();
         private bool _windowResizing = false;
 
@@ -56,6 +56,7 @@ namespace UIInfoSuite2.Options
             var showRobinBuildingStatusIcon = new ShowRobinBuildingStatusIcon(helper);
             var showSeasonalBerry = new ShowSeasonalBerry(helper);
             var showTodaysGift = new ShowTodaysGifts(helper);
+            var showOasisClothes = new ShowOasisClothes(helper);
 
             _elementsToDispose = new List<IDisposable>()
             {
@@ -74,7 +75,8 @@ namespace UIInfoSuite2.Options
                 showQueenOfSauceIcon,
                 showToolUpgradeStatus,
                 showRobinBuildingStatusIcon,
-                showSeasonalBerry
+                showSeasonalBerry,
+                showOasisClothes
             };
 
             int whichOption = 1;
@@ -113,6 +115,9 @@ namespace UIInfoSuite2.Options
             _optionsElements.Add(seasonalBerryIcon);
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowSeasonalBerryHazelnut)), whichOption++, showSeasonalBerry.ToggleHazelnutOption, () => options.ShowSeasonalBerryHazelnut, v => options.ShowSeasonalBerryHazelnut = v, seasonalBerryIcon));
             _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowTodaysGifts)), whichOption++, showTodaysGift.ToggleOption, () => options.ShowTodaysGifts, v => options.ShowTodaysGifts = v));
+            var showOasisClothesIcon = new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowOasisClothes)), whichOption++, showOasisClothes.ToggleOption, () => options.ShowOasisClothes, v => options.ShowOasisClothes = v);
+            _optionsElements.Add(showOasisClothesIcon);
+            _optionsElements.Add(new ModOptionsCheckbox(_helper.SafeGetString(nameof(options.ShowOasisClothesAll)), whichOption++, showOasisClothes.ToggleShowAllClothes, () => options.ShowOasisClothesAll, v => options.ShowOasisClothesAll = v, showOasisClothesIcon));
         }
 
 
@@ -160,7 +165,7 @@ namespace UIInfoSuite2.Options
                         _modOptionsPage = new ModOptionsPage(_optionsElements, _helper.Events);
                     if (_modOptionsPageButton == null)
                         _modOptionsPageButton = new ModOptionsPageButton(_helper.Events);
-                    
+
                     _modOptionsPageButton.OnLeftClicked += OnButtonLeftClicked;
                     List<IClickableMenu> tabPages = newGameMenu.pages;
                     _modOptionsTabPageNumber = tabPages.Count;
