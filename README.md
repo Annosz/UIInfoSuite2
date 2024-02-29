@@ -9,6 +9,7 @@ _Do **NOT** download the Source code (zip) or Source code (tar.gz). Also, do **N
 _Ongoing maintenance for the original UI Info Suite mod for Stardew Valley._
 
 <!-- readme: collaborators -start -->
+
 <!-- readme: collaborators -end -->
 
 UI Info Suite provides helpful information about things around you designed to help you be aware of what's going on without feeling like you're cheating.
