@@ -81,7 +81,7 @@ namespace UIInfoSuite2.UIElements
     {
       _helper.Events.GameLoop.DayStarted -= OnDayStarted;
       _helper.Events.Player.InventoryChanged -= OnInventoryChanged;
-      _helper.Events.Display.Rendered -= OnRendered;
+      _helper.Events.Display.RenderedActiveMenu -= OnRendered;
       _helper.Events.Display.RenderedHud -= OnRenderedHud;
       _helper.Events.Display.Rendering -= OnRendering;
 
@@ -93,7 +93,7 @@ namespace UIInfoSuite2.UIElements
 
         _helper.Events.GameLoop.DayStarted += OnDayStarted;
         _helper.Events.Player.InventoryChanged += OnInventoryChanged;
-        _helper.Events.Display.Rendered += OnRendered;
+        _helper.Events.Display.RenderedActiveMenu += OnRendered;
         _helper.Events.Display.RenderedHud += OnRenderedHud;
         _helper.Events.Display.Rendering += OnRendering;
       }
