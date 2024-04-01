@@ -1,6 +1,6 @@
 {
   // GUI - Game Menu
-  // "OptionsTabTooltip": "UI Info Suite 2 Options", // TODO
+  // "OptionsTabTooltip": "UI Info Suite 2 オプション",
   //GUI - Billboard
   "Billboard": "掲示板",
   "Calendar": "カレンダー",
@@ -25,7 +25,7 @@
   "ToolIsFinishedBeingUpgraded": "{0}のアップグレード完了！",
   "NpcBirthday": "{0}の誕生日",
   "RobinBuildingStatus": "ロビンは{0}日で建築を完了します",
-  "RobinHouseUpgradeStatus": "Robin will finish upgrading your house in {0} day(s)", // TODO
+  "RobinHouseUpgradeStatus": "ロビンはあなたの家のアップグレードを{0}日で完了します",
   // Display icons - Foragables
   "CanFindSalmonberry": "今日は茂みでサーモンベリーが見つかります",
   "CanFindBlackberry": "今日は茂みでブラックベリーが見つかります",
