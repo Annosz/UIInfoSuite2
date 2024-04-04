@@ -31,7 +31,7 @@ public class ModEntry : Mod
 #endregion
 
 #region Generic mod config menu
-  private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+  private void OnGameLaunched(object? sender, GameLaunchedEventArgs e)
   {
     // get Generic Mod Config Menu's API (if it's installed)
     ISemanticVersion? modVersion = Helper.ModRegistry.Get("spacechase0.GenericModConfigMenu")?.Manifest?.Version;
@@ -101,7 +101,7 @@ public class ModEntry : Mod
 
 
 #region Event subscriptions
-  private void OnReturnedToTitle(object sender, ReturnedToTitleEventArgs e)
+  private void OnReturnedToTitle(object? sender, ReturnedToTitleEventArgs e)
   {
     // Unload if the main player quits.
     if (Context.ScreenId != 0)
@@ -113,7 +113,7 @@ public class ModEntry : Mod
     _modOptionsPageHandler = null;
   }
 
-  private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+  private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e)
   {
     // Only load once for split screen.
     if (Context.ScreenId != 0)
@@ -128,7 +128,7 @@ public class ModEntry : Mod
     _modOptionsPageHandler = new ModOptionsPageHandler(Helper, _modOptions, _modConfig.ShowOptionsTabInMenu);
   }
 
-  private void OnSaved(object sender, EventArgs e)
+  private void OnSaved(object? sender, EventArgs e)
   {
     // Only save for the main player.
     if (Context.ScreenId != 0)

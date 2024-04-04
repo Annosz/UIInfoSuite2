@@ -26,7 +26,7 @@ public sealed class IconHandler
     return new Point(xPosition, yPos);
   }
 
-  public void Reset(object sender, EventArgs e)
+  public void Reset(object? sender, EventArgs e)
   {
     _amountOfVisibleIcons.Value = 0;
   }
