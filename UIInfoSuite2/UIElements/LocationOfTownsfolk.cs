@@ -104,6 +104,16 @@ internal class LocationOfTownsfolk : IDisposable
 
     _townsfolk.Clear();
 
+    // We shouldn't render if the RSV map is open, it already does its own NPC Tracking
+    bool isRsvWorldMap =
+      Game1.activeClickableMenu?.GetChildMenu()?.GetType().FullName?.Equals("RidgesideVillage.RSVWorldMap") ?? false;
+
+    if (isRsvWorldMap)
+    {
+      ModEntry.MonitorObject.Log("Not Rendering Villagers, in RSV Map");
+      return;
+    }
+
     foreach (GameLocation? loc in Game1.locations)
     {
       foreach (NPC? character in loc.characters)
