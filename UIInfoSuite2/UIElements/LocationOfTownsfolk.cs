@@ -151,7 +151,7 @@ internal class LocationOfTownsfolk : IDisposable
         {
           // npc
           checkbox.greyedOut = false;
-          checkbox.isChecked = _options.ShowLocationOfFriends.SafeGet(friendName, true);
+          checkbox.isChecked = _options.ShowLocationOfFriends.GetOrDefault(friendName, true);
         }
         else
         {
@@ -279,7 +279,7 @@ internal class LocationOfTownsfolk : IDisposable
       try
       {
         bool shouldDrawCharacter = Game1.player.friendshipData.ContainsKey(character.Name) &&
-                                   _options.ShowLocationOfFriends.SafeGet(character.Name, true) &&
+                                   _options.ShowLocationOfFriends.GetOrDefault(character.Name, true) &&
                                    character.id != -1;
         if (shouldDrawCharacter)
         {
