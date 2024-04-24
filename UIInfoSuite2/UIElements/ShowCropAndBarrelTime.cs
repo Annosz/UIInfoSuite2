@@ -140,9 +140,9 @@ internal class ShowCropAndBarrelTime : IDisposable
         currentTileBuilding.buildingChests.Count > inputKey &&
         !currentTileBuilding.buildingChests[inputKey].isEmpty())
     {
-      int wheatCount = 0;
-      int beetCount = 0;
-      int unmilledriceCount = 0;
+      var wheatCount = 0;
+      var beetCount = 0;
+      var unmilledriceCount = 0;
 
       foreach (Item item in currentTileBuilding.buildingChests[inputKey].Items)
       {
@@ -295,7 +295,7 @@ internal class ShowCropAndBarrelTime : IDisposable
       {
         if (hoeDirt.crop is not null && !hoeDirt.crop.dead.Value)
         {
-          int num = 0;
+          var num = 0;
 
           if (hoeDirt.crop.fullyGrown.Value && hoeDirt.crop.dayOfCurrentPhase.Value > 0)
           {
@@ -303,7 +303,7 @@ internal class ShowCropAndBarrelTime : IDisposable
           }
           else
           {
-            for (int i = 0; i < hoeDirt.crop.phaseDays.Count - 1; ++i)
+            for (var i = 0; i < hoeDirt.crop.phaseDays.Count - 1; ++i)
             {
               if (hoeDirt.crop.currentPhase.Value == i)
               {
@@ -372,7 +372,7 @@ internal class ShowCropAndBarrelTime : IDisposable
       {
         string treeTypeName = GetTreeTypeName(_helper, tree.treeType.Value);
         string treeText = _helper.SafeGetString(LanguageKeys.Tree);
-        string treeName = $"{treeTypeName} {treeText}";
+        var treeName = $"{treeTypeName} {treeText}";
         if (tree.stump.Value)
         {
           treeName += " (stump)";
@@ -416,7 +416,7 @@ internal class ShowCropAndBarrelTime : IDisposable
         string itemIdOfFruit = fruitTree.GetData().Fruit.First().ItemId; // TODO 1.6: Might be broken because of more than one item.
         string fruitName = ItemRegistry.GetData(itemIdOfFruit).DisplayName ?? "Unknown";
         string treeText = _helper.SafeGetString(LanguageKeys.Tree);
-        string treeName = $"{fruitName} {treeText}";
+        var treeName = $"{fruitName} {treeText}";
 
         string text;
 
