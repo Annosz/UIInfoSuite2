@@ -13,13 +13,13 @@ public enum Sounds
 
 public class SoundHelper
 {
-  private static readonly Lazy<SoundHelper> _instance = new(() => new SoundHelper());
+  private static readonly Lazy<SoundHelper> LazyInstance = new(() => new SoundHelper());
 
   private bool _initialized;
 
   protected SoundHelper() { }
 
-  public static SoundHelper Instance => _instance.Value;
+  public static SoundHelper Instance => LazyInstance.Value;
 
   public void Initialize(IModHelper helper)
   {
@@ -42,6 +42,7 @@ public class SoundHelper
     IModHelper helper,
     Sounds sound,
     string fileName,
+    string category = "Sound",
     int instanceLimit = -1,
     CueDefinition.LimitBehavior? limitBehavior = null
   )
@@ -64,7 +65,7 @@ public class SoundHelper
       audio = SoundEffect.FromStream(stream);
     }
 
-    newCueDefinition.SetSound(audio, Game1.audioEngine.GetCategoryIndex("Sound"));
+    newCueDefinition.SetSound(audio, Game1.audioEngine.GetCategoryIndex(category));
     Game1.soundBank.AddCue(newCueDefinition);
     ModEntry.MonitorObject.Log($"Registered Sound: {newCueDefinition.name}");
   }
