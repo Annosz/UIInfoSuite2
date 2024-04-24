@@ -332,9 +332,8 @@ internal class ShowCropAndBarrelTime : IDisposable
 
             if (!string.IsNullOrEmpty(hoeDirt.fertilizer.Value))
             {
-              string fertilizerName = ItemRegistry.GetData(hoeDirt.fertilizer.Value).DisplayName ?? "Unknown Fertilizer";
               string withText = _helper.SafeGetString(LanguageKeys.With);
-              hoverText.Append($"\n({withText} {fertilizerName})");
+              hoverText.Append($"\n({withText} {GetFertilizerString(hoeDirt)})");
             }
 
             if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
@@ -357,11 +356,9 @@ internal class ShowCropAndBarrelTime : IDisposable
         }
         else if (!string.IsNullOrEmpty(hoeDirt.fertilizer.Value))
         {
-          string fertilizerName = ItemRegistry.GetData(hoeDirt.fertilizer.Value).DisplayName ?? "Unknown Fertilizer";
-          string hoverText = fertilizerName;
           IClickableMenu.drawHoverText(
             Game1.spriteBatch,
-            hoverText,
+            GetFertilizerString(hoeDirt),
             Game1.smallFont,
             overrideX: overrideX,
             overrideY: overrideY
@@ -478,6 +475,30 @@ internal class ShowCropAndBarrelTime : IDisposable
         }
       }
     }
+  }
+
+  private static string GetFertilizerString(HoeDirt dirtTile)
+  {
+    var fertilizerNames = new Dictionary<string, int>();
+    // Ultimate Fertilizer Integration
+    foreach (string fertilizerStr in dirtTile.fertilizer.Value.Split("|"))
+    {
+      string name = ItemRegistry.GetData(fertilizerStr)?.DisplayName ?? "Unknown Fertilizer";
+      int count = fertilizerNames.GetOrDefault(name);
+      fertilizerNames[name] = count + 1;
+    }
+
+    IEnumerable<string> formattedNames = fertilizerNames.OrderBy(kv => kv.Value)
+                                                        .ThenBy(kv => kv.Key)
+                                                        .Select(
+                                                          kv =>
+                                                          {
+                                                            string quantityStr =
+                                                              kv.Value == 1 ? "" : $" x{kv.Value}";
+                                                            return $"{kv.Key}{quantityStr}";
+                                                          }
+                                                        );
+    return string.Join(",\n", formattedNames);
   }
 
   // See: https://stardewvalleywiki.com/Trees
