@@ -214,7 +214,7 @@ internal class ShowWhenAnimalNeedsPet : IDisposable
       {
         Vector2 positionAboveAnimal = GetPetPositionAboveAnimal(character);
         positionAboveAnimal.X += 50f;
-        positionAboveAnimal.Y -= 20f;
+        positionAboveAnimal.Y += 30f;
         Game1.spriteBatch.Draw(
           Game1.mouseCursors,
           Utility.ModifyCoordinatesForUIScale(
