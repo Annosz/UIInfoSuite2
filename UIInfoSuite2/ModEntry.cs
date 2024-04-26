@@ -174,17 +174,21 @@ public class ModEntry : Mod
     }
   }
 
-  private static void ToggleBillboard(bool dailyQuest)
+  private static void ToggleBillboard(bool shouldShowDailyQuest)
   {
     if (Context.IsPlayerFree)
     {
-      Game1.activeClickableMenu = new Billboard(dailyQuest);
+      Game1.activeClickableMenu = new Billboard(shouldShowDailyQuest);
     }
     else if (Game1.activeClickableMenu is Billboard billboard)
     {
-      Game1.player.FarmerSprite.SetOwner(Game1.player);
-      bool isDailyQuestBoard = (bool)(typeof(Billboard).GetField("dailyQuestBoard", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(billboard) ?? false);
-      if (isDailyQuestBoard == dailyQuest)
+      bool isRequestedBillboardCurrentlyOpen =
+        (bool)(
+          typeof(Billboard)
+            .GetField("dailyQuestBoard", BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.GetValue(billboard) ?? false
+        ) == shouldShowDailyQuest;
+      if (isRequestedBillboardCurrentlyOpen)
       {
         Game1.activeClickableMenu.exitThisMenu();
       }
