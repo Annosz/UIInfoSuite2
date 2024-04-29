@@ -8,6 +8,7 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
@@ -332,7 +333,16 @@ internal class ShowCropAndBarrelTime : IDisposable
 
             if (!string.IsNullOrEmpty(hoeDirt.fertilizer.Value))
             {
-              string fertilizerName = ItemRegistry.GetData(hoeDirt.fertilizer.Value).DisplayName ?? "Unknown Fertilizer";
+              string fertilizerName = string.Join(
+                "/",
+                hoeDirt.fertilizer.Value.Split('|')
+                       .Select(
+                         x => {
+                           ParsedItemData? fertilizer = ItemRegistry.GetData(x);
+                           return fertilizer == null ? "Unknown Fertilizer" : fertilizer.DisplayName;
+                         }
+                       )
+              );
               string withText = _helper.SafeGetString(LanguageKeys.With);
               hoverText.Append($"\n({withText} {fertilizerName})");
             }
@@ -355,9 +365,17 @@ internal class ShowCropAndBarrelTime : IDisposable
             );
           }
         }
-        else if (!string.IsNullOrEmpty(hoeDirt.fertilizer.Value))
-        {
-          string fertilizerName = ItemRegistry.GetData(hoeDirt.fertilizer.Value).DisplayName ?? "Unknown Fertilizer";
+        else if (!string.IsNullOrEmpty(hoeDirt.fertilizer.Value)) {
+          string fertilizerName = string.Join(
+            "/",
+            hoeDirt.fertilizer.Value.Split('|')
+                   .Select(
+                     x => {
+                       ParsedItemData? fertilizer = ItemRegistry.GetData(x);
+                       return fertilizer == null ? "Unknown Fertilizer" : fertilizer.DisplayName;
+                     }
+                   )
+          );
           string hoverText = fertilizerName;
           IClickableMenu.drawHoverText(
             Game1.spriteBatch,
