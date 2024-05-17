@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Extensions;
 using StardewValley.GameData.Crops;
 using StardewValley.GameData.FruitTrees;
 using StardewValley.Menus;
@@ -182,5 +184,86 @@ public static class Tools
         destColors[idx] = sourcePixel;
       }
     }
+  }
+
+  public static IEnumerable<int> GetDaysFromCondition(GameStateQuery.ParsedGameStateQuery parsedGameStateQuery)
+  {
+    HashSet<int> days = new();
+    if (parsedGameStateQuery.Query.Length < 2)
+    {
+      return days;
+    }
+
+    string queryStr = parsedGameStateQuery.Query[0];
+    if (!"day_of_month".Equals(queryStr, StringComparison.OrdinalIgnoreCase))
+    {
+      return days;
+    }
+
+    for (var i = 1; i < parsedGameStateQuery.Query.Length; i++)
+    {
+      string dayStr = parsedGameStateQuery.Query[i];
+      if ("even".Equals(dayStr, StringComparison.OrdinalIgnoreCase))
+      {
+        days.AddRange(Enumerable.Range(1, 28).Where(x => x % 2 == 0));
+        continue;
+      }
+
+      if ("odd".Equals(dayStr, StringComparison.OrdinalIgnoreCase))
+      {
+        days.AddRange(Enumerable.Range(1, 28).Where(x => x % 2 != 0));
+        continue;
+      }
+
+      try
+      {
+        int parsedInt = int.Parse(dayStr);
+        days.Add(parsedInt);
+      }
+      catch (Exception)
+      {
+        // ignored
+      }
+    }
+
+    return parsedGameStateQuery.Negated ? Enumerable.Range(1, 28).Where(x => !days.Contains(x)).ToHashSet() : days;
+  }
+
+  public static int? GetNextDayFromCondition(string? condition, bool includeToday = true)
+  {
+    HashSet<int> days = new();
+    if (condition == null)
+    {
+      return null;
+    }
+
+    GameStateQuery.ParsedGameStateQuery[]? conditionEntries = GameStateQuery.Parse(condition);
+
+    foreach (GameStateQuery.ParsedGameStateQuery parsedGameStateQuery in conditionEntries)
+    {
+      days.AddRange(GetDaysFromCondition(parsedGameStateQuery));
+    }
+
+    days.RemoveWhere(day => day < Game1.dayOfMonth || (!includeToday && day == Game1.dayOfMonth));
+
+    return days.Count == 0 ? null : days.Min();
+  }
+
+  public static int? GetLastDayFromCondition(string? condition)
+  {
+    HashSet<int> days = new();
+    if (condition == null)
+    {
+      return null;
+    }
+
+    GameStateQuery.ParsedGameStateQuery[]? conditionEntries = GameStateQuery.Parse(condition);
+
+    foreach (GameStateQuery.ParsedGameStateQuery parsedGameStateQuery in conditionEntries)
+    {
+      days.AddRange(GetDaysFromCondition(parsedGameStateQuery));
+    }
+
+    return days.Count == 0 ? null : days.Max();
   }
 }
