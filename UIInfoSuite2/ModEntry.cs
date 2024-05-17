@@ -5,6 +5,7 @@ using StardewValley;
 using StardewValley.Menus;
 using UIInfoSuite2.AdditionalFeatures;
 using UIInfoSuite2.Compatibility;
+using UIInfoSuite2.Compatibility.CustomBush;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Options;
 
@@ -38,18 +39,9 @@ public class ModEntry : Mod
     SoundHelper.Instance.Initialize(Helper);
 
     // get Generic Mod Config Menu's API (if it's installed)
-    ISemanticVersion? modVersion = Helper.ModRegistry.Get("spacechase0.GenericModConfigMenu")?.Manifest?.Version;
-    var minModVersion = "1.6.0";
-    if (modVersion?.IsOlderThan(minModVersion) == true)
-    {
-      Monitor.Log(
-        $"Detected Generic Mod Config Menu {modVersion} but expected {minModVersion} or newer. Disabling integration with that mod.",
-        LogLevel.Warn
-      );
-      return;
-    }
+    var configMenu = ApiManager.TryRegisterApi<IGenericModConfigMenuApi>(Helper, ModCompat.Gmcm, "1.6.0");
+    ApiManager.TryRegisterApi<ICustomBushApi>(Helper, ModCompat.CustomBush, "1.2.1", true);
 
-    var configMenu = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
     if (configMenu is null)
     {
       return;
