@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -370,8 +370,8 @@ internal class ShowCropAndBarrelTime : IDisposable
       }
       else if (terrain is Tree tree)
       {
-        string treeTypeName = GetTreeTypeName(_helper, tree.treeType.Value);
-        string treeText = _helper.SafeGetString(LanguageKeys.Tree);
+        string treeTypeName = GetTreeTypeName(tree.treeType.Value);
+        string treeText = I18n.Tree();
         var treeName = $"{treeTypeName} {treeText}";
         if (tree.stump.Value)
         {
@@ -382,11 +382,11 @@ internal class ShowCropAndBarrelTime : IDisposable
 
         if (tree.growthStage.Value < MAX_TREE_GROWTH_STAGE)
         {
-          text = $"{treeName}\n" + _helper.SafeGetString(LanguageKeys.stage) + $"{tree.growthStage.Value} / {MAX_TREE_GROWTH_STAGE}";
+          text = $"{treeName}\n" + I18n.Stage() + $"{tree.growthStage.Value} / {MAX_TREE_GROWTH_STAGE}";
 
           if (tree.fertilized.Value)
           {
-            string fertilizedText = _helper.SafeGetString(LanguageKeys.Fertilized);
+            string fertilizedText = I18n.Fertilized();
             text += $"\n({fertilizedText})";
           }
         }
@@ -481,22 +481,34 @@ internal class ShowCropAndBarrelTime : IDisposable
   }
 
   // See: https://stardewvalleywiki.com/Trees
-  private static string GetTreeTypeName(IModHelper _helper, string treeType)
+  private static string GetTreeTypeName(string treeType)
   {
     switch (treeType)
     {
-      case "1": return _helper.SafeGetString(LanguageKeys.Oak);
-      case "2": return _helper.SafeGetString(LanguageKeys.Maple);
-      case "3": return _helper.SafeGetString(LanguageKeys.Pine);
-      case "6": return _helper.SafeGetString(LanguageKeys.Palm);
-      case "7": return _helper.SafeGetString(LanguageKeys.Mushroom);
-      case "8": return _helper.SafeGetString(LanguageKeys.Mahogany);
-      case "9": return _helper.SafeGetString(LanguageKeys.PalmJungle);
-      case "10": return _helper.SafeGetString(LanguageKeys.GreenRainType1);
-      case "11": return _helper.SafeGetString(LanguageKeys.GreenRainType2);
-      case "12": return _helper.SafeGetString(LanguageKeys.GreenRainType3);
-      case "13": return _helper.SafeGetString(LanguageKeys.Mystic);
-      default: return $"Unknown (#{treeType})";
+      case "1":
+        return I18n.Oak();
+      case "2":
+        return I18n.Maple();
+      case "3":
+        return I18n.Pine();
+      case "6":
+        return I18n.Palm();
+      case "7":
+        return I18n.Mushroom();
+      case "8":
+        return I18n.Mahogany();
+      case "9":
+        return I18n.PalmJungle();
+      case "10":
+        return I18n.GreenRainType1();
+      case "11":
+        return I18n.GreenRainType2();
+      case "12":
+        return I18n.GreenRainType3();
+      case "13":
+        return I18n.Mystic();
+      default:
+        return $"Unknown (#{treeType})";
     }
   }
 
