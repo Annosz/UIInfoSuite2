@@ -8,10 +8,12 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using StardewValley.TerrainFeatures;
 using UIInfoSuite2.Compatibility;
+using UIInfoSuite2.Compatibility.CustomBush;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Infrastructure.Extensions;
 using Object = StardewValley.Object;
@@ -116,6 +118,8 @@ internal class ShowCropAndBarrelTime : IDisposable
   /// <param name="e">The event arguments.</param>
   private void OnRenderingHud(object? sender, RenderingHudEventArgs e)
   {
+    // TODO Clean up all of this code, it really is a mess.
+
     if (Game1.activeClickableMenu != null)
     {
       return;
@@ -410,7 +414,8 @@ internal class ShowCropAndBarrelTime : IDisposable
       }
       else if (terrain is FruitTree fruitTree)
       {
-        string itemIdOfFruit = fruitTree.GetData().Fruit.First().ItemId; // TODO 1.6: Might be broken because of more than one item.
+        string itemIdOfFruit =
+          fruitTree.GetData().Fruit.First().ItemId; // TODO 1.6: Might be broken because of more than one item.
         string fruitName = ItemRegistry.GetData(itemIdOfFruit).DisplayName ?? "Unknown";
         string treeText = _helper.SafeGetString(LanguageKeys.Tree);
         var treeName = $"{fruitName} {treeText}";
@@ -446,33 +451,29 @@ internal class ShowCropAndBarrelTime : IDisposable
       else if (terrain is Bush bush)
       {
         // Tea saplings (which are actually bushes)
-        if (bush.size.Value == Bush.greenTeaBush)
+        List<string> lines = new();
+        DetailRenderers.TeaBush(bush, lines);
+
+        if (lines.Count <= 0)
         {
-          int teaAge = bush.getAge();
-          if (teaAge < 20)
-          {
-            string text = ItemRegistry.GetData("(O)251").DisplayName // 251 <- Tea Sapling
-                          +
-                          $"\n{20 - teaAge} " +
-                          _helper.SafeGetString(LanguageKeys.DaysToMature);
-
-            if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
-            {
-              Vector2 tilePosition =
-                Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(terrain.Tile * Game1.tileSize));
-              overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
-              overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
-            }
-
-            IClickableMenu.drawHoverText(
-              Game1.spriteBatch,
-              text,
-              Game1.smallFont,
-              overrideX: overrideX,
-              overrideY: overrideY
-            );
-          }
+          return;
         }
+
+        if (Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0)
+        {
+          Vector2 tilePosition =
+            Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(terrain.Tile * Game1.tileSize));
+          overrideX = (int)(tilePosition.X + Utility.ModifyCoordinateForUIScale(32));
+          overrideY = (int)(tilePosition.Y + Utility.ModifyCoordinateForUIScale(32));
+        }
+
+        IClickableMenu.drawHoverText(
+          Game1.spriteBatch,
+          string.Join('\n', lines),
+          Game1.smallFont,
+          overrideX: overrideX,
+          overrideY: overrideY
+        );
       }
     }
   }
@@ -493,8 +494,7 @@ internal class ShowCropAndBarrelTime : IDisposable
                                                         .Select(
                                                           kv =>
                                                           {
-                                                            string quantityStr =
-                                                              kv.Value == 1 ? "" : $" x{kv.Value}";
+                                                            string quantityStr = kv.Value == 1 ? "" : $" x{kv.Value}";
                                                             return $"{kv.Key}{quantityStr}";
                                                           }
                                                         );
@@ -581,5 +581,92 @@ internal class ShowCropAndBarrelTime : IDisposable
     }
 
     return null;
+  }
+
+  private static class DetailRenderers
+  {
+    public static void TeaBush(TerrainFeature? terrain, List<string> entries)
+    {
+      if (terrain is not Bush bush || bush.size.Value != Bush.greenTeaBush)
+      {
+        return;
+      }
+
+      var ageToMature = 20;
+      bool willProduceThisSeason = Game1.season != Season.Winter;
+      string bushName = ItemRegistry.GetData("(O)251").DisplayName;
+      bool inProductionPeriod = Game1.dayOfMonth >= 22;
+      int daysUntilProductionPeriod = inProductionPeriod ? 0 : 22 - Game1.dayOfMonth;
+      List<CustomBushDroppedItem> droppedItems = new();
+
+      if (bush.tileSheetOffset.Value == 1)
+      {
+        droppedItems.Add(new CustomBushDroppedItem("", Game1.dayOfMonth, ItemRegistry.GetData("(O)815"), 1.0f));
+      }
+      else if (Game1.dayOfMonth >= 21 && Game1.dayOfMonth < 28)
+      {
+        droppedItems.Add(new CustomBushDroppedItem("", Game1.dayOfMonth + 1, ItemRegistry.GetData("(O)815"), 1.0f));
+      }
+
+      if (ApiManager.GetApi(ModCompat.CustomBush, out ICustomBushApi? customBushApi))
+      {
+        if (customBushApi.TryGetCustomBush(bush, out ICustomBush? customBushData, out string? id))
+        {
+          droppedItems.Clear();
+          willProduceThisSeason = customBushData.Seasons.Contains(Game1.season);
+          bushName = $"{customBushData.DisplayName} Bush";
+          ageToMature = customBushData.AgeToProduce;
+          inProductionPeriod = Game1.dayOfMonth >= customBushData.DayToBeginProducing;
+          daysUntilProductionPeriod = inProductionPeriod ? 0 : 22 - Game1.dayOfMonth;
+
+          if (customBushData.GetShakeOffItemIfReady(bush, out ParsedItemData? shakeOffItemData))
+          {
+            droppedItems.Add(new CustomBushDroppedItem(id, Game1.dayOfMonth, shakeOffItemData, 1.0f));
+          }
+          else
+          {
+            droppedItems = customBushApi.GetCustomBushDropItems(customBushData, id, false);
+          }
+        }
+      }
+
+      entries.Add(bushName);
+      bool isMature = bush.getAge() >= ageToMature;
+      if (!isMature || !willProduceThisSeason)
+      {
+        if (!isMature)
+        {
+          entries.Add($"{ageToMature - bush.getAge()} {I18n.DaysToMature()}");
+        }
+
+        if (!willProduceThisSeason)
+        {
+          entries.Add(I18n.DoesNotProduceThisSeason());
+        }
+
+        return;
+      }
+
+      // Too early in the season to produce
+      if (!inProductionPeriod)
+      {
+        entries.Add($"{daysUntilProductionPeriod} {I18n.Days()}");
+        return;
+      }
+
+      foreach ((string? _, int nextDayToProduce, ParsedItemData? parsedItemData, float chance) in droppedItems)
+      {
+        string chanceStr = 1.0f.Equals(chance) ? "" : $" ({chance * 100:2F}%)";
+        int daysUntilReady = nextDayToProduce - Game1.dayOfMonth;
+        if (daysUntilReady <= 0)
+        {
+          entries.Add($"{parsedItemData.DisplayName}: {I18n.ReadyToHarvest()}");
+        }
+        else
+        {
+          entries.Add($"{parsedItemData.DisplayName}: {daysUntilReady} {I18n.Days()}{chanceStr}");
+        }
+      }
+    }
   }
 }
