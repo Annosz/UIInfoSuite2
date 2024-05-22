@@ -1,6 +1,6 @@
 {
   // GUI - Game Menu
-  // "OptionsTabTooltip": "UI Info Suite 2 Options", // TODO
+  // "OptionsTabTooltip": "UI Info Suite 2 옵션", // TODO
   //GUI - Billboard
   "Billboard": "게시판",
   "Calendar": "달력",
@@ -25,7 +25,7 @@
   "ToolIsFinishedBeingUpgraded": "{0}이(가) 완성됐습니다!",
   "NpcBirthday": "{0}의 생일입니다！",
   "RobinBuildingStatus": "새 건물 완성까지 {0}일 남았습니다",
-  "RobinHouseUpgradeStatus": "Robin will finish upgrading your house in {0} day(s)", // TODO
+  "RobinHouseUpgradeStatus": "로빈이 당신의 집을 업그레이드하는 데 {0}일이 남았습니다",
   // Display icons - Foragables
   "CanFindSalmonberry": "오늘 새먼베리를 찾을 수 있습니다.",
   "CanFindBlackberry": "오늘 블랙베리를 찾을 수 있습니다.",
