@@ -13,6 +13,23 @@
   //Harvest
   "DaysToMature": "Tage bis gereift",
   "ReadyToHarvest": "Bereit zum Ernten!",
+  "With": "mit",
+  "Fertilized": "gedüngt",
+  "DoesNotProduceThisSeason": "Produziert in dieser Jahreszeit nichts",
+  //Tree
+  "Tree": "Baum",
+  "stage": "Stufe",
+  "Oak": "Eiche",
+  "Maple": "Ahorn",
+  "Pine": "Kiefer",
+  "Palm": "Palme",
+  "Mushroom": "Pilz",
+  "Mahogany": "Mahagoni",
+  "PalmJungle": "Palme (Dschungel)",
+  "GreenRainType1": "Grüner Regen Type 1",
+  "GreenRainType2": "Grüner Regen Type 2",
+  "GreenRainType3": "Grüner Regen Type 3",
+  "Mystic": "Mystisch",
   //Display icons - General
   "TodaysRecipe": "Heutiges Rezept: ",
   "TravelingMerchantIsInTown": "Der reisende Händler ist im Dorf!",
