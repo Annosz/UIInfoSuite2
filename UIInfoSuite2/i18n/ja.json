@@ -4,12 +4,15 @@
   //GUI - Billboard
   "Billboard": "掲示板",
   "Calendar": "カレンダー",
+  "SlayerGoals": "モンスター討伐目標",
   //GUI - Seed shop
   "HarvestPrice": "収穫価格",
   //Production
   "Days": "日",
   "Hours": "時間",
   "Minutes": "分",
+  "MachineProcessing": "加工",
+  "MachineDone": "完了",
   //Harvest
   "DaysToMature": "日で成熟",
   "ReadyToHarvest": "収穫可能！",
@@ -17,6 +20,8 @@
   "Fertilized": "肥料使用済",
   "DoesNotProduceThisSeason": "今季は生産しない",
   //Tree
+  "Stump": "切り株",
+  // This space is required for languages that use a space between words, delete otherwise (e.g. Korean)
   "Tree": "木",
   "stage": "成長段階：",
   "Oak": "オークの",
@@ -30,6 +35,7 @@
   "GreenRainType2": "コケむした",
   "GreenRainType3": "コケむした",
   "Mystic": "神秘の",
+  "VmvBirch": "バーチの",
   //Display icons - General
   "TodaysRecipe": "今日のレシピ： ",
   "TravelingMerchantIsInTown": "行商人が町にいる！",
@@ -82,7 +88,7 @@
   "HideMerchantWhenVisited": "訪問済みの場合は隠す",
   "ShowRainyDay": "雨の日を表示する",
   "ShowWhenNewRecipesAreAvailable": "新しいレシピが利用可能になったら表示する",
-  "ShowToolUpgradeStatus": "ツールのアップグレード情報を表示する",
+  "ShowToolUpgradeStatus": "どうぐのアップグレード情報を表示する",
   "ShowRobinBuildingStatusIcon": "ロビンの建築状態を表示する",
   "ShowLuckIcon": "幸運アイコンを表示する",
   "ShowExactValue": "詳細な値を表示する",
