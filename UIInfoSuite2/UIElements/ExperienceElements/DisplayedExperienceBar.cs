@@ -82,8 +82,18 @@ public class DisplayedExperienceBar
         0.85f
       );
 
+      String levelNumber = "";
+      if (Game1.player.Level < 25)
+      {
+        levelNumber = currentLevel.ToString();
+      }
+      else
+      {
+        levelNumber = MasteryTrackerMenu.getCurrentMasteryLevel().ToString();
+      }
+
       Game1.drawWithBorder(
-        currentLevel.ToString(),
+        levelNumber,
         Color.Black * 0.6f,
         Color.Black,
         new Vector2(leftSide + 33, Game1.graphics.GraphicsDevice.Viewport.TitleSafeArea.Bottom - 70)

@@ -6,6 +6,7 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Tools;
+using StardewValley.Menus;
 using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Infrastructure.Extensions;
@@ -313,10 +314,26 @@ public partial class ExperienceBar
     _experienceFillColor.Value = ExperienceFillColor[(SkillType)currentLevelIndex];
     _currentSkillLevel.Value = Game1.player.GetUnmodifiedSkillLevel(currentLevelIndex);
 
-    _experienceRequiredToLevel.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value);
-    _experienceFromPreviousLevels.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value - 1);
-    _experienceEarnedThisLevel.Value =
-      Game1.player.experiencePoints[currentLevelIndex] - _experienceFromPreviousLevels.Value;
+    
+    if (Game1.player.Level >= 25 && (MasteryTrackerMenu.getCurrentMasteryLevel() < 5))
+    {
+      _experienceRequiredToLevel.Value = MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel() + 1);
+      _experienceFromPreviousLevels.Value = MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel());
+      _experienceEarnedThisLevel.Value = (int)Game1.stats.Get("MasteryExp") - MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel());
+      _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
+
+      //TODO: I tried making this match the dark green from the mastery bar on the player menu but no matter what i did, it oversaturates and makes a bright color
+      _experienceFillColor.Value = new Color(0, 5, 0, 0.93f);
+      //TODO: Need to find a good icon to use for this (and also figure out how to implement that)
+      _experienceIconRectangle.Value = SkillIconRectangles[SkillType.Luck];
+      //TODO: text overflows the EXP bar
+    }
+    else
+    {
+      _experienceRequiredToLevel.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value);
+      _experienceFromPreviousLevels.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value - 1);
+      _experienceEarnedThisLevel.Value = Game1.player.experiencePoints[currentLevelIndex] - _experienceFromPreviousLevels.Value;
+    }
 
     if (_experienceRequiredToLevel.Value <= 0 && _levelExtenderApi != null)
     {
@@ -329,7 +346,7 @@ public partial class ExperienceBar
 
     if (displayExperience)
     {
-      if (ExperienceGainTextEnabled && _experienceRequiredToLevel.Value > 0 && Game1.player.Level < 25)
+      if (ExperienceGainTextEnabled && _experienceRequiredToLevel.Value > 0)
       {
         int currentExperienceToUse = Game1.player.experiencePoints[currentLevelIndex];
         int previousExperienceToUse = _currentExperience.Value[currentLevelIndex];
@@ -347,14 +364,6 @@ public partial class ExperienceBar
             new DisplayedExperienceValue(experienceGain, Game1.player.getLocalPosition(Game1.viewport))
           );
         }
-      }
-      else if(Game1.player.Level >= 25 && ((int)Game1.stats.Get("MasteryExp") < 100000))
-      {
-          int newMasteryXP = (int)Game1.stats.Get("MasteryExp") - _currentMasteryXP.Value;
-          _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
-          _displayedExperienceValues.Value.Add(
-            new DisplayedExperienceValue(newMasteryXP, Game1.player.getLocalPosition(Game1.viewport))
-          );
       }
 
       _currentExperience.Value[currentLevelIndex] = Game1.player.experiencePoints[currentLevelIndex];
@@ -383,5 +392,5 @@ public partial class ExperienceBar
       _ => -1
     };
   }
-#endregion Logic
+  #endregion Logic
 }
