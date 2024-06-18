@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Enums;
@@ -18,6 +18,7 @@ public partial class ExperienceBar
 #region Properties
   private readonly PerScreen<Item> _previousItem = new();
   private readonly PerScreen<int[]> _currentExperience = new(() => new int[5]);
+  private readonly PerScreen<int> _currentMasteryXP = new(() => 0);
   private readonly PerScreen<int[]> _currentLevelExtenderExperience = new(() => new int[5]);
   private readonly PerScreen<int> _currentSkillLevel = new(() => 0);
   private readonly PerScreen<int> _experienceRequiredToLevel = new(() => -1);
@@ -261,7 +262,12 @@ public partial class ExperienceBar
       _currentExperience.Value[i] = Game1.player.experiencePoints[i];
     }
 
-    if (_levelExtenderApi != null)
+    if (Game1.player.Level >= 25)
+    {
+      _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
+    }
+
+      if (_levelExtenderApi != null)
     {
       for (var i = 0; i < _currentLevelExtenderExperience.Value.Length; ++i)
       {
@@ -323,7 +329,7 @@ public partial class ExperienceBar
 
     if (displayExperience)
     {
-      if (ExperienceGainTextEnabled && _experienceRequiredToLevel.Value > 0)
+      if (ExperienceGainTextEnabled && _experienceRequiredToLevel.Value > 0 && Game1.player.Level < 25)
       {
         int currentExperienceToUse = Game1.player.experiencePoints[currentLevelIndex];
         int previousExperienceToUse = _currentExperience.Value[currentLevelIndex];
@@ -341,6 +347,14 @@ public partial class ExperienceBar
             new DisplayedExperienceValue(experienceGain, Game1.player.getLocalPosition(Game1.viewport))
           );
         }
+      }
+      else if(Game1.player.Level >= 25 && ((int)Game1.stats.Get("MasteryExp") < 100000))
+      {
+          int newMasteryXP = (int)Game1.stats.Get("MasteryExp") - _currentMasteryXP.Value;
+          _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
+          _displayedExperienceValues.Value.Add(
+            new DisplayedExperienceValue(newMasteryXP, Game1.player.getLocalPosition(Game1.viewport))
+          );
       }
 
       _currentExperience.Value[currentLevelIndex] = Game1.player.experiencePoints[currentLevelIndex];
