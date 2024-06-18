@@ -63,6 +63,7 @@ public partial class ExperienceBar
 
   private readonly PerScreen<Rectangle> _levelUpIconRectangle = new(() => SkillIconRectangles[SkillType.Farming]);
   private readonly PerScreen<Color> _experienceFillColor = new(() => ExperienceFillColor[SkillType.Farming]);
+  private readonly PerScreen<Color> _experienceTextColor = new(() => Color.Black);
 
   private bool ExperienceBarFadeoutEnabled { get; set; } = true;
   private bool ExperienceGainTextEnabled { get; set; } = true;
@@ -246,6 +247,7 @@ public partial class ExperienceBar
     {
       _displayedExperienceBar.Value.Draw(
         _experienceFillColor.Value,
+        _experienceTextColor.Value,
         _experienceIconRectangle.Value,
         _experienceEarnedThisLevel.Value,
         _experienceRequiredToLevel.Value - _experienceFromPreviousLevels.Value,
@@ -322,11 +324,9 @@ public partial class ExperienceBar
       _experienceEarnedThisLevel.Value = (int)Game1.stats.Get("MasteryExp") - MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel());
       _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
 
-      //TODO: I tried making this match the dark green from the mastery bar on the player menu but no matter what i did, it oversaturates and makes a bright color
-      _experienceFillColor.Value = new Color(0, 5, 0, 0.93f);
-      //TODO: Need to find a good icon to use for this (and also figure out how to implement that)
+      _experienceFillColor.Value = new Color(0, 0.443f, 0.243f  , 1.0f);
+      _experienceTextColor.Value = Color.White;
       _experienceIconRectangle.Value = SkillIconRectangles[SkillType.Luck];
-      //TODO: text overflows the EXP bar
     }
     else
     {
