@@ -61,7 +61,7 @@ internal class ShopHarvestPrices : IDisposable
       int yPosition = menu.yPositionOnScreen + 580;
       IClickableMenu.drawTextureBox(Game1.spriteBatch, xPosition + 20, yPosition - 52, 264, 108, Color.White);
       // Title "Harvest Price"
-      string textToRender = _helper.SafeGetString(LanguageKeys.HarvestPrice);
+      string textToRender = I18n.HarvestPrice();
       Game1.spriteBatch.DrawString(
         Game1.dialogueFont,
         textToRender,

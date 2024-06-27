@@ -117,35 +117,35 @@ internal class LuckOfDay : IDisposable
       {
         // Spirits are very happy (FeelingLucky)
         case var l when l > 0.07:
-          _hoverText.Value = _helper.SafeGetString(LanguageKeys.LuckStatus1);
+          _hoverText.Value = I18n.LuckStatus1();
           _color.Value = Luck1Color;
           break;
         // Spirits are in good humor (LuckyButNotTooLucky)
         case var l when l > 0.02 && l <= 0.07:
-          _hoverText.Value = _helper.SafeGetString(LanguageKeys.LuckStatus2);
+          _hoverText.Value = I18n.LuckStatus2();
           _color.Value = Luck2Color;
 
           break;
         // The spirits feel neutral
         case var l when l >= -0.02 && l <= 0.02 && l != 0:
-          _hoverText.Value = _helper.SafeGetString(LanguageKeys.LuckStatus3);
+          _hoverText.Value = I18n.LuckStatus3();
           _color.Value = Luck3Color;
 
           break;
         // The spirits feel absolutely neutral
         case var l when l == 0:
-          _hoverText.Value = _helper.SafeGetString(LanguageKeys.LuckStatus4);
+          _hoverText.Value = I18n.LuckStatus4();
           _color.Value = Luck4Color;
           break;
         // The spirits are somewhat annoyed (NotFeelingLuckyAtAll)
         case var l when l >= -0.07 && l < -0.02:
-          _hoverText.Value = _helper.SafeGetString(LanguageKeys.LuckStatus5);
+          _hoverText.Value = I18n.LuckStatus5();
           _color.Value = Luck5Color;
 
           break;
         // The spirits are very displeased (MaybeStayHome)
         case var l when l < -0.07:
-          _hoverText.Value = _helper.SafeGetString(LanguageKeys.LuckStatus6);
+          _hoverText.Value = I18n.LuckStatus6();
           _color.Value = Luck6Color;
           break;
       }
@@ -154,7 +154,7 @@ internal class LuckOfDay : IDisposable
       if (ShowExactValue)
       {
         _hoverText.Value = string.Format(
-          _helper.SafeGetString(LanguageKeys.DailyLuckValue),
+          I18n.DailyLuckValue(),
           Game1.player.DailyLuck.ToString("N3")
         );
       }

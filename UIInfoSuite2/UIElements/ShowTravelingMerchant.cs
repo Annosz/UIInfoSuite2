@@ -99,7 +99,7 @@ public class ShowTravelingMerchant : IDisposable
     // Show text on hover
     if (ShouldDrawIcon() && (_travelingMerchantIcon?.containsPoint(Game1.getMouseX(), Game1.getMouseY()) ?? false))
     {
-      string hoverText = _helper.SafeGetString(LanguageKeys.TravelingMerchantIsInTown);
+      string hoverText = I18n.TravelingMerchantIsInTown();
       IClickableMenu.drawHoverText(Game1.spriteBatch, hoverText, Game1.dialogueFont);
     }
   }

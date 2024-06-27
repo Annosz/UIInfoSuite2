@@ -1,6 +1,21 @@
-{
+﻿{
   // GUI - Game Menu
   "OptionsTabTooltip": "UI Info Suite 2 选项",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "在游戏菜单中显示选项",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "在游戏内菜单中启用额外的选项卡，您可以在其中配置此模组的每个选项。",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "应用此保存中的默认设置",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "新角色将从这个保存的文件继承mod的设置。",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "打开日历",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "通过热键打开日历。",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "打开任务板",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "通过热键打开任务板。",
+  "Keybinds.Subtitle.ShowRange.displayedName": "显示物品效果范围",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "例如：稻草人、洒水器、祝尼魔屋、蜂房、蘑菇树桩和长满苔藓的种子。",
+  "Keybinds.ShowOneRange.DisplayedName": "显示单个范围",
+  "Keybinds.ShowOneRange.Tooltip": "当鼠标移至需要显示的物品上时，显示范围。",
+  "Keybinds.ShowAllRange.DisplayedName": "显示全部范围",
+  "Keybinds.ShowAllRange.Tooltip": "当鼠标移至需要显示的物品上时，显示所有范围。",
   //GUI - Billboard
   "Billboard": "布告栏",
   "Calendar": "日历",
@@ -16,6 +31,7 @@
   "With": "已使用",
   "Fertilized": "已施肥",
   //Tree
+  "Stump": "树桩",
   "Tree": "树",
   "stage": "阶段",
   "Oak": "橡",
@@ -41,7 +57,7 @@
   "ToolIsFinishedBeingUpgraded": "{0}完成了！",
   "NpcBirthday": "{0}的生日",
   "RobinBuildingStatus": "罗宾将在 {0} 天内完成你的新建筑",
-  "RobinHouseUpgradeStatus": "罗宾将在 {0} 天内完成升级你的房子", 
+  "RobinHouseUpgradeStatus": "罗宾将在 {0} 天内完成升级你的房子",
   // Display icons - Foragables
   "CanFindSalmonberry": "今天可以找到美洲大树莓",
   "CanFindBlackberry": "今天可以找到黑莓",
@@ -68,6 +84,7 @@
   "HideAnimalPetOnMaxFriendship": "在动物达到最大心情时隐藏",
   "ShowCropAndBarrelTooltip": "显示作物与桶的剩余时间",
   "ShowItemEffectRanges": "显示稻草人与洒水器的范围",
+  "ButtonControlShow": "按下LeftCtrl显示单个，同时按下LeftAlt显示全部",
   "ShowExtraItemInformation": "鼠标悬停时显示物品信息",
   "ShowHarvestPricesInShop": "在购买页面显示收获价格",
   //Settings - Tabs info
@@ -88,5 +105,8 @@
   "ShowSeasonalBerry": "显示季节采摘物",
   "ShowSeasonalBerryHazelnut": "显示树上的榛子",
   //Others
-  "LevelUp": "升级"
+  "LevelUp": "升级",
+  "TrackOnMap": "在地图上追踪",
+  "UnknownCrop": "未知的作物"
+
 }

@@ -44,7 +44,7 @@ public static class DropsHelper
   {
     if (crop.indexOfHarvest.Value is null)
     {
-      return "Unknown Crop";
+      return I18n.UnknownCrop();
     }
 
     // If you look at Crop.cs in the decompiled sources, it seems that there's a special case for spring onions - that's what the =="1" is about.

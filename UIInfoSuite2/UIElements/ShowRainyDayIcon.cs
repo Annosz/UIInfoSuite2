@@ -228,25 +228,25 @@ internal class ShowRainyDayIcon : IDisposable
       case Game1.weather_rain:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(0, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.RainNextDay);
+        _valleyWeather.HoverText = I18n.RainNextDay();
         break;
 
       case Game1.weather_lightning:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(15, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.ThunderstormNextDay);
+        _valleyWeather.HoverText = I18n.ThunderstormNextDay();
         break;
 
       case Game1.weather_snow:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(30, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.SnowNextDay);
+        _valleyWeather.HoverText = I18n.SnowNextDay();
         break;
 
       case Game1.weather_green_rain:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(45, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.RainNextDay);
+        _valleyWeather.HoverText = I18n.RainNextDay();
         break;
 
       default:
@@ -262,19 +262,19 @@ internal class ShowRainyDayIcon : IDisposable
       case Game1.weather_rain:
         _islandWeather.IsRainyTomorrow = true;
         _islandWeather.SpriteLocation = new Rectangle(60, 0, 18, 18);
-        _islandWeather.HoverText = _helper.SafeGetString(LanguageKeys.IslandRainNextDay);
+        _islandWeather.HoverText = I18n.IslandRainNextDay();
         break;
 
       case Game1.weather_lightning:
         _islandWeather.IsRainyTomorrow = true;
         _islandWeather.SpriteLocation = new Rectangle(78, 0, 18, 18);
-        _islandWeather.HoverText = _helper.SafeGetString(LanguageKeys.IslandThunderstormNextDay);
+        _islandWeather.HoverText = I18n.IslandThunderstormNextDay();
         break;
 
       case Game1.weather_green_rain:
         _islandWeather.IsRainyTomorrow = true;
         _islandWeather.SpriteLocation = new Rectangle(96, 0, 18, 18);
-        _islandWeather.HoverText = _helper.SafeGetString(LanguageKeys.IslandRainNextDay);
+        _islandWeather.HoverText = I18n.IslandRainNextDay();
         break;
 
       default:

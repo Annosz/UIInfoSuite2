@@ -113,7 +113,7 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
         if (building.daysOfConstructionLeft.Value > building.daysUntilUpgrade.Value)
         {
           hoverText = string.Format(
-            _helper.SafeGetString(LanguageKeys.RobinBuildingStatus),
+            I18n.RobinBuildingStatus(),
             building.daysOfConstructionLeft.Value
           );
           return true;
@@ -121,7 +121,7 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
 
         // Add another translation string for this?
         hoverText = string.Format(
-          _helper.SafeGetString(LanguageKeys.RobinBuildingStatus),
+          I18n.RobinBuildingStatus(),
           building.daysUntilUpgrade.Value
         );
         return true;
@@ -131,7 +131,7 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
       return false;
     }
 
-    hoverText = string.Format(_helper.SafeGetString(LanguageKeys.RobinHouseUpgradeStatus), remainingDays);
+    hoverText = string.Format(I18n.RobinHouseUpgradeStatus(), remainingDays);
     return true;
   }
 

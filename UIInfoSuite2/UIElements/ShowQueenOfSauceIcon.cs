@@ -114,7 +114,7 @@ internal class ShowQueenOfSauceIcon : IDisposable
     {
       IClickableMenu.drawHoverText(
         Game1.spriteBatch,
-        _helper.SafeGetString(LanguageKeys.TodaysRecipe) + _todaysRecipe.DisplayName,
+        I18n.TodaysRecipe() + _todaysRecipe.DisplayName,
         Game1.dialogueFont
       );
     }

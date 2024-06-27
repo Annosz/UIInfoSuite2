@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -14,7 +15,7 @@ namespace UIInfoSuite2;
 public class ModEntry : Mod
 {
   private static SkipIntro _skipIntro; // Needed so GC won't throw away object with subscriptions
-  private static ModConfig _modConfig;
+  public static ModConfig _modConfig;
 
   private static EventHandler<ButtonsChangedEventArgs> _calendarAndQuestKeyBindingsHandler;
 
@@ -65,32 +66,52 @@ public class ModEntry : Mod
     // add some config options
     configMenu.AddBoolOption(
       ModManifest,
-      name: () => "Show options in in-game menu",
-      tooltip: () => "Enables an extra tab in the in-game menu where you can configure every options for this mod.",
+      name: () => I18n.Bool_ShowOptionsTabInMenu_DisplayedName(),
+      tooltip: () => I18n.Bool_ShowOptionsTabInMenu_Tooltip(),
       getValue: () => _modConfig.ShowOptionsTabInMenu,
       setValue: value => _modConfig.ShowOptionsTabInMenu = value
     );
     configMenu.AddTextOption(
       ModManifest,
-      name: () => "Apply default settings from this save",
-      tooltip: () => "New characters will inherit the settings for the mod from this save file.",
+      name: () => I18n.Text_ApplyDefaultSettingsFromThisSave_DisplayedName(),
+      tooltip: () => I18n.Text_ApplyDefaultSettingsFromThisSave_Tooltip(),
       getValue: () => _modConfig.ApplyDefaultSettingsFromThisSave,
       setValue: value => _modConfig.ApplyDefaultSettingsFromThisSave = value
     );
     configMenu.AddKeybindList(
       ModManifest,
-      name: () => "Open calendar keybind",
-      tooltip: () => "Opens the calendar tab.",
+      name: () => I18n.Keybinds_OpenCalendarKeybind_DisplayedName(),
+      tooltip: () => I18n.Keybinds_OpenCalendarKeybind_Tooltip(),
       getValue: () => _modConfig.OpenCalendarKeybind,
       setValue: value => _modConfig.OpenCalendarKeybind = value
     );
     configMenu.AddKeybindList(
       ModManifest,
-      name: () => "Open quest board keybind",
-      tooltip: () => "Opens the quest board.",
+      name: () => I18n.Keybinds_OpenQuestBoardKeybind_DisplayedName(),
+      tooltip: () => I18n.Keybinds_OpenQuestBoardKeybind_Tooltip(),
       getValue: () => _modConfig.OpenQuestBoardKeybind,
       setValue: value => _modConfig.OpenQuestBoardKeybind = value
     );
+    // Show item effect ranges
+    configMenu.AddSectionTitle(
+      ModManifest,
+      text: () => I18n.Keybinds_Subtitle_ShowRange_DisplayedName(),
+      tooltip: () => I18n.Keybinds_Subtitle_ShowRange_Tooltip()
+      );
+    configMenu.AddKeybindList(
+      ModManifest,
+      name: () => I18n.Keybinds_ShowOneRange_DisplayedName(),
+      tooltip: () => I18n.Keybinds_ShowOneRange_Tooltip(),
+      getValue: () => _modConfig.ShowOneRange,
+      setValue: value => _modConfig.ShowOneRange = value
+    );
+    configMenu.AddKeybindList(
+      ModManifest,
+      name: () => I18n.Keybinds_ShowAllRange_DisplayedName(),
+      tooltip: () => I18n.Keybinds_ShowAllRange_Tooltip(),
+      getValue: () => _modConfig.ShowAllRange,
+      setValue: value => _modConfig.ShowAllRange = value
+      );
   }
 #endregion
 
@@ -165,5 +186,40 @@ public class ModEntry : Mod
       }
     }
   }
+
+  //public static void RegisterItemEffectRangesBindings(IModHelper helper, bool subscribe)
+  //{
+  //  if (_calendarAndQuestKeyBindingsHandler == null)
+  //  {
+  //    _calendarAndQuestKeyBindingsHandler = (sender, e) => HandleCalendarAndQuestKeyBindings(helper);
+  //  }
+
+  //  helper.Events.Input.ButtonsChanged -= _calendarAndQuestKeyBindingsHandler;
+
+  //  if (subscribe)
+  //  {
+  //    helper.Events.Input.ButtonsChanged += _calendarAndQuestKeyBindingsHandler;
+  //  }
+  //}
+
+  public static void HandleItemEffectRangesBindings(object? sender, ButtonsChangedEventArgs e)
+  {
+    if (_modConfig != null)
+    {
+      if (Context.IsPlayerFree)
+      {
+        if (_modConfig.ShowAllRange.JustPressed())
+        {
+          MonitorObject.Log("显示全部面积", LogLevel.Debug);
+        }
+        else if (_modConfig.ShowOneRange.JustPressed())
+        {
+          MonitorObject.Log("显示单个面积", LogLevel.Debug); 
+        }
+        
+      }
+    }
+  }
+
 #endregion
 }
