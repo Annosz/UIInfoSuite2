@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -15,6 +17,8 @@ using Object = StardewValley.Object;
 
 namespace UIInfoSuite2.UIElements;
 
+public record RequiredBundleItem(string Text, Color? Color);
+
 internal class ShowItemHoverInformation : IDisposable
 {
   private readonly ClickableTextureComponent _bundleIcon = new(
@@ -25,6 +29,10 @@ internal class ShowItemHoverInformation : IDisposable
   );
 
   private readonly IModHelper _helper;
+
+  private readonly Dictionary<int, Color?> _colorCache = new();
+
+  private readonly int bundleInfoHeight = 36;
 
   private readonly PerScreen<Item?> _hoverItem = new();
   private readonly ClickableTextureComponent _museumIcon;
@@ -154,17 +162,24 @@ internal class ShowItemHoverInformation : IDisposable
                            hoveredObject.Type != "Fish" &&
                            hoveredObject.Category != Object.skillBooksCategory;
 
-      string? requiredBundleName = null;
-      Color? bundleColor = null;
+      List<RequiredBundleItem>? requiredBundleItems = new();
       if (hoveredObject != null)
       {
-        BundleRequiredItem? bundleDisplayData = BundleHelper.GetBundleItemIfNotDonated(hoveredObject);
+
+        List<BundleRequiredItem>? bundleDisplayData = BundleHelper.GetBundleItemIfNotDonated(hoveredObject);
+
         if (bundleDisplayData != null)
         {
-          requiredBundleName = bundleDisplayData.Name;
-
-          // TODO cache these colors so we're not doing it every time
-          bundleColor = BundleHelper.GetRealColorFromIndex(bundleDisplayData.Id)?.Desaturate(0.35f);
+          bundleDisplayData.ForEach(item =>
+          {
+            _colorCache.TryGetValue(item.Id, out Color? bundleColor);
+            if (bundleColor == null)
+            {
+              bundleColor = BundleHelper.GetRealColorFromIndex(item.Id)?.Desaturate(0.35f);
+              _colorCache[item.Id] = bundleColor;
+            }
+            requiredBundleItems.Add(new RequiredBundleItem(item.Name + " : " + item.Count, bundleColor));
+          });
         }
       }
 
@@ -172,10 +187,12 @@ internal class ShowItemHoverInformation : IDisposable
       int windowWidth, windowHeight;
 
       var bundleHeaderWidth = 0;
-      if (!string.IsNullOrEmpty(requiredBundleName))
+      if (requiredBundleItems.Count > 0)
       {
         // bundleHeaderWidth = ((bundleIcon.Width * 3 = 45) - 7 = 38) + 3 + bundleTextSize.X + 3 + ((shippingBin.Width * 1.2 = 36) - 12 = 24)
-        bundleHeaderWidth = 68 + (int)Game1.dialogueFont.MeasureString(requiredBundleName).X;
+        int maxWidth = requiredBundleItems.Max(item => (int)Game1.dialogueFont.MeasureString(item.Text).X);
+
+        bundleHeaderWidth = 68 + maxWidth;
       }
 
       var itemTextWidth = (int)Game1.smallFont.MeasureString(itemPrice.ToString()).X;
@@ -203,9 +220,9 @@ internal class ShowItemHoverInformation : IDisposable
         windowHeight += 40;
       }
 
-      if (!string.IsNullOrEmpty(requiredBundleName))
+      if (requiredBundleItems.Count > 0)
       {
-        windowHeight += 4;
+        windowHeight += 4 + bundleInfoHeight * (requiredBundleItems.Count - 1);
         drawPositionOffset.Y += 4;
       }
 
@@ -234,7 +251,16 @@ internal class ShowItemHoverInformation : IDisposable
       }
 
       var windowPos = new Vector2(windowX, windowY);
+      
+      if(requiredBundleItems.Count > 1)
+      {
+        windowPos.Y += bundleInfoHeight * (requiredBundleItems.Count - 1);
+      }
       Vector2 drawPosition = windowPos + new Vector2(16, 20) + drawPositionOffset;
+      if(requiredBundleItems.Count > 1)
+      {
+        windowPos.Y -= bundleInfoHeight * (requiredBundleItems.Count - 1);
+      }
 
       // Icons are drawn in 32x40 cells. The small font has a cap height of 18 and an offset of (2, 6)
       var rowHeight = 40;
@@ -244,7 +270,7 @@ internal class ShowItemHoverInformation : IDisposable
       if (itemPrice > 0 ||
           stackPrice > 0 ||
           cropPrice > 0 ||
-          !string.IsNullOrEmpty(requiredBundleName) ||
+          requiredBundleItems.Count > 0 ||
           notDonatedYet ||
           notShippedYet)
       {
@@ -342,11 +368,15 @@ internal class ShowItemHoverInformation : IDisposable
         );
       }
 
-      if (!string.IsNullOrEmpty(requiredBundleName))
+      if (requiredBundleItems.Count > 0)
       {
         // Draws a 30x42 bundle icon offset by (-7, -13) from the top-left corner of the window
         // and the 36px high banner with the bundle name
-        DrawBundleBanner(spriteBatch, requiredBundleName, windowPos + new Vector2(-7, -13), windowWidth, bundleColor);
+        for (int i = 0; i < requiredBundleItems.Count; i++)
+        {
+          var item = requiredBundleItems[i];
+          DrawBundleBanner(spriteBatch, item.Text, windowPos + new Vector2(-7, -13) + new Vector2(0, bundleInfoHeight * i), windowWidth, item.Color);
+        }
       }
 
       if (notShippedYet)
