@@ -259,6 +259,10 @@ internal class ShowCropAndBarrelTime : IDisposable
         return I18n.Mystic();
       case "Lumisteria.MtVapius.Birchtree":
         return I18n.VmvBirch();
+      case "FlashShifter.StardewValleyExpandedCP_Birch_Tree":
+        return I18n.SVEBirch();
+      case "FlashShifter.StardewValleyExpandedCP_Fir_Tree":
+        return I18n.SVEFir();
       default:
         return $"Unknown (#{treeType})";
     }
