@@ -42,6 +42,9 @@
   "LuckStatus4": "Духи сьогодні абсолютно нейтральні.",
   "LuckStatus5": "Сьогодні удача не буде на вашому боці.",
   "LuckStatus6": "Можливо, сьогодні вам слід залишися вдома...",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "Показ. анім. переходу до нового рівня",
   "ShowExperienceBar": "Показувати шкалу досвіду",
@@ -71,6 +74,8 @@
   "ShowExactValue": "Показувати точне значення",
   "ShowSeasonalBerry": "Показувати сезонні лісові ягоди",
   "ShowSeasonalBerryHazelnut": "Показ., чи є фундук на деревах",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "Новий рівень"
 }

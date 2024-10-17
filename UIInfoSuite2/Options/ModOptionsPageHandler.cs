@@ -89,6 +89,7 @@ internal class ModOptionsPageHandler : IDisposable
     var showRobinBuildingStatusIcon = new ShowRobinBuildingStatusIcon(helper);
     var showSeasonalBerry = new ShowSeasonalBerry(helper);
     var showTodaysGift = new ShowTodaysGifts(helper);
+    var showOasisClothes = new ShowOasisClothes(helper);
 
     _elementsToDispose = new List<IDisposable>
     {
@@ -106,7 +107,8 @@ internal class ModOptionsPageHandler : IDisposable
       showQueenOfSauceIcon,
       showToolUpgradeStatus,
       showRobinBuildingStatusIcon,
-      showSeasonalBerry
+      showSeasonalBerry,
+      showOasisClothes
     };
 
     var whichOption = 1;
@@ -350,6 +352,24 @@ internal class ModOptionsPageHandler : IDisposable
         v => options.ShowTodaysGifts = v
       )
     );
+    var showOasisClothesIcon = new ModOptionsCheckbox(
+      _helper.SafeGetString(nameof(options.ShowOasisClothes)), 
+      whichOption++, 
+      showOasisClothes.ToggleOption, 
+      () => options.ShowOasisClothes, 
+      v => options.ShowOasisClothes = v
+      );
+      _optionsElements.Add(showOasisClothesIcon);
+      _optionsElements.Add(
+        new ModOptionsCheckbox(
+          _helper.SafeGetString(nameof(options.ShowOasisClothesAll)), 
+          whichOption++, 
+          showOasisClothes.ToggleShowAllClothes, 
+          () => options.ShowOasisClothesAll, 
+          v => options.ShowOasisClothesAll = v, 
+          showOasisClothesIcon
+        )
+      );
   }
 
 

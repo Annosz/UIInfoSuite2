@@ -42,6 +42,9 @@
 	"LuckStatus4": "Ma a szellemek teljesen semlegesnek érzik magukat!",
 	"LuckStatus5": "Ma a szerencse nem a te oldaladon áll!",
 	"LuckStatus6": "Talán ma otthon kellene maradnod!",
+	// Display icons - Merchants
+	"SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+	"SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
 	//Settings - General
 	"ShowLevelUpAnimation": "Szintlépés animáció megjelenítés",
 	"ShowExperienceBar": "Tapasztalatpont mérő megjelenítés",
@@ -71,6 +74,8 @@
 	"ShowExactValue": "Pontos érték megjelenítés",
 	"ShowSeasonalBerry": "Szezonális takarmánynövény megjelenítés",
 	"ShowSeasonalBerryHazelnut": "Mogyoró megjelenítés a fákon",
+	"ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+	"ShowOasisClothesAll": "Show all clothing items",       // TODO
 	//Others
 	"LevelUp": "Szintlépés"
 }

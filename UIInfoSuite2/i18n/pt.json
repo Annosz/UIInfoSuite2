@@ -42,6 +42,9 @@
   "LuckStatus4": "Os espíritos se sentem absolutamente neutros hoje.",
   "LuckStatus5": "Os espíritos estão pouco aborrecidos",
   "LuckStatus6": "Os espíritos estão muito aborrecidos",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "Mostrar animação de subida de nível",
   "ShowExperienceBar": "Mostrar barra de experiência",
@@ -71,6 +74,8 @@
   "ShowExactValue": "Mostra o valor exato",
   "ShowSeasonalBerry": "Mostrar coletáveis sazonais",
   "ShowSeasonalBerryHazelnut": "Mostrar avelãs nas árvores",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "Subir de nível"
 }

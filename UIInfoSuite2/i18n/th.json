@@ -42,6 +42,9 @@
   "LuckStatus4": "วันนี้เหล่าวิญญาณรู้สึกวางตัวเป็นกลาง",
   "LuckStatus5": "วันนี้โชคไม่เข้าข้างคุณ",
   "LuckStatus6": "บางทีวันนี้คุณควรจะอยู่บ้าน...",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "แสดงอะนิเมชั่นการเลื่อนขั้น",
   "ShowExperienceBar": "แสดงแถบค่าประสบการณ์",
@@ -71,6 +74,8 @@
   "ShowExactValue": "แสดงมูลค่าจริง",
   "ShowSeasonalBerry": "แสดงของป่าตามฤดูกาล",
   "ShowSeasonalBerryHazelnut": "แสดง Hazelnuts บนต้นไม้",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "เลื่อนขั้น"
 }

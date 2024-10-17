@@ -58,6 +58,9 @@
   "LuckStatus4": "今天精灵们十分冷漠",
   "LuckStatus5": "今天运气不会站在你这边",
   "LuckStatus6": "也许你今天应该待在家里……",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "显示升级动画",
   "ShowExperienceBar": "显示经验条",
@@ -87,6 +90,8 @@
   "ShowExactValue": "显示精确的值",
   "ShowSeasonalBerry": "显示季节采摘物",
   "ShowSeasonalBerryHazelnut": "显示树上的榛子",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "升级"
 }

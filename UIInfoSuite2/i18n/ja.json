@@ -59,6 +59,9 @@
   "LuckStatus4": "今日の運勢はどっちつかず",
   "LuckStatus5": "今日は運が味方してくれそうにない…",
   "LuckStatus6": "今日は家で安静にしたほうが良いだろう…",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "レベルアップアニメーションを表示する",
   "ShowExperienceBar": "経験値バーを表示する",
@@ -88,6 +91,8 @@
   "ShowExactValue": "詳細な値を表示する",
   "ShowSeasonalBerry": "季節の採取を表示する",
   "ShowSeasonalBerryHazelnut": "ヘーゼルナッツを表示する",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "レベルアップ"
 }

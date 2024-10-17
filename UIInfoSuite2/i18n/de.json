@@ -62,6 +62,9 @@
   "LuckStatus4": "Fortuna's Laune ist heute absolut neutral",
   "LuckStatus5": "Das Glück ist heute nicht auf deiner Seite",
   "LuckStatus6": "Vielleicht solltest du heute zu Hause bleiben",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "Zeige Aufstiegsanimation",
   "ShowExperienceBar": "Zeige Erfahrungsleiste",
@@ -91,6 +94,8 @@
   "ShowExactValue": "Zeige exakten Wert",
   "ShowSeasonalBerry": "Zeige saisonale Früchte",
   "ShowSeasonalBerryHazelnut": "Zeige Haselnüsse auf Bäumen",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "Level aufgestiegen"
 }

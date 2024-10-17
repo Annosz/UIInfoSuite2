@@ -31,5 +31,7 @@ internal record ModOptions
   public bool ShowSeasonalBerryHazelnut { get; set; } = false;
   public bool ShowTodaysGifts { get; set; } = true;
   public bool HideBirthdayIfFullFriendShip { get; set; } = true;
+  public bool ShowOasisClothes { get; set; } = true;
+  public bool ShowOasisClothesAll { get; set; } = true;
   public Dictionary<string, bool> ShowLocationOfFriends { get; set; } = new();
 }

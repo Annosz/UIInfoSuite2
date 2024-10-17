@@ -62,6 +62,9 @@
   "LuckStatus4": "오늘은 정령들의 기분이 완벽히 중립적이다.",
   "LuckStatus5": "오늘은 운이 따라주지 않는 것 같다.",
   "LuckStatus6": "오늘은 집에 있는 편이 좋을 것 같다...",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "레벨 업 애니메이션 표시",
   "ShowExperienceBar": "경험치 바 표시",
@@ -91,6 +94,8 @@
   "ShowExactValue": "정확한 수치 표시",
   "ShowSeasonalBerry": "사계절 채집물 표시",
   "ShowSeasonalBerryHazelnut": "헤이즐넛이 있는 나무 표시",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "레벨 업"
 }

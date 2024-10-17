@@ -59,6 +59,9 @@
   "LuckStatus4": "Les esprits sont plutôt neutre aujourd'hui.",
   "LuckStatus5": "La chance n'est pas avec toi aujourd'hui.",
   "LuckStatus6": "Tu ferais mieux de rester à la maison aujourd'hui.",
+  // Display icons - Merchants
+  "SandyClothingItemRare": "Sandy has rare clothing for sale",  // TODO
+  "SandyClothingItemAll": "Sandy's Clothing Item: {0}",         // TODO
   //Settings - General
   "ShowLevelUpAnimation": "Montrer l'animation de gain de niveau",
   "ShowExperienceBar": "Montrer la barre d'expérience",
@@ -88,6 +91,8 @@
   "ShowExactValue": "Montrer la valeur exacte",
   "ShowSeasonalBerry": "Montrer les récoltables de saison\n(buissons de baie)",
   "ShowSeasonalBerryHazelnut": "Montrer les noisettes sur les arbres",
+  "ShowOasisClothes": "Show Oasis's rare clothing items", // TODO
+  "ShowOasisClothesAll": "Show all clothing items",       // TODO
   //Others
   "LevelUp": "Gain de niveau"
 }
