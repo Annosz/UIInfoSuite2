@@ -280,7 +280,7 @@ internal class LocationOfTownsfolk : IDisposable
       {
         bool shouldDrawCharacter = Game1.player.friendshipData.ContainsKey(character.Name) &&
                                    _options.ShowLocationOfFriends.GetOrDefault(character.Name, true) &&
-                                   character.id != -1;
+                                   character.id != -1 && character.IsInvisible != true;
         if (shouldDrawCharacter)
         {
           DrawNPC(character, namesToShow);
