@@ -1,18 +1,42 @@
 {
   // GUI - Game Menu
+  "OptionsTabTooltip": "Opciones de UI Info Suite 2",
   // "OptionsTabTooltip": "UI Info Suite 2 Options", // TODO
   //GUI - Billboard
   "Billboard": "Tablón de anuncios",
   "Calendar": "Calendario",
+  "SlayerGoals": "Metas de Erradicación de Monstruos",
   //GUI - Seed shop
   "HarvestPrice": "Precio de la cosecha",
   //Production
   "Days": "días",
   "Hours": "horas",
   "Minutes": "minutos",
+  "MachineProcessing": "Procesando",
+  "MachineDone": "Listo",
   //Harvest
   "DaysToMature": "días para madurar",
   "ReadyToHarvest": "¡Listo para cosechar!",
+  "With": "con",
+  "Fertilized": "fertilizado",
+  "DoesNotProduceThisSeason": "No produce en esta temporada",
+  //Tree
+  "Stump": "tocón",
+  // This space is required for languages that use a space between words, delete otherwise (e.g. Korean)
+  "Tree": "Árbol",
+  "stage": "Etapa",
+  "Oak": "Roble",
+  "Maple": "Arce",
+  "Pine": "Pino",
+  "Palm": "Palma",
+  "Mushroom": "Seta",
+  "Mahogany": "Caoba",
+  "PalmJungle": "Palma (Selva)",
+  "GreenRainType1": "Lluvia Verde Tipo 1",
+  "GreenRainType2": "Lluvia Verde Tipo 2",
+  "GreenRainType3": "Lluvia Verde Tipo 3",
+  "Mystic": "Místico",
+  "VmvBirch": "(VMV) Abedul",
   //Display icons - General
   "TodaysRecipe": "Receta de hoy: ",
   "TravelingMerchantIsInTown": "¡El comerciante ambulante está en la zona!",
