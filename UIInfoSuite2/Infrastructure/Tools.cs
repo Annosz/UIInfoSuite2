@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -106,6 +107,21 @@ public static class Tools
     }
 
     return hoverItem;
+  }
+
+  public static CraftingRecipe? GetHoveredCraftingRecipe()
+  {
+    CraftingRecipe? hoveredRecipe = null;
+    if (Game1.activeClickableMenu is CraftingPage cookingPage)
+    {
+      hoveredRecipe = cookingPage.hoverRecipe;
+    }
+    else if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.GetCurrentPage() is CraftingPage craftingPage)
+    {
+      hoveredRecipe = craftingPage.hoverRecipe;
+    }
+      return hoveredRecipe;
+
   }
 
   public static void GetSubTexture(Color[] output, Color[] originalColors, Rectangle sourceBounds, Rectangle clipArea)
