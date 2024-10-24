@@ -98,15 +98,17 @@ internal class ModOptionsPageHandler : IDisposable
       locationOfTownsfolk,
       showWhenAnimalNeedsPet,
       showCalendarAndBillboardOnGameMenuButton,
-      showCropAndBarrelTime,
+      showScarecrowAndSprinklerRange,
       showItemHoverInformation,
-      showTravelingMerchant,
-      showRainyDayIcon,
       shopHarvestPrices,
       showQueenOfSauceIcon,
+      showTravelingMerchant,
+      showRainyDayIcon,
+      showCropAndBarrelTime,
       showToolUpgradeStatus,
       showRobinBuildingStatusIcon,
-      showSeasonalBerry
+      showSeasonalBerry,
+      showTodaysGift
     };
 
     var whichOption = 1;
@@ -359,6 +361,13 @@ internal class ModOptionsPageHandler : IDisposable
     {
       item.Dispose();
     }
+    _helper.Events.Input.ButtonPressed -= OnButtonPressed;
+    _helper.Events.GameLoop.UpdateTicking -= OnUpdateTicking;
+    _helper.Events.GameLoop.UpdateTicked -= OnUpdateTicked;
+    _helper.Events.Display.RenderingActiveMenu -= OnRenderingMenu;
+    _helper.Events.Display.RenderedActiveMenu -= OnRenderedMenu;
+    GameRunner.instance.Window.ClientSizeChanged -= OnWindowClientSizeChanged;
+    _helper.Events.Display.WindowResized -= OnWindowResized;
   }
 
   private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
