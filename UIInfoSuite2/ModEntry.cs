@@ -65,29 +65,29 @@ public class ModEntry : Mod
     // add some config options
     configMenu.AddBoolOption(
       ModManifest,
-      name: () => "Show options in in-game menu",
-      tooltip: () => "Enables an extra tab in the in-game menu where you can configure every options for this mod.",
+      name: () => I18n.Bool_ShowOptionsTabInMenu_DisplayedName(),
+      tooltip: () => I18n.Bool_ShowOptionsTabInMenu_Tooltip(),
       getValue: () => _modConfig.ShowOptionsTabInMenu,
       setValue: value => _modConfig.ShowOptionsTabInMenu = value
     );
     configMenu.AddTextOption(
       ModManifest,
-      name: () => "Apply default settings from this save",
-      tooltip: () => "New characters will inherit the settings for the mod from this save file.",
+      name: () => I18n.Text_ApplyDefaultSettingsFromThisSave_DisplayedName(),
+      tooltip: () => I18n.Text_ApplyDefaultSettingsFromThisSave_Tooltip(),
       getValue: () => _modConfig.ApplyDefaultSettingsFromThisSave,
       setValue: value => _modConfig.ApplyDefaultSettingsFromThisSave = value
     );
     configMenu.AddKeybindList(
       ModManifest,
-      name: () => "Open calendar keybind",
-      tooltip: () => "Opens the calendar tab.",
+      name: () => I18n.Keybinds_OpenCalendarKeybind_DisplayedName(),
+      tooltip: () => I18n.Keybinds_OpenCalendarKeybind_Tooltip(),
       getValue: () => _modConfig.OpenCalendarKeybind,
       setValue: value => _modConfig.OpenCalendarKeybind = value
     );
     configMenu.AddKeybindList(
       ModManifest,
-      name: () => "Open quest board keybind",
-      tooltip: () => "Opens the quest board.",
+      name: () => I18n.Keybinds_OpenQuestBoardKeybind_DisplayedName(),
+      tooltip: () => I18n.Keybinds_OpenQuestBoardKeybind_Tooltip(),
       getValue: () => _modConfig.OpenQuestBoardKeybind,
       setValue: value => _modConfig.OpenQuestBoardKeybind = value
     );

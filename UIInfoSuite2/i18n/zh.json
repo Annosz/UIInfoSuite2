@@ -1,6 +1,15 @@
 ﻿{
   // GUI - Game Menu
   "OptionsTabTooltip": "UI Info Suite 2 选项",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "在游戏菜单中显示选项",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "在游戏内菜单中启用额外的选项卡，您可以在其中配置此模组的每个选项。",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "应用此保存中的默认设置",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "新角色将从这个保存的文件继承mod的设置。",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "打开日历",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "通过热键打开日历。",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "打开任务板",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "通过热键打开任务板。",
   //GUI - Billboard
   "Billboard": "布告栏",
   "Calendar": "日历",
@@ -98,5 +107,6 @@
   "ShowSeasonalBerry": "显示季节采摘物",
   "ShowSeasonalBerryHazelnut": "显示树上的榛子",
   //Others
-  "LevelUp": "升级"
+  "LevelUp": "升级",
+  "TrackOnMap": "在地图追踪"
 }

@@ -1,6 +1,15 @@
-{
+﻿{
   // GUI - Game Menu
   "OptionsTabTooltip": "UI Info Suite 2 Options",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "Show options in in-game menu",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "Enables an extra tab in the in-game menu where you can configure every options for this mod.",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "Apply default settings from this save",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "New characters will inherit the settings for the mod from this save file.",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "Open calendar keybind",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "Opens the calendar tab.",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "Open quest board keybind",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "Opens the quest board.",
   //GUI - Billboard
   "Billboard": "Billboard",
   "Calendar": "Calendar",
@@ -99,5 +108,6 @@
   "ShowSeasonalBerry": "Show seasonal forageables",
   "ShowSeasonalBerryHazelnut": "Show hazelnuts on trees",
   //Others
-  "LevelUp": "Level Up"
+  "LevelUp": "Level Up",
+  "TrackOnMap": "Track on map"
 }
