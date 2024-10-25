@@ -1,21 +1,28 @@
-{
+﻿{
   // GUI - Game Menu
   "OptionsTabTooltip": "UI Info Suite 2 选项",
   //GUI - Billboard
   "Billboard": "布告栏",
   "Calendar": "日历",
+  "SlayerGoals": "怪物消灭目标",
   //GUI - Seed shop
   "HarvestPrice": "收获价格",
   //Production
   "Days": "天",
   "Hours": "时",
   "Minutes": "分",
+  "MachineProcessing": "加工中",
+  "MachineDone": "完成",
   //Harvest
   "DaysToMature": "天后成熟",
   "ReadyToHarvest": "可以收获！",
   "With": "已使用",
   "Fertilized": "已施肥",
+  "Watered": "已浇水",
+  "NotWatered": "未浇水",
+  "DoesNotProduceThisSeason": "本季不生产",
   //Tree
+  "Stump": "树桩",
   "Tree": "树",
   "stage": "阶段",
   "Oak": "橡",
@@ -29,6 +36,9 @@
   "GreenRainType2": "苔雨II",
   "GreenRainType3": "苔雨III",
   "Mystic": "神秘",
+  "VmvBirch": "(VMV) 白桦",
+  "SVEBirch": "(SVE) 白桦",
+  "SVEFir": "(SVE) 冷杉",
   //Display icons - General
   "TodaysRecipe": "今日食谱：",
   "TravelingMerchantIsInTown": "旅行商人在镇上！",
@@ -41,7 +51,7 @@
   "ToolIsFinishedBeingUpgraded": "{0}完成了！",
   "NpcBirthday": "{0}的生日",
   "RobinBuildingStatus": "罗宾将在 {0} 天内完成你的新建筑",
-  "RobinHouseUpgradeStatus": "罗宾将在 {0} 天内完成升级你的房子", 
+  "RobinHouseUpgradeStatus": "罗宾将在 {0} 天内完成升级你的房子",
   // Display icons - Foragables
   "CanFindSalmonberry": "今天可以找到美洲大树莓",
   "CanFindBlackberry": "今天可以找到黑莓",
