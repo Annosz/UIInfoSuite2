@@ -172,9 +172,9 @@ internal class LocationOfTownsfolk : IDisposable
   private void CheckSelectedBox(ButtonPressedEventArgs e)
   {
     var slotPosition =
-      (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(
-        _socialPage
-      )!;
+          (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!.GetValue(
+            _socialPage
+          )!;
 
     for (int i = slotPosition; i < slotPosition + 5; ++i)
     {
@@ -210,9 +210,9 @@ internal class LocationOfTownsfolk : IDisposable
     );
 
     var slotPosition =
-      (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(
-        _socialPage
-      )!;
+          (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!.GetValue(
+            _socialPage
+          )!;
     var yOffset = 0;
 
     for (int i = slotPosition; i < slotPosition + 5 && i < _friendNames.Count; ++i)

@@ -95,9 +95,8 @@ internal class ShowAccurateHearts : IDisposable
       return;
     }
 
-
     var slotPosition =
-      (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(
+      (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!.GetValue(
         _socialPage
       )!;
     var yOffset = 0;
@@ -154,6 +153,7 @@ internal class ShowAccurateHearts : IDisposable
         }
       }
     }
+    Game1.activeClickableMenu.drawMouse(Game1.spriteBatch);
   }
 #endregion
 }
