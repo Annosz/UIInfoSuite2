@@ -315,8 +315,8 @@ internal class LocationOfTownsfolk : IDisposable
       WorldMapManager.GetPositionData(
         Game1.player.currentLocation,
         new Point((int)location.Value.X, (int)location.Value.Y)
-      ) ??
-      WorldMapManager.GetPositionData(Game1.getFarm(), Point.Zero);
+      ).Value.Data ??
+      WorldMapManager.GetPositionData(Game1.getFarm(), Point.Zero).Value.Data;
     MapRegion? mapRegion = mapPosition.Region;
     Rectangle mapBounds = mapRegion.GetMapPixelBounds();
     var offsetLocation = new Vector2(
@@ -357,8 +357,8 @@ internal class LocationOfTownsfolk : IDisposable
   {
     var playerNormalizedTile = new Point(Math.Max(0, Game1.player.TilePoint.X), Math.Max(0, Game1.player.TilePoint.Y));
     MapAreaPosition playerMapAreaPosition =
-      WorldMapManager.GetPositionData(Game1.player.currentLocation, playerNormalizedTile) ??
-      WorldMapManager.GetPositionData(Game1.getFarm(), Point.Zero);
+      WorldMapManager.GetPositionData(Game1.player.currentLocation, playerNormalizedTile).Value.Data ??
+      WorldMapManager.GetPositionData(Game1.getFarm(), Point.Zero).Value.Data;
     // ^^ Regarding that ?? clause...  If the player is in the farmhouse or barn or any building on the farm, GetPositionData is
     //  going to return null.  Thus the fallback to pretending the player is on the farm.  However, it seems to me that
     //  Game1.player.currentLocation.GetParentLocation() would be the safer long-term bet.  But rule number 1 of modding is this:
@@ -366,7 +366,7 @@ internal class LocationOfTownsfolk : IDisposable
 
     var characterNormalizedTile = new Point(Math.Max(0, character.TilePoint.X), Math.Max(0, character.TilePoint.Y));
     MapAreaPosition characterMapAreaPosition =
-      WorldMapManager.GetPositionData(character.currentLocation, characterNormalizedTile);
+      WorldMapManager.GetPositionData(character.currentLocation, characterNormalizedTile).Value.Data;
 
     if (playerMapAreaPosition != null &&
         characterMapAreaPosition != null &&
