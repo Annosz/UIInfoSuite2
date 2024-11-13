@@ -33,8 +33,8 @@
   "ReadyToHarvest": "수확 가능!",
   "With": "효과:",
   "Fertilized": "비료",
-  "Watered": "Watered",
-  "NotWatered": "Not Watered",
+  "Watered": "물 주었음",
+  "NotWatered": "물 주지 않음",
   "DoesNotProduceThisSeason": "이번 계절에는 생산하지 않음",
   //Tree
   "Stump": "그루터기",
