@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewValley;
@@ -11,7 +12,7 @@ namespace UIInfoSuite2.Infrastructure.Helpers;
 
 using BundleIngredientsCache = Dictionary<string, List<List<int>>>;
 
-public record BundleRequiredItem(string Name, int BannerWidth, int Id, string QualifiedId, int Quality);
+public record BundleRequiredItem(string Name, int BannerWidth, int Id, string QualifiedId, int Quality, int Count);
 
 public record BundleKeyData(string Name, int Color);
 
@@ -48,7 +49,7 @@ internal static class BundleHelper
     return 68 + (int)Game1.dialogueFont.MeasureString(bundleName).X;
   }
 
-  public static BundleRequiredItem? GetBundleItemIfNotDonated(Item item)
+  public static List<BundleRequiredItem>? GetBundleItemIfNotDonated(Item item)
   {
     if (item is not SObject donatedItem || donatedItem.bigCraftable.Value)
     {
@@ -72,7 +73,7 @@ internal static class BundleHelper
     }
 
 
-    BundleRequiredItem? output;
+    List<BundleRequiredItem>? output;
     List<List<int>>? bundleRequiredItemsList;
 
     if (bundlesIngredientsInfo.TryGetValue(donatedItem.QualifiedItemId, out bundleRequiredItemsList))
@@ -94,11 +95,13 @@ internal static class BundleHelper
     return output ?? null;
   }
 
-  private static BundleRequiredItem? GetBundleItemIfNotDonatedFromList(List<List<int>>? lists, ISalable obj)
+  private static List<BundleRequiredItem>? GetBundleItemIfNotDonatedFromList(List<List<int>>? lists, ISalable obj)
   {
+    
+    List<BundleRequiredItem> output = new();
     if (lists == null)
     {
-      return null;
+      return output;
     }
 
     foreach (List<int> list in lists)
@@ -107,23 +110,23 @@ internal static class BundleHelper
       {
         continue;
       }
-
       BundleKeyData? bundleKeyData = GetBundleKeyDataFromIndex(list[0]);
       if (bundleKeyData == null)
       {
         continue;
       }
 
-      return new BundleRequiredItem(
+      output.Add(new BundleRequiredItem(
         bundleKeyData.Name,
         GetBundleBannerWidthForName(bundleKeyData.Name),
         list[0],
         obj.QualifiedItemId,
-        obj.Quality
-      );
+        obj.Quality,
+        list[1]
+        ));
     }
 
-    return null;
+    return output;
   }
 
   public static void PopulateBundleNameMappings(bool force = false)
