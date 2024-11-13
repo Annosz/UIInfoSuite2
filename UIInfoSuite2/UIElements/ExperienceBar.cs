@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Enums;
@@ -6,6 +6,7 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Tools;
+using StardewValley.Menus;
 using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.UIElements.ExperienceElements;
@@ -17,6 +18,7 @@ public partial class ExperienceBar
 #region Properties
   private readonly PerScreen<Item> _previousItem = new();
   private readonly PerScreen<int[]> _currentExperience = new(() => new int[5]);
+  private readonly PerScreen<int> _currentMasteryXP = new(() => 0);
   private readonly PerScreen<int[]> _currentLevelExtenderExperience = new(() => new int[5]);
   private readonly PerScreen<int> _currentSkillLevel = new(() => 0);
   private readonly PerScreen<int> _experienceRequiredToLevel = new(() => -1);
@@ -60,6 +62,7 @@ public partial class ExperienceBar
 
   private readonly PerScreen<Rectangle> _levelUpIconRectangle = new(() => SkillIconRectangles[SkillType.Farming]);
   private readonly PerScreen<Color> _experienceFillColor = new(() => ExperienceFillColor[SkillType.Farming]);
+  private readonly PerScreen<Color> _experienceTextColor = new(() => Color.Black);
 
   private bool ExperienceBarFadeoutEnabled { get; set; } = true;
   private bool ExperienceGainTextEnabled { get; set; } = true;
@@ -243,6 +246,7 @@ public partial class ExperienceBar
     {
       _displayedExperienceBar.Value.Draw(
         _experienceFillColor.Value,
+        _experienceTextColor.Value,
         _experienceIconRectangle.Value,
         _experienceEarnedThisLevel.Value,
         _experienceRequiredToLevel.Value - _experienceFromPreviousLevels.Value,
@@ -260,7 +264,12 @@ public partial class ExperienceBar
       _currentExperience.Value[i] = Game1.player.experiencePoints[i];
     }
 
-    if (_levelExtenderApi != null)
+    if (Game1.player.Level >= 25)
+    {
+      _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
+    }
+
+      if (_levelExtenderApi != null)
     {
       for (var i = 0; i < _currentLevelExtenderExperience.Value.Length; ++i)
       {
@@ -306,10 +315,24 @@ public partial class ExperienceBar
     _experienceFillColor.Value = ExperienceFillColor[(SkillType)currentLevelIndex];
     _currentSkillLevel.Value = Game1.player.GetUnmodifiedSkillLevel(currentLevelIndex);
 
-    _experienceRequiredToLevel.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value);
-    _experienceFromPreviousLevels.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value - 1);
-    _experienceEarnedThisLevel.Value =
-      Game1.player.experiencePoints[currentLevelIndex] - _experienceFromPreviousLevels.Value;
+    
+    if (Game1.player.Level >= 25 && (MasteryTrackerMenu.getCurrentMasteryLevel() < 5))
+    {
+      _experienceRequiredToLevel.Value = MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel() + 1);
+      _experienceFromPreviousLevels.Value = MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel());
+      _experienceEarnedThisLevel.Value = (int)Game1.stats.Get("MasteryExp") - MasteryTrackerMenu.getMasteryExpNeededForLevel(MasteryTrackerMenu.getCurrentMasteryLevel());
+      _currentMasteryXP.Value = (int)Game1.stats.Get("MasteryExp");
+
+      _experienceFillColor.Value = new Color(0, 0.443f, 0.243f  , 1.0f);
+      _experienceTextColor.Value = Color.White;
+      _experienceIconRectangle.Value = SkillIconRectangles[SkillType.Luck];
+    }
+    else
+    {
+      _experienceRequiredToLevel.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value);
+      _experienceFromPreviousLevels.Value = GetExperienceRequiredToLevel(_currentSkillLevel.Value - 1);
+      _experienceEarnedThisLevel.Value = Game1.player.experiencePoints[currentLevelIndex] - _experienceFromPreviousLevels.Value;
+    }
 
     if (_experienceRequiredToLevel.Value <= 0 && _levelExtenderApi != null)
     {
@@ -368,5 +391,5 @@ public partial class ExperienceBar
       _ => -1
     };
   }
-#endregion Logic
+  #endregion Logic
 }
