@@ -115,6 +115,7 @@
   "ShowExactValue": "Show exact value",
   "ShowSeasonalBerry": "Show seasonal forageables",
   "ShowSeasonalBerryHazelnut": "Show hazelnuts on trees",
+  "ShowNewCraftable": "Show when craftable has not been crafted",
   //Others
   "LevelUp": "Level Up",
   "TrackOnMap": "Track on map"

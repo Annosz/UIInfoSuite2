@@ -89,6 +89,7 @@ internal class ModOptionsPageHandler : IDisposable
     var showRobinBuildingStatusIcon = new ShowRobinBuildingStatusIcon(helper);
     var showSeasonalBerry = new ShowSeasonalBerry(helper);
     var showTodaysGift = new ShowTodaysGifts(helper);
+    var showHoverRecipeInCollection = new ShowUncraftedCraftablesLabel(helper);
 
     _elementsToDispose = new List<IDisposable>
     {
@@ -108,6 +109,7 @@ internal class ModOptionsPageHandler : IDisposable
       showToolUpgradeStatus,
       showRobinBuildingStatusIcon,
       showSeasonalBerry,
+      showHoverRecipeInCollection,
       showTodaysGift
     };
 
@@ -371,6 +373,15 @@ internal class ModOptionsPageHandler : IDisposable
         v => options.ShowTodaysGifts = v
       )
     );
+    _optionsElements.Add(
+      new ModOptionsCheckbox(
+        _helper.SafeGetString(nameof(options.ShowNewCraftable)),
+        whichOption++,
+        showHoverRecipeInCollection.ToggleOption,
+        () => options.ShowNewCraftable,
+        v => options.ShowNewCraftable = v
+      )
+    );
   }
 
 
@@ -541,10 +552,13 @@ internal class ModOptionsPageHandler : IDisposable
           optionsTabName,
           "ui2_mod_options"
         ) // Placeholder label that shouldn't be displayed
-        {
-          // The exit page tab ID is 12347
-          myID = 12348, leftNeighborID = 12347, tryDefaultIfNoDownNeighborExists = true, fullyImmutable = true
-        };
+      {
+        // The exit page tab ID is 12347
+        myID = 12348,
+        leftNeighborID = 12347,
+        tryDefaultIfNoDownNeighborExists = true,
+        fullyImmutable = true
+      };
 
       // Do not add our tab to GameMenu.tabs because GameMenu.draw will draw the menu tab incorrectly
       // when our page is the current tab.
