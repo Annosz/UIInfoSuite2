@@ -99,16 +99,18 @@ internal class ModOptionsPageHandler : IDisposable
       locationOfTownsfolk,
       showWhenAnimalNeedsPet,
       showCalendarAndBillboardOnGameMenuButton,
-      showCropAndBarrelTime,
+      showScarecrowAndSprinklerRange,
       showItemHoverInformation,
-      showTravelingMerchant,
-      showRainyDayIcon,
       shopHarvestPrices,
       showQueenOfSauceIcon,
+      showTravelingMerchant,
+      showRainyDayIcon,
+      showCropAndBarrelTime,
       showToolUpgradeStatus,
       showRobinBuildingStatusIcon,
       showSeasonalBerry,
-      showHoverRecipeInCollection
+      showHoverRecipeInCollection,
+      showTodaysGift
     };
 
     var whichOption = 1;
@@ -244,13 +246,32 @@ internal class ModOptionsPageHandler : IDisposable
         v => options.ShowCropAndBarrelTooltip = v
       )
     );
+    var ScarecrowAndSprinklerRangeIcon = new ModOptionsCheckbox(
+      I18n.ShowItemEffectRanges(),
+      whichOption++,
+      showScarecrowAndSprinklerRange.ToggleOption,
+      () => options.ShowItemEffectRanges,
+      v => options.ShowItemEffectRanges = v
+    );
+    _optionsElements.Add(ScarecrowAndSprinklerRangeIcon);
     _optionsElements.Add(
       new ModOptionsCheckbox(
-        _helper.SafeGetString(nameof(options.ShowItemEffectRanges)),
+        I18n.ButtonControlShow(),
         whichOption++,
-        showScarecrowAndSprinklerRange.ToggleOption,
-        () => options.ShowItemEffectRanges,
-        v => options.ShowItemEffectRanges = v
+        showScarecrowAndSprinklerRange.ToggleButtonControlShowOption,
+        () => options.ButtonControlShow,
+        v => options.ButtonControlShow = v,
+        ScarecrowAndSprinklerRangeIcon
+      )
+    );
+    _optionsElements.Add(
+      new ModOptionsCheckbox(
+        I18n.ShowBombRange(),
+        whichOption++,
+        showScarecrowAndSprinklerRange.ToggleShowBombRangeOption,
+        () => options.ShowBombRange,
+        v => options.ShowBombRange = v,
+        ScarecrowAndSprinklerRangeIcon
       )
     );
     _optionsElements.Add(
@@ -370,6 +391,14 @@ internal class ModOptionsPageHandler : IDisposable
     {
       item.Dispose();
     }
+
+    _helper.Events.Input.ButtonPressed -= OnButtonPressed;
+    _helper.Events.GameLoop.UpdateTicking -= OnUpdateTicking;
+    _helper.Events.GameLoop.UpdateTicked -= OnUpdateTicked;
+    _helper.Events.Display.RenderingActiveMenu -= OnRenderingMenu;
+    _helper.Events.Display.RenderedActiveMenu -= OnRenderedMenu;
+    GameRunner.instance.Window.ClientSizeChanged -= OnWindowClientSizeChanged;
+    _helper.Events.Display.WindowResized -= OnWindowResized;
   }
 
   private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
@@ -578,7 +607,7 @@ internal class ModOptionsPageHandler : IDisposable
 
   private void OnRenderingMenu(object? sender, RenderingActiveMenuEventArgs e)
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu)
+    if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.GetChildMenu() == null)
     {
       // Draw our tab icon behind the menu even if it is dimmed by the menu's transparent background,
       // so that it still displays during transitions eg. when a letter is viewed in the collections tab
@@ -588,37 +617,35 @@ internal class ModOptionsPageHandler : IDisposable
 
   private void OnRenderedMenu(object? sender, RenderedActiveMenuEventArgs e)
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu
-        // But don't render when the map is displayed...
-        &&
-        !(gameMenu.currentTab == GameMenu.mapTab
-          // ...or when a letter is opened in the collection's page
-          ||
-          (gameMenu.GetCurrentPage() is CollectionsPage cPage && cPage.letterviewerSubMenu != null)))
+    if (Game1.activeClickableMenu is not GameMenu gameMenu ||
+        gameMenu.currentTab == GameMenu.mapTab ||
+        gameMenu.GetChildMenu() != null ||
+        gameMenu.GetCurrentPage() is CollectionsPage { letterviewerSubMenu: not null })
     {
-      DrawButton(gameMenu);
+      return;
+    }
 
-      Tools.DrawMouseCursor();
+    DrawButton(gameMenu);
 
-      // Draw the game menu's hover text again so it displays above our tab
+    Tools.DrawMouseCursor();
+
+    // Draw the game menu's hover text again so it displays above our tab
+    if (!gameMenu.hoverText.Equals(""))
+    {
+      IClickableMenu.drawHoverText(Game1.spriteBatch, gameMenu.hoverText, Game1.smallFont);
+    }
+
+    // Draw our tab's hover text
+    if (_modOptionsTab.Value?.containsPoint(Game1.getMouseX(), Game1.getMouseY()) == true)
+    {
+      IClickableMenu.drawHoverText(Game1.spriteBatch, I18n.OptionsTabTooltip(), Game1.smallFont);
+
       if (!gameMenu.hoverText.Equals(""))
       {
-        IClickableMenu.drawHoverText(Game1.spriteBatch, gameMenu.hoverText, Game1.smallFont);
-      }
-
-      // Draw our tab's hover text
-      if (_modOptionsTab.Value?.containsPoint(Game1.getMouseX(), Game1.getMouseY()) == true)
-      {
-        Translation tooltip = _helper.Translation.Get(LanguageKeys.OptionsTabTooltip).Default("UI Info Mod Options");
-        IClickableMenu.drawHoverText(Game1.spriteBatch, tooltip, Game1.smallFont);
-
-        if (!gameMenu.hoverText.Equals(""))
-        {
-          ModEntry.MonitorObject.LogOnce(
-            $"{GetType().Name}: Both our mod options tab and the game are displaying hover text",
-            LogLevel.Warn
-          );
-        }
+        ModEntry.MonitorObject.LogOnce(
+          $"{GetType().Name}: Both our mod options tab and the game are displaying hover text",
+          LogLevel.Warn
+        );
       }
     }
   }

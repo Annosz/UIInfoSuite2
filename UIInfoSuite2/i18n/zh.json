@@ -1,21 +1,59 @@
-{
+﻿{
   // GUI - Game Menu
   "OptionsTabTooltip": "UI Info Suite 2 选项",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "在游戏菜单中显示选项",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "在游戏内菜单中启用额外的选项卡，您可以在其中配置此模组的每个选项。",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "应用此保存中的默认设置",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "新角色将从这个保存的文件继承mod的设置。",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "打开日历",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "通过热键打开日历。",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "打开任务板",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "通过热键打开任务板。",
+  "Keybinds.Subtitle.ShowRange.displayedName": "显示物品效果范围",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "例如：稻草人、洒水器、祝尼魔屋、蜂房、蘑菇树桩和长满苔藓的种子。",
+  "Keybinds.ShowOneRange.DisplayedName": "显示单个范围",
+  "Keybinds.ShowOneRange.Tooltip": "当鼠标移至需要显示的物品上时，显示范围。",
+  "Keybinds.ShowAllRange.DisplayedName": "显示全部范围",
+  "Keybinds.ShowAllRange.Tooltip": "当鼠标移至需要显示的物品上时，显示所有范围。",
   //GUI - Billboard
   "Billboard": "布告栏",
   "Calendar": "日历",
+  "SlayerGoals": "怪物消灭目标",
   //GUI - Seed shop
   "HarvestPrice": "收获价格",
   //Production
   "Days": "天",
   "Hours": "时",
   "Minutes": "分",
+  "MachineProcessing": "加工中",
+  "MachineDone": "完成",
   //Harvest
   "DaysToMature": "天后成熟",
   "ReadyToHarvest": "可以收获！",
   "With": "已使用",
   "Fertilized": "已施肥",
+  "Watered": "已浇水",
+  "NotWatered": "未浇水",
+  "DoesNotProduceThisSeason": "本季不生产",
+  //Tree
+  "Stump": "树桩",
   "Tree": "树",
+  "stage": "阶段",
+  "Oak": "橡",
+  "Maple": "枫",
+  "Pine": "松",
+  "Palm": "棕榈",
+  "Mushroom": "蘑菇",
+  "Mahogany": "桃花心木",
+  "PalmJungle": "棕榈(丛林)",
+  "GreenRainType1": "苔雨I",
+  "GreenRainType2": "苔雨II",
+  "GreenRainType3": "苔雨III",
+  "Mystic": "神秘",
+  "VmvBirch": "(VMV) 白桦",
+  "SVEBirch": "(SVE) 白桦",
+  "SVEFir": "(SVE) 冷杉",
   //Display icons - General
   "TodaysRecipe": "今日食谱：",
   "TravelingMerchantIsInTown": "旅行商人在镇上！",
@@ -28,7 +66,7 @@
   "ToolIsFinishedBeingUpgraded": "{0}完成了！",
   "NpcBirthday": "{0}的生日",
   "RobinBuildingStatus": "罗宾将在 {0} 天内完成你的新建筑",
-  "RobinHouseUpgradeStatus": "罗宾将在 {0} 天内完成升级你的房子", 
+  "RobinHouseUpgradeStatus": "罗宾将在 {0} 天内完成升级你的房子",
   // Display icons - Foragables
   "CanFindSalmonberry": "今天可以找到美洲大树莓",
   "CanFindBlackberry": "今天可以找到黑莓",
@@ -55,6 +93,8 @@
   "HideAnimalPetOnMaxFriendship": "在动物达到最大心情时隐藏",
   "ShowCropAndBarrelTooltip": "显示作物与桶的剩余时间",
   "ShowItemEffectRanges": "显示稻草人与洒水器的范围",
+  "ButtonControlShow": "按下LeftCtrl显示当前，同时按下LeftAlt显示全部",
+  "ShowBombRange": "显示炸弹摧毁范围",
   "ShowExtraItemInformation": "鼠标悬停时显示物品信息",
   "ShowHarvestPricesInShop": "在购买页面显示收获价格",
   //Settings - Tabs info
@@ -75,5 +115,6 @@
   "ShowSeasonalBerry": "显示季节采摘物",
   "ShowSeasonalBerryHazelnut": "显示树上的榛子",
   //Others
-  "LevelUp": "升级"
+  "LevelUp": "升级",
+  "TrackOnMap": "在地图追踪"
 }

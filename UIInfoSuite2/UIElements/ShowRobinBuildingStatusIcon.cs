@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -9,7 +8,6 @@ using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Menus;
 using UIInfoSuite2.Infrastructure;
-using UIInfoSuite2.Infrastructure.Extensions;
 
 namespace UIInfoSuite2.UIElements;
 
@@ -41,6 +39,7 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
     _helper.Events.GameLoop.DayStarted -= OnDayStarted;
     _helper.Events.Display.RenderingHud -= OnRenderingHud;
     _helper.Events.Display.RenderedHud -= OnRenderedHud;
+    _helper.Events.GameLoop.OneSecondUpdateTicked -= OnTickInRobinHouse;
 
     if (showRobinBuildingStatus)
     {
@@ -49,11 +48,22 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
       _helper.Events.GameLoop.DayStarted += OnDayStarted;
       _helper.Events.Display.RenderingHud += OnRenderingHud;
       _helper.Events.Display.RenderedHud += OnRenderedHud;
+      _helper.Events.GameLoop.OneSecondUpdateTicked += OnTickInRobinHouse;
     }
   }
 #endregion
 
 #region Event subscriptions
+  public void OnTickInRobinHouse(object? sender, OneSecondUpdateTickedEventArgs e)
+  {
+    if (Game1.currentLocation?.Name != "ScienceHouse")
+    {
+      return;
+    }
+
+    UpdateRobinBuindingStatusData();
+  }
+
   private void OnDayStarted(object sender, DayStartedEventArgs e)
   {
     UpdateRobinBuindingStatusData();
@@ -94,24 +104,18 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
 
     if (remainingDays <= 0)
     {
-      Building? building = Game1.getFarm().buildings.FirstOrDefault(b => b.isUnderConstruction(false));
+      Building? building = Game1.GetBuildingUnderConstruction();
 
       if (building is not null)
       {
         if (building.daysOfConstructionLeft.Value > building.daysUntilUpgrade.Value)
         {
-          hoverText = string.Format(
-            _helper.SafeGetString(LanguageKeys.RobinBuildingStatus),
-            building.daysOfConstructionLeft.Value
-          );
+          hoverText = string.Format(I18n.RobinBuildingStatus(), building.daysOfConstructionLeft.Value);
           return true;
         }
 
         // Add another translation string for this?
-        hoverText = string.Format(
-          _helper.SafeGetString(LanguageKeys.RobinBuildingStatus),
-          building.daysUntilUpgrade.Value
-        );
+        hoverText = string.Format(I18n.RobinBuildingStatus(), building.daysUntilUpgrade.Value);
         return true;
       }
 
@@ -119,7 +123,7 @@ internal class ShowRobinBuildingStatusIcon : IDisposable
       return false;
     }
 
-    hoverText = string.Format(_helper.SafeGetString(LanguageKeys.RobinHouseUpgradeStatus), remainingDays);
+    hoverText = string.Format(I18n.RobinHouseUpgradeStatus(), remainingDays);
     return true;
   }
 

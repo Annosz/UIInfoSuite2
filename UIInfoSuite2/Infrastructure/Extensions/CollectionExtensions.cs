@@ -4,22 +4,27 @@ namespace UIInfoSuite2.Infrastructure.Extensions;
 
 public static class CollectionExtensions
 {
-  public static TValue SafeGet<TKey, TValue>(
+  /// <summary>
+  ///   Get a value from a dictionary, or return a default if it isn't present in the collection
+  /// </summary>
+  /// <param name="dictionary">This Dictionary</param>
+  /// <param name="key">The key to look up</param>
+  /// <param name="defaultValue">The value to return if the key is not present</param>
+  /// <typeparam name="TKey">Dictionary Key Type</typeparam>
+  /// <typeparam name="TValue">Dictionary Value Type</typeparam>
+  /// <returns></returns>
+  public static TValue GetOrDefault<TKey, TValue>(
     this IDictionary<TKey, TValue> dictionary,
     TKey key,
-    TValue defaultValue = default
+    TValue defaultValue
   )
   {
-    TValue value = defaultValue;
+    return dictionary.TryGetValue(key, out TValue? foundDictValue) ? foundDictValue : defaultValue;
+  }
 
-    if (dictionary != null)
-    {
-      if (!dictionary.TryGetValue(key, out value))
-      {
-        value = defaultValue;
-      }
-    }
-
-    return value;
+  public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+    where TValue : unmanaged
+  {
+    return dictionary.GetOrDefault(key, default);
   }
 }

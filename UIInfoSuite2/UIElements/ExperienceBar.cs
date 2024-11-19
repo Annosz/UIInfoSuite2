@@ -8,7 +8,6 @@ using StardewValley;
 using StardewValley.Tools;
 using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
-using UIInfoSuite2.Infrastructure.Extensions;
 using UIInfoSuite2.UIElements.ExperienceElements;
 
 namespace UIInfoSuite2.UIElements;
@@ -218,7 +217,7 @@ public partial class ExperienceBar
     // Level up text
     if (LevelUpAnimationEnabled && _levelUpVisibleTimer.Value != 0)
     {
-      _displayedLevelUpMessage.Value.Draw(_levelUpIconRectangle.Value, _helper.SafeGetString(LanguageKeys.LevelUp));
+      _displayedLevelUpMessage.Value.Draw(_levelUpIconRectangle.Value, I18n.LevelUp());
     }
 
     // Experience values

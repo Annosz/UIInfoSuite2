@@ -9,7 +9,6 @@ using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
 using UIInfoSuite2.Infrastructure;
-using UIInfoSuite2.Infrastructure.Extensions;
 
 namespace UIInfoSuite2.UIElements;
 
@@ -27,8 +26,8 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
 
   private readonly IModHelper _helper;
 
-  private readonly PerScreen<Item> _hoverItem = new();
-  private readonly PerScreen<Item> _heldItem = new();
+  private readonly PerScreen<Item?> _hoverItem = new();
+  private readonly PerScreen<Item?> _heldItem = new();
 #endregion
 
 #region Lifecycle
@@ -65,14 +64,16 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
   {
     // Get hovered and hold item
     _hoverItem.Value = Tools.GetHoveredItem();
-    if (Game1.activeClickableMenu is GameMenu gameMenu)
+    if (Game1.activeClickableMenu is not GameMenu gameMenu)
     {
-      List<IClickableMenu> menuList = gameMenu.pages;
+      return;
+    }
 
-      if (menuList[0] is InventoryPage inventory)
-      {
-        _heldItem.Value = Game1.player.CursorSlotItem;
-      }
+    List<IClickableMenu> menuList = gameMenu.pages;
+
+    if (menuList[0] is InventoryPage)
+    {
+      _heldItem.Value = Game1.player.CursorSlotItem;
     }
   }
 
@@ -93,7 +94,8 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
     if (_hoverItem.Value == null &&
         Game1.activeClickableMenu is GameMenu gameMenu &&
         gameMenu.currentTab == 0 &&
-        _heldItem.Value == null)
+        _heldItem.Value == null &&
+        gameMenu.GetChildMenu() == null)
     {
       DrawBillboard();
     }
@@ -121,9 +123,9 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
     {
       string hoverText = Game1.getMouseX() <
                          _showBillboardButton.Value.bounds.X + _showBillboardButton.Value.bounds.Width / 2
-        ? LanguageKeys.Calendar
-        : LanguageKeys.Billboard;
-      IClickableMenu.drawHoverText(Game1.spriteBatch, _helper.SafeGetString(hoverText), Game1.dialogueFont);
+        ? I18n.Calendar()
+        : I18n.Billboard();
+      IClickableMenu.drawHoverText(Game1.spriteBatch, hoverText, Game1.dialogueFont);
     }
   }
 

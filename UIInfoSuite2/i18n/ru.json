@@ -1,18 +1,60 @@
-{
+﻿{
   // GUI - Game Menu
-  // "OptionsTabTooltip": "UI Info Suite 2 Options", // TODO
+  "OptionsTabTooltip": "Настройки UI Info Suite 2",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "Показывать настройки в игре",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "Добавляет во внутриигровое меню дополнительную вкладку, где вы можете настроить все параметры мода.",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "Применять настройки из этого сохранения",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "К новым персонажам будут применяться настройки из этого файла сохранения.",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "Кнопка открытия календаря",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "Открывает календарь.",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "Кнопка открытия доски объявлений",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "Открывает доску объявлений.",
+  "Keybinds.Subtitle.ShowRange.displayedName": "Показать радиус работы объектов",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "Таких как: пугало, спринклер, домик Джунимо, улей, грибной пень и мшистое семечко.",
+  "Keybinds.ShowOneRange.DisplayedName": "Показать радиус работы объекта",
+  "Keybinds.ShowOneRange.Tooltip": "Если мышка на объекте, показывать радиус этого объекта.",
+  "Keybinds.ShowAllRange.DisplayedName": "Показать радиус работы всех объектов",
+  "Keybinds.ShowAllRange.Tooltip": "Если мышка на объекте, показывать радиус всех объектов этого типа.",
   //GUI - Billboard
   "Billboard": "Объявления",
   "Calendar": "Календарь",
+  "SlayerGoals": "План по истреблению",
   //GUI - Seed shop
   "HarvestPrice": "Цена урожая",
   //Production
   "Days": "дней",
   "Hours": "часов",
   "Minutes": "минут",
+  "MachineProcessing": "Обработка",
+  "MachineDone": "Готово",
   //Harvest
   "DaysToMature": "дней до созревания",
   "ReadyToHarvest": "Готово к сбору урожая!",
+  "With": "Содержит",
+  "Fertilized": "Удобрено",
+  "Watered": "Полито",
+  "NotWatered": "Не полито",
+  "DoesNotProduceThisSeason": "В этот сезон не плодоносит",
+  //Tree
+  "Stump": "Пень",
+  // This space is required for languages that use a space between words, delete otherwise (e.g. Korean)
+  "Tree": " ", //Most of the basic trees do not use the *thing*-tree word construction. If i knew how to delete it completely instead of using blank space, i would.
+  "stage": "Рост",
+  "Oak": "Дуб",
+  "Maple": "Клён",
+  "Pine": "Сосна",
+  "Palm": "Пальма",
+  "Mushroom": "Грибное дерево",
+  "Mahogany": "Красное дерево",
+  "PalmJungle": "Пальма (Джунгли)",
+  "GreenRainType1": "Мшистое дерево",
+  "GreenRainType2": "Густое мшистое дерево",
+  "GreenRainType3": "Папоротниковое дерево",
+  "Mystic": "Таинственое дерево",
+  "VmvBirch": "(VMV) Берёза",
+  "SVEBirch": "(SVE) Берёза",
+  "SVEFir": "(SVE) Ель",
   //Display icons - General
   "TodaysRecipe": "Сегодняшний рецепт: ",
   "TravelingMerchantIsInTown": "Странствующий Торговец в городе!",
@@ -25,7 +67,7 @@
   "ToolIsFinishedBeingUpgraded": "{0} улучшено!",
   "NpcBirthday": "Сегодня день рождение {0}",
   "RobinBuildingStatus": "Робин завершит строительство через {0} дн.",
-  "RobinHouseUpgradeStatus": "Robin will finish upgrading your house in {0} day(s)", // TODO
+  "RobinHouseUpgradeStatus": "Робин закончит модернизацию вашего дома за {0} дн",
   // Display icons - Foragables
   "CanFindSalmonberry": "Сегодня ты можешь найти морошку",
   "CanFindBlackberry": "Сегодня ты можешь найти ежевику",
@@ -52,6 +94,8 @@
   "HideAnimalPetOnMaxFriendship": "Скрывать при максимальной дружбе",
   "ShowCropAndBarrelTooltip": "Показывать время у урожая и бочек",
   "ShowItemEffectRanges": "Показывать радиус пугал и спринклеров",
+  "ButtonControlShow": "Использовать кнопки для просмотра радиуса",
+  "ShowBombRange": "Показывать радиус подрыва бомбы",
   "ShowExtraItemInformation": "Показывать дополнительную информацию по предметам",
   "ShowHarvestPricesInShop": "Показывать цену урожая в магазине",
   //Settings - Tabs info
@@ -72,5 +116,6 @@
   "ShowSeasonalBerry": "Показывать сезонные растения",
   "ShowSeasonalBerryHazelnut": "Показывать фундук на деревьях",
   //Others
-  "LevelUp": "Уровень повышен"
+  "LevelUp": "Уровень повышен",
+  "TrackOnMap": "Отслеживать на карте"
 }

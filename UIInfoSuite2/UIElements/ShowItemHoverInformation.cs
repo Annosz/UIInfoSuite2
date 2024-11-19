@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -10,9 +8,9 @@ using StardewValley;
 using StardewValley.Locations;
 using StardewValley.Menus;
 using StardewValley.Tools;
-using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Infrastructure.Extensions;
+using UIInfoSuite2.Infrastructure.Helpers;
 using Object = StardewValley.Object;
 
 namespace UIInfoSuite2.UIElements;
@@ -30,7 +28,6 @@ internal class ShowItemHoverInformation : IDisposable
 
   private readonly PerScreen<Item?> _hoverItem = new();
   private readonly ClickableTextureComponent _museumIcon;
-  private readonly Dictionary<string, List<ItemAndQuality>> _prunedRequiredBundles = new();
 
   private readonly ClickableTextureComponent _shippingBottomIcon = new(
     new Rectangle(0, 0, Game1.tileSize, Game1.tileSize),
@@ -46,8 +43,6 @@ internal class ShowItemHoverInformation : IDisposable
     1.2f
   );
 
-  private Dictionary<string, string> _bundleNameOverrides;
-  private CommunityCenter _communityCenter;
   private LibraryMuseum _libraryMuseum;
 
   public ShowItemHoverInformation(IModHelper helper)
@@ -79,41 +74,18 @@ internal class ShowItemHoverInformation : IDisposable
 
   public void ToggleOption(bool showItemHoverInformation)
   {
-    _helper.Events.GameLoop.DayStarted -= OnDayStarted;
-    _helper.Events.Player.InventoryChanged -= OnInventoryChanged;
     _helper.Events.Display.RenderedActiveMenu -= OnRenderedActiveMenu;
     _helper.Events.Display.RenderedHud -= OnRenderedHud;
     _helper.Events.Display.Rendering -= OnRendering;
 
     if (showItemHoverInformation)
     {
-      _communityCenter = Game1.getLocationFromName("CommunityCenter") as CommunityCenter;
-
       _libraryMuseum = Game1.getLocationFromName("ArchaeologyHouse") as LibraryMuseum;
 
-      _helper.Events.GameLoop.DayStarted += OnDayStarted;
-      _helper.Events.Player.InventoryChanged += OnInventoryChanged;
       _helper.Events.Display.RenderedActiveMenu += OnRenderedActiveMenu;
       _helper.Events.Display.RenderedHud += OnRenderedHud;
       _helper.Events.Display.Rendering += OnRendering;
     }
-  }
-
-  // [EventPriority(EventPriority.Low)]
-  private void OnDayStarted(object? sender, DayStartedEventArgs e)
-  {
-    // NB The Custom Community Center mod is only ready at this point
-    if (_helper.GameContent.CurrentLocaleConstant == LocalizedContentManager.LanguageCode.en &&
-        _helper.ModRegistry.IsLoaded("blueberry.CustomCommunityCentre"))
-    {
-      _bundleNameOverrides = GetEnglishNamesForCustomCommunityCenterBundles();
-    }
-    else
-    {
-      _bundleNameOverrides = null;
-    }
-
-    PopulateRequiredBundles();
   }
 
   /// <summary>Raised before the game draws anything to the screen in a draw tick, as soon as the sprite batch is opened.</summary>
@@ -133,6 +105,7 @@ internal class ShowItemHoverInformation : IDisposable
   /// <param name="e">The event arguments.</param>
   private void OnRenderedHud(object? sender, RenderedHudEventArgs e)
   {
+    // ModEntry.MonitorObject.Log(Game1.player.currentLocation.Name);
     if (Game1.activeClickableMenu == null)
     {
       DrawAdvancedTooltip(e.SpriteBatch);
@@ -145,6 +118,7 @@ internal class ShowItemHoverInformation : IDisposable
   /// </summary>
   /// <param name="sender">The event sender.</param>
   /// <param name="e">The event arguments.</param>
+  [EventPriority(EventPriority.Low)]
   private void OnRenderedActiveMenu(object? sender, RenderedActiveMenuEventArgs e)
   {
     if (Game1.activeClickableMenu != null)
@@ -153,111 +127,11 @@ internal class ShowItemHoverInformation : IDisposable
     }
   }
 
-  /// <summary>
-  ///   Raised after items are added or removed to a player's inventory. NOTE: this event is currently only raised for
-  ///   the current player.
-  /// </summary>
-  /// <param name="sender">The event sender.</param>
-  /// <param name="e">The event arguments.</param>
-  private void OnInventoryChanged(object? sender, InventoryChangedEventArgs e)
-  {
-    if (e.IsLocalPlayer)
-    {
-      PopulateRequiredBundles();
-    }
-  }
-
-  /// Retrieve English bundle names for Custom Community Center bundles as the bundle id is not the bundle's English name.
-  /// For example, the bundle id is "Custom_blueberry_Kitchen_Area0_Bundle0" but the name is "Baker's"
-  private Dictionary<string, string> GetEnglishNamesForCustomCommunityCenterBundles()
-  {
-    try
-    {
-      Dictionary<string, string> englishNames = new();
-      var bundleNamesAsset = _helper.GameContent.Load<Dictionary<string, string>>(@"Strings\BundleNames");
-      foreach (KeyValuePair<string, string> namePair in bundleNamesAsset)
-      {
-        if (namePair.Key != namePair.Value)
-        {
-          englishNames[namePair.Key] = namePair.Value;
-        }
-      }
-
-      return englishNames;
-    }
-    catch (Exception e)
-    {
-      ModEntry.MonitorObject.LogOnce(
-        "Failed to retrieve English names for Custom Community Center bundles. Custom bundle names may be displayed incorrectly.",
-        LogLevel.Warn
-      );
-      ModEntry.MonitorObject.Log(e.ToString());
-      return null;
-    }
-  }
-
-  private void PopulateRequiredBundles()
-  {
-    _prunedRequiredBundles.Clear();
-    if (Game1.player.hasOrWillReceiveMail("canReadJunimoText") && !Game1.player.mailReceived.Contains("JojaMember"))
-    {
-      foreach (KeyValuePair<string, string> bundle in Game1.netWorldState.Value.BundleData)
-      {
-        string[] bundleRoomInfo = bundle.Key.Split('/');
-        string bundleRoom = bundleRoomInfo[0];
-        int areaNum = CommunityCenter.getAreaNumberFromName(bundleRoom);
-
-        if (_communityCenter.shouldNoteAppearInArea(areaNum))
-        {
-          int bundleNumber = bundleRoomInfo[1].SafeParseInt32();
-          string[] bundleInfo = bundle.Value.Split('/');
-          string bundleName =
-            _helper.GameContent.CurrentLocaleConstant == LocalizedContentManager.LanguageCode.en ||
-            int.TryParse(bundleInfo[^1], out _)
-              ? bundleInfo[0]
-              : bundleInfo[^1];
-          string[] bundleValues = bundleInfo[2].Split(' ');
-          List<ItemAndQuality> source = new();
-
-          for (var i = 0; i < bundleValues.Length; i += 3)
-          {
-            string bundleValue = bundleValues[i];
-            int quality = bundleValues[i + 2].SafeParseInt32();
-            if (bundleValue != "-1" && !_communityCenter.bundles[bundleNumber][i / 3])
-            {
-              // 1.6ism - we're presuming that all bundles will always be Objects
-              source.Add(new ItemAndQuality("(O)" + bundleValue, quality));
-            }
-          }
-
-          if (source.Count > 0)
-          {
-            if (_bundleNameOverrides != null && _bundleNameOverrides.TryGetValue(bundleName, out string value))
-            {
-              bundleName = value;
-            }
-
-            _prunedRequiredBundles.Add(bundleName, source);
-          }
-        }
-      }
-    }
-  }
-
-  //private Item _lastHoverItem;
-  //private int lastStackSize;
-  //private int lastItemPrice;
-  //private int lastStackPrice;
-  //private int lastCropPrice;
-  //private int lastTruePrice;
-  //private int lastWindowWidth;
-  //private string lastRequiredBundleName;
-
   private void DrawAdvancedTooltip(SpriteBatch spriteBatch)
   {
     if (_hoverItem.Value != null &&
         !(_hoverItem.Value is MeleeWeapon weapon && weapon.isScythe()) &&
-        !(_hoverItem.Value is FishingRod))
+        _hoverItem.Value is not FishingRod)
     {
       var hoveredObject = _hoverItem.Value as Object;
 
@@ -279,51 +153,18 @@ internal class ShowItemHoverInformation : IDisposable
                            !Game1.player.basicShipped.ContainsKey(hoveredObject.ItemId) &&
                            hoveredObject.Type != "Fish" &&
                            hoveredObject.Category != Object.skillBooksCategory;
-      if (notShippedYet &&
-          hoveredObject != null &&
-          ModEntry.DGA.IsCustomObject(hoveredObject, out DynamicGameAssetsHelper? dgaHelper))
-      {
-        // NB For DGA items, Game1.player.basicShipped.ContainsKey(hoveredObject.ParentSheetIndex) will always be false
-        //    and Object.countsForShippedCollection bypasses the type and category checks
-        try
-        {
-          // For shipping, DGA patches:
-          // - CollectionsPage()
-          // - ShippingMenu.parseItems()
-          // - StardewValley.Object.countsForShippedCollection()
-          // - StardewValley.Object.isIndexOkForBasicShippedCategory()
-          // But it doesn't patch Utility.getFarmerItemsShippedPercent() which determines if the requirements for the achievement are met.
-          // This means that DGA items do not (yet) count for the "Full Shipment" achievement even though they appear in the collections page.
-
-          // Nonetheless, show the icon if that item is still hidden in the collections page.
-          string dgaId = dgaHelper.GetDgaObjectFakeId(hoveredObject);
-          bool inCollectionsPage = Object.isPotentialBasicShipped(dgaId, hoveredObject.Category, hoveredObject.Type);
-
-          notShippedYet = inCollectionsPage && !Game1.player.basicShipped.ContainsKey(dgaId);
-        }
-        catch (Exception e)
-        {
-          ModEntry.MonitorObject.LogOnce(
-            $"An error occured while checking if the DGA item {hoveredObject.Name} has been shipped.",
-            LogLevel.Error
-          );
-          ModEntry.MonitorObject.Log(e.ToString(), LogLevel.Debug);
-        }
-      }
 
       string? requiredBundleName = null;
+      Color? bundleColor = null;
       if (hoveredObject != null)
       {
-        foreach (KeyValuePair<string, List<ItemAndQuality>> requiredBundle in _prunedRequiredBundles)
+        BundleRequiredItem? bundleDisplayData = BundleHelper.GetBundleItemIfNotDonated(hoveredObject);
+        if (bundleDisplayData != null)
         {
-          if (requiredBundle.Value.Any(
-                itemQuality => itemQuality.qualifiedItemId == hoveredObject.QualifiedItemId &&
-                               hoveredObject.Quality >= itemQuality.quality
-              ))
-          {
-            requiredBundleName = requiredBundle.Key;
-            break;
-          }
+          requiredBundleName = bundleDisplayData.Name;
+
+          // TODO cache these colors so we're not doing it every time
+          bundleColor = BundleHelper.GetRealColorFromIndex(bundleDisplayData.Id)?.Desaturate(0.35f);
         }
       }
 
@@ -505,7 +346,7 @@ internal class ShowItemHoverInformation : IDisposable
       {
         // Draws a 30x42 bundle icon offset by (-7, -13) from the top-left corner of the window
         // and the 36px high banner with the bundle name
-        DrawBundleBanner(spriteBatch, requiredBundleName, windowPos + new Vector2(-7, -13), windowWidth);
+        DrawBundleBanner(spriteBatch, requiredBundleName, windowPos + new Vector2(-7, -13), windowWidth, bundleColor);
       }
 
       if (notShippedYet)
@@ -514,16 +355,6 @@ internal class ShowItemHoverInformation : IDisposable
         var shippingBinDims = new Vector2(30, 24);
         DrawShippingBin(spriteBatch, windowPos + new Vector2(windowWidth - 6, 8), shippingBinDims / 2);
       }
-
-      //memorize the result to save processing time when calling again with same values
-      //_lastHoverItem = (_lastHoverItem != _hoverItem.Value) ? _hoverItem.Value : _lastHoverItem;
-      //lastItemPrice = (itemPrice != lastItemPrice) ? itemPrice : lastItemPrice;
-      //lastCropPrice = (lastCropPrice != cropPrice) ? cropPrice : lastCropPrice;
-      //lastStackPrice = (lastStackPrice != stackPrice) ? stackPrice : lastStackPrice;
-      //lastTruePrice = (lastTruePrice != truePrice) ? truePrice : lastTruePrice;
-      //lastWindowWidth = (lastWindowWidth != windowWidth) ? windowWidth : lastWindowWidth;
-      //lastRequiredBundleName = (lastRequiredBundleName != requiredBundleName) ? requiredBundleName : lastRequiredBundleName;
-      //lastStackSize = (_hoverItem.Value != null && lastStackSize != _hoverItem.Value.Stack) ? _hoverItem.Value.Stack : lastStackSize;
     }
   }
 
@@ -533,22 +364,30 @@ internal class ShowItemHoverInformation : IDisposable
     b.DrawString(Game1.smallFont, text, position, Game1.textColor);
   }
 
-  private void DrawBundleBanner(SpriteBatch spriteBatch, string bundleName, Vector2 position, int windowWidth)
+  private void DrawBundleBanner(
+    SpriteBatch spriteBatch,
+    string bundleName,
+    Vector2 position,
+    int windowWidth,
+    Color? color = null
+  )
   {
     // NB The dialogue font has a cap height of 30 and an offset of (3, 6)
+
+    Color drawColor = color ?? Color.Crimson;
 
     var bundleBannerX = (int)position.X;
     int bundleBannerY = (int)position.Y + 3;
     var cellCount = 36;
-    var solidCells = 6;
+    var solidCells = 8;
     int cellWidth = windowWidth / cellCount;
     for (var cell = 0; cell < cellCount; ++cell)
     {
-      float fadeAmount = 0.92f - (cell < solidCells ? 0 : 1.0f * (cell - solidCells) / (cellCount - solidCells));
+      float fadeAmount = 0.97f - (cell < solidCells ? 0 : 1.0f * (cell - solidCells) / (cellCount - solidCells));
       spriteBatch.Draw(
         Game1.staminaRect,
         new Rectangle(bundleBannerX + cell * cellWidth, bundleBannerY, cellWidth, 36),
-        Color.Crimson * fadeAmount
+        drawColor * fadeAmount
       );
     }
 
@@ -564,11 +403,16 @@ internal class ShowItemHoverInformation : IDisposable
       0.86f
     );
 
-    spriteBatch.DrawString(
-      Game1.dialogueFont,
+    Utility.drawTextWithColoredShadow(
+      spriteBatch,
       bundleName,
+      Game1.dialogueFont,
       position + new Vector2(_bundleIcon.sourceRect.Width * _bundleIcon.scale + 3, 0),
-      Color.White
+      Color.Ivory,
+      Color.DarkSlateGray,
+      horizontalShadowOffset: 2,
+      verticalShadowOffset: 2,
+      numShadows: 3
     );
   }
 
@@ -602,6 +446,4 @@ internal class ShowItemHoverInformation : IDisposable
       0.86f
     );
   }
-
-  private record ItemAndQuality(string qualifiedItemId, int quality);
 }

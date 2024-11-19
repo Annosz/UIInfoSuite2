@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -91,11 +90,9 @@ internal class ShowTodaysGifts : IDisposable
       return;
     }
 
-    var slotPosition = (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic)
-                                              .GetValue(_socialPage);
     var yOffset = 25;
 
-    for (int i = slotPosition; i < slotPosition + 5 && i < _socialPage.SocialEntries.Count; ++i)
+    for (int i = _socialPage.slotPosition; i < _socialPage.slotPosition + 5 && i < _socialPage.SocialEntries.Count; ++i)
     {
       int yPosition = Game1.activeClickableMenu.yPositionOnScreen + 130 + yOffset;
       yOffset += 112;

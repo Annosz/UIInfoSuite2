@@ -1,21 +1,60 @@
 ﻿{
   // GUI - Game Menu
   "OptionsTabTooltip": "UI Info Suite 2 Options",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "Show options in in-game menu",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "Enables an extra tab in the in-game menu where you can configure every options for this mod.",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "Apply default settings from this save",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "New characters will inherit the settings for the mod from this save file.",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "Open calendar keybind",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "Opens the calendar tab.",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "Open quest board keybind",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "Opens the quest board.",
+  "Keybinds.Subtitle.ShowRange.displayedName": "Show item effect ranges",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "Such: scarecrow, sprinkler, Junimo Hut, bee house, mushroom log and mossy seed.",
+  "Keybinds.ShowOneRange.DisplayedName": "Show current item range",
+  "Keybinds.ShowOneRange.Tooltip": "When the mouse moves over the item you want to show, show range.",
+  "Keybinds.ShowAllRange.DisplayedName": "Show all item range",
+  "Keybinds.ShowAllRange.Tooltip": "When the mouse moves over the item you want to show, all ranges are show.",
   //GUI - Billboard
   "Billboard": "Billboard",
   "Calendar": "Calendar",
+  "SlayerGoals": "Monster Eradication Goals",
   //GUI - Seed shop
   "HarvestPrice": "Harvest price",
   //Production
   "Days": "days",
   "Hours": "hours",
   "Minutes": "minutes",
+  "MachineProcessing": "Processing",
+  "MachineDone": "Done",
   //Harvest
   "DaysToMature": "days to mature",
   "ReadyToHarvest": "Ready to harvest!",
   "With": "with",
   "Fertilized": "fertilized",
-  "Tree": "Tree",
+  "Watered": "Watered",
+  "NotWatered": "Not Watered",
+  "DoesNotProduceThisSeason": "Does not produce this season",
+  //Tree
+  "Stump": "stump",
+  // This space is required for languages that use a space between words, delete otherwise (e.g. Korean)
+  "Tree": " Tree",
+  "stage": "Stage",
+  "Oak": "Oak",
+  "Maple": "Maple",
+  "Pine": "Pine",
+  "Palm": "Palm",
+  "Mushroom": "Mushroom",
+  "Mahogany": "Mahogany",
+  "PalmJungle": "Palm (Jungle)",
+  "GreenRainType1": "Green Rain Type 1",
+  "GreenRainType2": "Green Rain Type 2",
+  "GreenRainType3": "Green Rain Type 3",
+  "Mystic": "Mystic",
+  "VmvBirch": "(VMV) Birch",
+  "SVEBirch": "(SVE) Birch",
+  "SVEFir": "(SVE) Fir",
   //Display icons - General
   "TodaysRecipe": "Today's Recipe: ",
   "TravelingMerchantIsInTown": "Traveling merchant is in town!",
@@ -55,6 +94,8 @@
   "HideAnimalPetOnMaxFriendship": "Hide on max friendship",
   "ShowCropAndBarrelTooltip": "Show crop and barrel times",
   "ShowItemEffectRanges": "Show scarecrow and sprinkler range",
+  "ButtonControlShow": "Press leftctrl to show current item range, while pressing leftalt to show all item range",
+  "ShowBombRange": "Show the bomb destroying Range",
   "ShowExtraItemInformation": "Show item hover information",
   "ShowHarvestPricesInShop": "Show shop harvest prices",
   //Settings - Tabs info
@@ -76,5 +117,6 @@
   "ShowSeasonalBerryHazelnut": "Show hazelnuts on trees",
   "ShowNewCraftable": "Show when craftable has not been crafted",
   //Others
-  "LevelUp": "Level Up"
+  "LevelUp": "Level Up",
+  "TrackOnMap": "Track on map"
 }

@@ -13,11 +13,13 @@ public sealed class IconHandler
 
   public static IconHandler Handler { get; } = new();
 
+  public bool IsQuestLogPermanent { get; set; } = false;
+
   public Point GetNewIconPosition()
   {
     int yPos = Game1.options.zoomButtons ? 290 : 260;
     int xPosition = Tools.GetWidthInPlayArea() - 70 - 48 * _amountOfVisibleIcons.Value;
-    if (Game1.player.questLog.Any() || Game1.player.team.specialOrders.Any())
+    if (IsQuestLogPermanent || Game1.player.questLog.Any() || Game1.player.team.specialOrders.Any())
     {
       xPosition -= 65;
     }

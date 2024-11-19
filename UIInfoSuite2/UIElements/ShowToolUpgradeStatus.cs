@@ -1,13 +1,14 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
+using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValley.Tools;
 using UIInfoSuite2.Infrastructure;
-using UIInfoSuite2.Infrastructure.Extensions;
 
 namespace UIInfoSuite2.UIElements;
 
@@ -23,48 +24,55 @@ internal class ShowToolUpgradeStatus : IDisposable
       return;
     }
 
-    if (toolBeingUpgraded is (Axe or Pickaxe or Hoe or WateringCan) ||
-        (toolBeingUpgraded is GenericTool trashcan && trashcan.IndexOfMenuItemView is (>= 13 and <= 16)))
+    if (toolBeingUpgraded is Axe
+        or Pickaxe
+        or Hoe
+        or WateringCan
+        or Pan
+        or GenericTool { IndexOfMenuItemView: >= 13 and <= 16 })
     {
-      // NB The previous method used Tool.UpgradeLevel, but it turns out that field is not correctly set by the game.
-      //    Tools other than the Trash Cans only worked because they had special handling code.
-
-      // Read the 16x16 source rectangle based on Tool.IndexOfMenuItemView
-      _toolTexturePosition.Value = Game1.getSquareSourceRectForNonStandardTileSheet(
-        Game1.toolSpriteSheet,
-        16,
-        16,
-        toolBeingUpgraded.IndexOfMenuItemView
+      ParsedItemData? itemData = ItemRegistry.GetDataOrErrorItem(toolBeingUpgraded.QualifiedItemId);
+      Texture2D? itemTexture = itemData.GetTexture();
+      Rectangle itemTextureLocation = itemData.GetSourceRect();
+      float scaleFactor = 40.0f / itemTextureLocation.Width;
+      _toolUpgradeIcon.Value = new ClickableTextureComponent(
+        new Rectangle(0, 0, 40, 40),
+        itemTexture,
+        itemTextureLocation,
+        scaleFactor
       );
-    }
-    else
-    {
-      _toolTexturePosition.Value = null;
     }
 
     if (Game1.player.daysLeftForToolUpgrade.Value > 0)
     {
       _hoverText.Value = string.Format(
-        _helper.SafeGetString(LanguageKeys.DaysUntilToolIsUpgraded),
+        I18n.DaysUntilToolIsUpgraded(),
         Game1.player.daysLeftForToolUpgrade.Value,
         toolBeingUpgraded.DisplayName
       );
     }
     else
     {
-      _hoverText.Value = string.Format(
-        _helper.SafeGetString(LanguageKeys.ToolIsFinishedBeingUpgraded),
-        toolBeingUpgraded.DisplayName
-      );
+      _hoverText.Value = string.Format(I18n.ToolIsFinishedBeingUpgraded(), toolBeingUpgraded.DisplayName);
     }
   }
 #endregion
 
 #region Properties
-  private readonly PerScreen<Rectangle?> _toolTexturePosition = new();
   private readonly PerScreen<string> _hoverText = new();
   private readonly PerScreen<Tool?> _toolBeingUpgraded = new();
-  private readonly PerScreen<ClickableTextureComponent> _toolUpgradeIcon = new();
+
+  private readonly PerScreen<ClickableTextureComponent> _toolUpgradeIcon = new(
+    () =>
+    {
+      return new ClickableTextureComponent(
+        new Rectangle(0, 0, 40, 40),
+        Game1.mouseCursors,
+        new Rectangle(322, 498, 12, 12),
+        40 / 12f
+      );
+    }
+  );
 
   private readonly IModHelper _helper;
 #endregion
@@ -102,7 +110,7 @@ internal class ShowToolUpgradeStatus : IDisposable
 
 
 #region Event subscriptions
-  private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
+  private void OnUpdateTicked(object? sender, UpdateTickedEventArgs e)
   {
     if (e.IsOneSecond && _toolBeingUpgraded.Value != Game1.player.toolBeingUpgraded.Value)
     {
@@ -110,59 +118,29 @@ internal class ShowToolUpgradeStatus : IDisposable
     }
   }
 
-  private void OnDayStarted(object sender, DayStartedEventArgs e)
+  private void OnDayStarted(object? sender, DayStartedEventArgs e)
   {
     UpdateToolInfo();
   }
 
-  private void OnRenderingHud(object sender, RenderingHudEventArgs e)
+  private void OnRenderingHud(object? sender, RenderingHudEventArgs e)
   {
-    // Draw a 40x40 icon
-    if (UIElementUtils.IsRenderingNormally() && _toolBeingUpgraded.Value != null)
+    if (!UIElementUtils.IsRenderingNormally() || _toolBeingUpgraded.Value == null)
     {
-      Point iconPosition = IconHandler.Handler.GetNewIconPosition();
-      _toolUpgradeIcon.Value = new ClickableTextureComponent(
-        new Rectangle(iconPosition.X, iconPosition.Y, 40, 40),
-        Game1.toolSpriteSheet,
-        new Rectangle(),
-        2.5f
-      );
-
-      if (_toolTexturePosition.Value is Rectangle toolSourceRect)
-      {
-        _toolUpgradeIcon.Value.sourceRect = toolSourceRect;
-        _toolUpgradeIcon.Value.draw(e.SpriteBatch);
-      }
-      else
-      {
-        // Generic method for modded tools
-        try
-        {
-          // drawInMenu draws a 64x64 texture (16x16 texture at scale 4 = pixelZoom) if scaleSize is set to 1.
-          // It aligns position + (32, 32) with the center of the texture but we want to align position + 20, so that's an offset of -12.
-          _toolBeingUpgraded.Value.drawInMenu(
-            e.SpriteBatch,
-            iconPosition.ToVector2() + new Vector2(-12),
-            2.5f / Game1.pixelZoom
-          );
-        }
-        catch (Exception ex)
-        {
-          ModEntry.MonitorObject.LogOnce(
-            $"An error occured while displaying the {_toolBeingUpgraded.Value.Name} tool.",
-            LogLevel.Error
-          );
-          ModEntry.MonitorObject.Log(ex.ToString());
-        }
-      }
+      return;
     }
+
+    Point iconPosition = IconHandler.Handler.GetNewIconPosition();
+    _toolUpgradeIcon.Value.bounds.X = iconPosition.X;
+    _toolUpgradeIcon.Value.bounds.Y = iconPosition.Y;
+
+    _toolUpgradeIcon.Value.draw(e.SpriteBatch);
   }
 
-  private void OnRenderedHud(object sender, RenderedHudEventArgs e)
+  private void OnRenderedHud(object? sender, RenderedHudEventArgs e)
   {
     // Show text on hover
-    if (_toolBeingUpgraded.Value != null &&
-        (_toolUpgradeIcon.Value?.containsPoint(Game1.getMouseX(), Game1.getMouseY()) ?? false))
+    if (_toolBeingUpgraded.Value != null && _toolUpgradeIcon.Value.containsPoint(Game1.getMouseX(), Game1.getMouseY()))
     {
       IClickableMenu.drawHoverText(Game1.spriteBatch, _hoverText.Value, Game1.dialogueFont);
     }

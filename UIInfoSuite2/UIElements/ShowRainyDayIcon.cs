@@ -7,7 +7,6 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 using UIInfoSuite2.Infrastructure;
-using UIInfoSuite2.Infrastructure.Extensions;
 
 namespace UIInfoSuite2.UIElements;
 
@@ -149,7 +148,10 @@ internal class ShowRainyDayIcon : IDisposable
     // Setup Texture sheet as a copy, so as not to disturb existing sprites
     _iconSheet = new Texture2D(Game1.graphics.GraphicsDevice, WeatherSheetWidth, WeatherSheetHeight);
     _weatherIconColors = new Color[WeatherSheetWidth * WeatherSheetHeight];
-    Texture2D weatherBorderTexture = Texture2D.FromFile(Game1.graphics.GraphicsDevice, Path.Combine(_helper.DirectoryPath, "assets", "weatherbox.png"));
+    Texture2D weatherBorderTexture = Texture2D.FromFile(
+      Game1.graphics.GraphicsDevice,
+      Path.Combine(_helper.DirectoryPath, "assets", "weatherbox.png")
+    );
     var weatherBorderColors = new Color[15 * 15];
     var cursorColors = new Color[Game1.mouseCursors.Width * Game1.mouseCursors.Height];
     var cursorColors_1_6 = new Color[Game1.mouseCursors_1_6.Width * Game1.mouseCursors_1_6.Height];
@@ -162,7 +164,12 @@ internal class ShowRainyDayIcon : IDisposable
 
     // Copy over the bits we want
     // Border from TV screen
-    Tools.GetSubTexture(subTextureColors, weatherBorderColors, new Rectangle(0, 0, 15, 15), new Rectangle(0, 0, 15, 15));
+    Tools.GetSubTexture(
+      subTextureColors,
+      weatherBorderColors,
+      new Rectangle(0, 0, 15, 15),
+      new Rectangle(0, 0, 15, 15)
+    );
     // Copy to each destination
     for (var i = 0; i < 4; i++)
     {
@@ -228,25 +235,25 @@ internal class ShowRainyDayIcon : IDisposable
       case Game1.weather_rain:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(0, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.RainNextDay);
+        _valleyWeather.HoverText = I18n.RainNextDay();
         break;
 
       case Game1.weather_lightning:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(15, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.ThunderstormNextDay);
+        _valleyWeather.HoverText = I18n.ThunderstormNextDay();
         break;
 
       case Game1.weather_snow:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(30, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.SnowNextDay);
+        _valleyWeather.HoverText = I18n.SnowNextDay();
         break;
 
       case Game1.weather_green_rain:
         _valleyWeather.IsRainyTomorrow = true;
         _valleyWeather.SpriteLocation = new Rectangle(45, 0, 15, 15);
-        _valleyWeather.HoverText = _helper.SafeGetString(LanguageKeys.RainNextDay);
+        _valleyWeather.HoverText = I18n.RainNextDay();
         break;
 
       default:
@@ -262,19 +269,19 @@ internal class ShowRainyDayIcon : IDisposable
       case Game1.weather_rain:
         _islandWeather.IsRainyTomorrow = true;
         _islandWeather.SpriteLocation = new Rectangle(60, 0, 18, 18);
-        _islandWeather.HoverText = _helper.SafeGetString(LanguageKeys.IslandRainNextDay);
+        _islandWeather.HoverText = I18n.IslandRainNextDay();
         break;
 
       case Game1.weather_lightning:
         _islandWeather.IsRainyTomorrow = true;
         _islandWeather.SpriteLocation = new Rectangle(78, 0, 18, 18);
-        _islandWeather.HoverText = _helper.SafeGetString(LanguageKeys.IslandThunderstormNextDay);
+        _islandWeather.HoverText = I18n.IslandThunderstormNextDay();
         break;
 
       case Game1.weather_green_rain:
         _islandWeather.IsRainyTomorrow = true;
         _islandWeather.SpriteLocation = new Rectangle(96, 0, 18, 18);
-        _islandWeather.HoverText = _helper.SafeGetString(LanguageKeys.IslandRainNextDay);
+        _islandWeather.HoverText = I18n.IslandRainNextDay();
         break;
 
       default:

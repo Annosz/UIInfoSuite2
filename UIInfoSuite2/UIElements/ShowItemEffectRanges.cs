@@ -17,11 +17,19 @@ namespace UIInfoSuite2.UIElements;
 internal class ShowItemEffectRanges : IDisposable
 {
 #region Properties
-  private readonly PerScreen<HashSet<Point>> _effectiveArea = new(() => new HashSet<Point>());
+  private readonly PerScreen<List<Point>> _effectiveAreaCurrent = new(() => new List<Point>());
+  private readonly PerScreen<HashSet<Point>> _effectiveAreaOther = new(() => new HashSet<Point>());
+  private readonly PerScreen<HashSet<Point>> _effectiveAreaIntersection = new(() => new HashSet<Point>());
 
   private readonly Mutex _mutex = new();
 
   private readonly IModHelper _helper;
+
+  private bool ButtonControlShow { get; set; }
+  private bool ShowBombRange { get; set; }
+
+  private bool ButtonShowOneRange { get; set; }
+  private bool ButtonShowAllRanges { get; set; }
 #endregion
 
 
@@ -38,6 +46,8 @@ internal class ShowItemEffectRanges : IDisposable
 
   public void ToggleOption(bool showItemEffectRanges)
   {
+    ToggleButtonControlShowOption(showItemEffectRanges);
+
     _helper.Events.Display.RenderingHud -= OnRenderingHud;
     _helper.Events.GameLoop.UpdateTicked -= OnUpdateTicked;
 
@@ -46,6 +56,22 @@ internal class ShowItemEffectRanges : IDisposable
       _helper.Events.Display.RenderingHud += OnRenderingHud;
       _helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
     }
+  }
+
+  public void ToggleButtonControlShowOption(bool buttonControlShow)
+  {
+    ButtonControlShow = buttonControlShow;
+
+    _helper.Events.Input.ButtonsChanged -= OnButtonChanged;
+    if (buttonControlShow)
+    {
+      _helper.Events.Input.ButtonsChanged += OnButtonChanged;
+    }
+  }
+
+  public void ToggleShowBombRangeOption(bool showBombRange)
+  {
+    ShowBombRange = showBombRange;
   }
 #endregion
 
@@ -68,7 +94,9 @@ internal class ShowItemEffectRanges : IDisposable
     {
       try
       {
-        _effectiveArea.Value.Clear();
+        _effectiveAreaCurrent.Value.Clear();
+        _effectiveAreaOther.Value.Clear();
+        _effectiveAreaIntersection.Value.Clear();
       }
       finally
       {
@@ -79,9 +107,18 @@ internal class ShowItemEffectRanges : IDisposable
     if (Game1.activeClickableMenu == null && UIElementUtils.IsRenderingNormally())
     {
       UpdateEffectiveArea();
+      GetOverlapValue();
+      if (ButtonShowOneRange)
+      {
+        ButtonShowOneRange = false;
+      }
+
+      if (ButtonShowAllRanges)
+      {
+        ButtonShowAllRanges = false;
+      }
     }
   }
-
 
   private void OnRenderingHud(object? sender, RenderingHudEventArgs e)
   {
@@ -89,7 +126,7 @@ internal class ShowItemEffectRanges : IDisposable
     {
       try
       {
-        foreach (Point point in _effectiveArea.Value)
+        foreach (Point point in _effectiveAreaOther.Value)
         {
           var position = new Vector2(
             point.X * Utility.ModifyCoordinateFromUIScale(Game1.tileSize),
@@ -107,10 +144,48 @@ internal class ShowItemEffectRanges : IDisposable
             0.01f
           );
         }
+
+        foreach (Point point in _effectiveAreaIntersection.Value)
+        {
+          var position = new Vector2(
+            point.X * Utility.ModifyCoordinateFromUIScale(Game1.tileSize),
+            point.Y * Utility.ModifyCoordinateFromUIScale(Game1.tileSize)
+          );
+          e.SpriteBatch.Draw(
+            Game1.mouseCursors,
+            Utility.ModifyCoordinatesForUIScale(Game1.GlobalToLocal(Utility.ModifyCoordinatesForUIScale(position))),
+            new Rectangle(194, 388, 16, 16),
+            Color.Red * 0.7f,
+            0.0f,
+            Vector2.Zero,
+            Utility.ModifyCoordinateForUIScale(Game1.pixelZoom),
+            SpriteEffects.None,
+            0.01f
+          );
+        }
       }
       finally
       {
         _mutex.ReleaseMutex();
+      }
+    }
+  }
+
+  private void OnButtonChanged(object? sender, ButtonsChangedEventArgs e)
+  {
+    if (ModEntry._modConfig != null)
+    {
+      if (Context.IsPlayerFree)
+      {
+        if (ModEntry._modConfig.ShowOneRange.IsDown())
+        {
+          ButtonShowOneRange = true;
+        }
+
+        if (ModEntry._modConfig.ShowAllRange.IsDown())
+        {
+          ButtonShowAllRanges = true;
+        }
       }
     }
   }
@@ -133,13 +208,105 @@ internal class ShowItemEffectRanges : IDisposable
       {
         if (nextBuilding is JunimoHut nextHut)
         {
-          AddTilesToHighlightedArea(arrayToUse, nextHut.tileX.Value + 1, nextHut.tileY.Value + 1);
+          AddTilesToHighlightedArea(arrayToUse, false, nextHut.tileX.Value + 1, nextHut.tileY.Value + 1);
         }
       }
     }
 
     // Every other item is here
-    if (Game1.player.CurrentItem is Object currentItem && currentItem.isPlaceable())
+    if (ButtonControlShow && (ButtonShowOneRange || ButtonShowAllRanges))
+    {
+      Vector2 gamepadTile = Game1.player.CurrentTool != null
+        ? Utility.snapToInt(Game1.player.GetToolLocation() / Game1.tileSize)
+        : Utility.snapToInt(Game1.player.GetGrabTile());
+      Vector2 mouseTile = Game1.currentCursorTile;
+      Vector2 tile = Game1.options.gamepadControls && Game1.timerUntilMouseFade <= 0 ? gamepadTile : mouseTile;
+      if (Game1.currentLocation.Objects?.TryGetValue(tile, out Object? currentObject) ?? false)
+      {
+        if (currentObject != null)
+        {
+          Vector2 currentTile = Game1.GetPlacementGrabTile();
+          Game1.isCheckingNonMousePlacement = !Game1.IsPerformingMousePlacement();
+          Vector2 validTile = Utility.snapToInt(
+                                Utility.GetNearbyValidPlacementPosition(
+                                  Game1.player,
+                                  Game1.currentLocation,
+                                  currentObject,
+                                  (int)currentTile.X * Game1.tileSize,
+                                  (int)currentTile.Y * Game1.tileSize
+                                )
+                              ) /
+                              Game1.tileSize;
+          Game1.isCheckingNonMousePlacement = false;
+
+          if (currentObject.Name.IndexOf("arecrow", StringComparison.OrdinalIgnoreCase) >= 0)
+          {
+            string itemName = currentObject.Name;
+            arrayToUse = itemName.Contains("eluxe")
+              ? GetDistanceArray(ObjectsWithDistance.DeluxeScarecrow, false, currentObject)
+              : GetDistanceArray(ObjectsWithDistance.Scarecrow, false, currentObject);
+            AddTilesToHighlightedArea(arrayToUse, true, (int)validTile.X, (int)validTile.Y);
+
+            if (ButtonShowAllRanges)
+            {
+              similarObjects = GetSimilarObjectsInLocation("arecrow");
+              foreach (Object next in similarObjects)
+              {
+                if (!next.Equals(currentObject))
+                {
+                  int[][] arrayToUse_ = next.Name.IndexOf("eluxe", StringComparison.OrdinalIgnoreCase) >= 0
+                    ? GetDistanceArray(ObjectsWithDistance.DeluxeScarecrow, false, next)
+                    : GetDistanceArray(ObjectsWithDistance.Scarecrow, false, next);
+                  if (!arrayToUse_.SequenceEqual(arrayToUse))
+                  {
+                    AddTilesToHighlightedArea(arrayToUse, false, (int)next.TileLocation.X, (int)next.TileLocation.Y);
+                  }
+                }
+              }
+            }
+          }
+          else if (currentObject.Name.IndexOf("sprinkler", StringComparison.OrdinalIgnoreCase) >= 0)
+          {
+            IEnumerable<Vector2> unplacedSprinklerTiles = currentObject.GetSprinklerTiles();
+            if (currentObject.TileLocation != validTile)
+            {
+              unplacedSprinklerTiles =
+                unplacedSprinklerTiles.Select(tile => tile - currentObject.TileLocation + validTile);
+            }
+
+            AddTilesToHighlightedArea(unplacedSprinklerTiles, true);
+
+            if (ButtonShowAllRanges)
+            {
+              similarObjects = GetSimilarObjectsInLocation("sprinkler");
+              foreach (Object next in similarObjects)
+              {
+                if (!next.Equals(currentObject))
+                {
+                  AddTilesToHighlightedArea(next.GetSprinklerTiles(), false);
+                }
+              }
+            }
+          }
+          else if (currentObject.Name.IndexOf("bee house", StringComparison.OrdinalIgnoreCase) >= 0)
+          {
+            arrayToUse = GetDistanceArray(ObjectsWithDistance.Beehouse);
+            AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
+          }
+          else if (currentObject.Name.IndexOf("mushroom log", StringComparison.OrdinalIgnoreCase) >= 0)
+          {
+            arrayToUse = GetDistanceArray(ObjectsWithDistance.MushroomLog);
+            AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
+          }
+          else if (currentObject.Name.IndexOf("mossy seed", StringComparison.OrdinalIgnoreCase) >= 0)
+          {
+            arrayToUse = GetDistanceArray(ObjectsWithDistance.MossySeed);
+            AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
+          }
+        }
+      }
+    }
+    else if (Game1.player.CurrentItem is Object currentItem && currentItem.isPlaceable())
     {
       string itemName = currentItem.Name;
 
@@ -162,7 +329,7 @@ internal class ShowItemEffectRanges : IDisposable
         arrayToUse = itemName.Contains("eluxe")
           ? GetDistanceArray(ObjectsWithDistance.DeluxeScarecrow, false, currentItem)
           : GetDistanceArray(ObjectsWithDistance.Scarecrow, false, currentItem);
-        AddTilesToHighlightedArea(arrayToUse, (int)validTile.X, (int)validTile.Y);
+        AddTilesToHighlightedArea(arrayToUse, true, (int)validTile.X, (int)validTile.Y);
 
         similarObjects = GetSimilarObjectsInLocation("arecrow");
         foreach (Object next in similarObjects)
@@ -170,7 +337,7 @@ internal class ShowItemEffectRanges : IDisposable
           arrayToUse = next.Name.IndexOf("eluxe", StringComparison.OrdinalIgnoreCase) >= 0
             ? GetDistanceArray(ObjectsWithDistance.DeluxeScarecrow, false, next)
             : GetDistanceArray(ObjectsWithDistance.Scarecrow, false, next);
-          AddTilesToHighlightedArea(arrayToUse, (int)next.TileLocation.X, (int)next.TileLocation.Y);
+          AddTilesToHighlightedArea(arrayToUse, false, (int)next.TileLocation.X, (int)next.TileLocation.Y);
         }
       }
       else if (itemName.IndexOf("sprinkler", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -194,24 +361,51 @@ internal class ShowItemEffectRanges : IDisposable
           unplacedSprinklerTiles = unplacedSprinklerTiles.Select(tile => tile - currentItem.TileLocation + validTile);
         }
 
-        AddTilesToHighlightedArea(unplacedSprinklerTiles);
+        AddTilesToHighlightedArea(unplacedSprinklerTiles, true);
 
         similarObjects = GetSimilarObjectsInLocation("sprinkler");
         foreach (Object next in similarObjects)
         {
           // Absolute tile positions
-          AddTilesToHighlightedArea(next.GetSprinklerTiles());
+          AddTilesToHighlightedArea(next.GetSprinklerTiles(), false);
         }
       }
       else if (itemName.IndexOf("bee house", StringComparison.OrdinalIgnoreCase) >= 0)
       {
         arrayToUse = GetDistanceArray(ObjectsWithDistance.Beehouse);
-        AddTilesToHighlightedArea(arrayToUse, (int)validTile.X, (int)validTile.Y);
+        AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
+      }
+      else if (itemName.IndexOf("mushroom log", StringComparison.OrdinalIgnoreCase) >= 0)
+      {
+        arrayToUse = GetDistanceArray(ObjectsWithDistance.MushroomLog);
+        AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
+      }
+      else if (itemName.IndexOf("mossy seed", StringComparison.OrdinalIgnoreCase) >= 0)
+      {
+        arrayToUse = GetDistanceArray(ObjectsWithDistance.MossySeed);
+        AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
+      }
+      else if (ShowBombRange && itemName.IndexOf("Bomb", StringComparison.OrdinalIgnoreCase) >= 0)
+      {
+        if (itemName.Contains("ega"))
+        {
+          arrayToUse = GetDistanceArray(ObjectsWithDistance.MegaBomb);
+        }
+        else if (itemName.Contains("herry"))
+        {
+          arrayToUse = GetDistanceArray(ObjectsWithDistance.CherryBomb);
+        }
+        else
+        {
+          arrayToUse = GetDistanceArray(ObjectsWithDistance.Bomb);
+        }
+
+        AddTilesToHighlightedArea(arrayToUse, false, (int)validTile.X, (int)validTile.Y);
       }
     }
   }
 
-  private void AddTilesToHighlightedArea(IEnumerable<Vector2> tiles, int xPos = 0, int yPos = 0)
+  private void AddTilesToHighlightedArea(IEnumerable<Vector2> tiles, bool overlap, int xPos = 0, int yPos = 0)
   {
     if (_mutex.WaitOne())
     {
@@ -222,7 +416,14 @@ internal class ShowItemEffectRanges : IDisposable
           var point = tile.ToPoint();
           point.X += xPos;
           point.Y += yPos;
-          _effectiveArea.Value.Add(point);
+          if (overlap)
+          {
+            _effectiveAreaCurrent.Value.Add(point);
+          }
+          else
+          {
+            _effectiveAreaOther.Value.Add(point);
+          }
         }
       }
       finally
@@ -232,7 +433,7 @@ internal class ShowItemEffectRanges : IDisposable
     }
   }
 
-  private void AddTilesToHighlightedArea(int[][] tileMap, int xPos = 0, int yPos = 0)
+  private void AddTilesToHighlightedArea(int[][] tileMap, bool overlap, int xPos = 0, int yPos = 0)
   {
     int xOffset = tileMap.Length / 2;
 
@@ -247,7 +448,14 @@ internal class ShowItemEffectRanges : IDisposable
           {
             if (tileMap[i][j] == 1)
             {
-              _effectiveArea.Value.Add(new Point(xPos + i - xOffset, yPos + j - yOffset));
+              if (overlap)
+              {
+                _effectiveAreaCurrent.Value.Add(new Point(xPos + i - xOffset, yPos + j - yOffset));
+              }
+              else
+              {
+                _effectiveAreaOther.Value.Add(new Point(xPos + i - xOffset, yPos + j - yOffset));
+              }
             }
           }
         }
@@ -280,6 +488,18 @@ internal class ShowItemEffectRanges : IDisposable
     return result;
   }
 
+  /// <summary>
+  ///   Extract the overlapping area.
+  /// </summary>
+  private void GetOverlapValue()
+  {
+    var temp = new PerScreen<HashSet<Point>>();
+    _effectiveAreaIntersection.Value = _effectiveAreaOther.Value.Intersect(_effectiveAreaCurrent.Value).ToHashSet();
+    temp.Value = _effectiveAreaCurrent.Value.Except(_effectiveAreaOther.Value).ToHashSet();
+    _effectiveAreaOther.Value = _effectiveAreaOther.Value.Except(_effectiveAreaCurrent.Value).ToHashSet();
+    _effectiveAreaOther.Value = _effectiveAreaOther.Value.Union(temp.Value).ToHashSet();
+  }
+
 #region Distance map
   private enum ObjectsWithDistance
   {
@@ -290,7 +510,12 @@ internal class ShowItemEffectRanges : IDisposable
     Sprinkler,
     QualitySprinkler,
     IridiumSprinkler,
-    PrismaticSprinkler
+    PrismaticSprinkler,
+    MushroomLog,
+    MossySeed,
+    CherryBomb,
+    Bomb,
+    MegaBomb
   }
 
   private int[][] GetDistanceArray(ObjectsWithDistance type, bool hasPressureNozzle = false, Object? instance = null)
@@ -317,6 +542,16 @@ internal class ShowItemEffectRanges : IDisposable
           : GetCircularMask(100, maxDisplaySquareRadius: 2);
       case ObjectsWithDistance.PrismaticSprinkler:
         return GetCircularMask(3.69, Math.Sqrt(18), false);
+      case ObjectsWithDistance.MushroomLog:
+        return GetCircularMask(100, maxDisplaySquareRadius: 7);
+      case ObjectsWithDistance.MossySeed:
+        return GetCircularMask(100, maxDisplaySquareRadius: 5);
+      case ObjectsWithDistance.CherryBomb:
+        return GetCircularMask(3.39);
+      case ObjectsWithDistance.Bomb:
+        return GetCircularMask(5.52);
+      case ObjectsWithDistance.MegaBomb:
+        return GetCircularMask(7.45);
       default:
         return null;
     }

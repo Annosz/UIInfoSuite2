@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +20,7 @@ internal class LocationOfTownsfolk : IDisposable
 {
 #region Properties
   private SocialPage _socialPage = null!;
-  private string[] _friendNames = null!;
+  private readonly List<string> _friendNames = new();
   private readonly List<NPC> _townsfolk = new();
   private readonly List<OptionsCheckbox> _checkboxes = new();
 
@@ -104,11 +103,21 @@ internal class LocationOfTownsfolk : IDisposable
 
     _townsfolk.Clear();
 
+    // We shouldn't render if the RSV map is open, it already does its own NPC Tracking
+    bool isRsvWorldMap =
+      Game1.activeClickableMenu?.GetChildMenu()?.GetType().FullName?.Equals("RidgesideVillage.RSVWorldMap") ?? false;
+
+    if (isRsvWorldMap)
+    {
+      ModEntry.MonitorObject.Log("Not Rendering Villagers, in RSV Map");
+      return;
+    }
+
     foreach (GameLocation? loc in Game1.locations)
     {
       foreach (NPC? character in loc.characters)
       {
-        if (character.isVillager())
+        if (character.IsVillager)
         {
           _townsfolk.Add(character);
         }
@@ -122,18 +131,23 @@ internal class LocationOfTownsfolk : IDisposable
   {
     if (Game1.activeClickableMenu is GameMenu gameMenu)
     {
+      _friendNames.Clear();
       foreach (IClickableMenu? menu in gameMenu.pages)
       {
         if (menu is SocialPage socialPage)
         {
           _socialPage = socialPage;
-          _friendNames = socialPage.GetAllNpcs().Select(n => n.Name).ToArray();
+          foreach (SocialPage.SocialEntry? SocialEntries in socialPage.SocialEntries)
+          {
+            _friendNames.Add(SocialEntries.InternalName);
+          }
+
           break;
         }
       }
 
       _checkboxes.Clear();
-      for (var i = 0; i < _friendNames.Length; i++)
+      for (var i = 0; i < _friendNames.Count; i++)
       {
         string friendName = _friendNames[i];
         var checkbox = new OptionsCheckbox("", i);
@@ -141,7 +155,7 @@ internal class LocationOfTownsfolk : IDisposable
         {
           // npc
           checkbox.greyedOut = false;
-          checkbox.isChecked = _options.ShowLocationOfFriends.SafeGet(friendName, true);
+          checkbox.isChecked = _options.ShowLocationOfFriends.GetOrDefault(friendName, true);
         }
         else
         {
@@ -157,12 +171,7 @@ internal class LocationOfTownsfolk : IDisposable
 
   private void CheckSelectedBox(ButtonPressedEventArgs e)
   {
-    var slotPosition =
-      (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(
-        _socialPage
-      )!;
-
-    for (int i = slotPosition; i < slotPosition + 5; ++i)
+    for (int i = _socialPage.slotPosition; i < _socialPage.slotPosition + 5; ++i)
     {
       OptionsCheckbox checkbox = _checkboxes[i];
       var rect = new Rectangle(checkbox.bounds.X, checkbox.bounds.Y, checkbox.bounds.Width, checkbox.bounds.Height);
@@ -195,13 +204,9 @@ internal class LocationOfTownsfolk : IDisposable
       true
     );
 
-    var slotPosition =
-      (int)typeof(SocialPage).GetField("slotPosition", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(
-        _socialPage
-      )!;
     var yOffset = 0;
 
-    for (int i = slotPosition; i < slotPosition + 5 && i < _friendNames.Length; ++i)
+    for (int i = _socialPage.slotPosition; i < _socialPage.slotPosition + 5 && i < _friendNames.Count; ++i)
     {
       OptionsCheckbox checkbox = _checkboxes[i];
       checkbox.bounds.X = Game1.activeClickableMenu.xPositionOnScreen - 60;
@@ -256,7 +261,7 @@ internal class LocationOfTownsfolk : IDisposable
 
       if (checkbox.bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
       {
-        IClickableMenu.drawHoverText(Game1.spriteBatch, "Track on map", Game1.dialogueFont);
+        IClickableMenu.drawHoverText(Game1.spriteBatch, I18n.TrackOnMap(), Game1.dialogueFont);
       }
     }
   }
@@ -269,8 +274,9 @@ internal class LocationOfTownsfolk : IDisposable
       try
       {
         bool shouldDrawCharacter = Game1.player.friendshipData.ContainsKey(character.Name) &&
-                                   _options.ShowLocationOfFriends.SafeGet(character.Name, true) &&
-                                   character.id != -1;
+                                   _options.ShowLocationOfFriends.GetOrDefault(character.Name, true) &&
+                                   character.id != -1 &&
+                                   character.IsInvisible != true;
         if (shouldDrawCharacter)
         {
           DrawNPC(character, namesToShow);
@@ -305,13 +311,18 @@ internal class LocationOfTownsfolk : IDisposable
     }
 
     Rectangle headShot = character.GetHeadShot();
-    MapAreaPosition? mapPosition =
-      WorldMapManager.GetPositionData(
-        Game1.player.currentLocation,
-        new Point((int)location.Value.X, (int)location.Value.Y)
-      ) ??
-      WorldMapManager.GetPositionData(Game1.getFarm(), Point.Zero);
-    MapRegion? mapRegion = mapPosition.Region;
+    MapAreaPosition? mapPosition = Tools.GetMapPositionDataSafe(
+      Game1.player.currentLocation,
+      new Point((int)location.Value.X, (int)location.Value.Y)
+    );
+
+    if (mapPosition is null)
+    {
+      ModEntry.MonitorObject.LogOnce($"Unable to draw headshot for {character.Name}");
+      return;
+    }
+
+    MapRegion mapRegion = mapPosition.Region;
     Rectangle mapBounds = mapRegion.GetMapPixelBounds();
     var offsetLocation = new Vector2(
       location.Value.X + mapBounds.X - headShot.Width,
@@ -350,21 +361,18 @@ internal class LocationOfTownsfolk : IDisposable
   private static Vector2? GetMapCoordinatesForNPC(NPC character)
   {
     var playerNormalizedTile = new Point(Math.Max(0, Game1.player.TilePoint.X), Math.Max(0, Game1.player.TilePoint.Y));
-    MapAreaPosition playerMapAreaPosition =
-      WorldMapManager.GetPositionData(Game1.player.currentLocation, playerNormalizedTile) ??
-      WorldMapManager.GetPositionData(Game1.getFarm(), Point.Zero);
+    MapAreaPosition? playerMapAreaPosition = Tools.GetMapPositionDataSafe(Game1.player.currentLocation, playerNormalizedTile);
     // ^^ Regarding that ?? clause...  If the player is in the farmhouse or barn or any building on the farm, GetPositionData is
     //  going to return null.  Thus the fallback to pretending the player is on the farm.  However, it seems to me that
     //  Game1.player.currentLocation.GetParentLocation() would be the safer long-term bet.  But rule number 1 of modding is this:
     //  the game code is always right, even when it's wrong.
 
     var characterNormalizedTile = new Point(Math.Max(0, character.TilePoint.X), Math.Max(0, character.TilePoint.Y));
-    MapAreaPosition characterMapAreaPosition =
-      WorldMapManager.GetPositionData(character.currentLocation, characterNormalizedTile);
+    MapAreaPosition? characterMapAreaPosition = Tools.GetMapPositionDataSafe(character.currentLocation, characterNormalizedTile);
 
     if (playerMapAreaPosition != null &&
         characterMapAreaPosition != null &&
-        !(characterMapAreaPosition.Region.Id != playerMapAreaPosition.Region.Id))
+        characterMapAreaPosition.Region.Id == playerMapAreaPosition.Region.Id)
     {
       return characterMapAreaPosition.GetMapPixelPosition(character.currentLocation, characterNormalizedTile);
     }

@@ -8,7 +8,6 @@ using StardewValley.Locations;
 using StardewValley.Menus;
 using StardewValley.Objects;
 using UIInfoSuite2.Infrastructure;
-using UIInfoSuite2.Infrastructure.Extensions;
 
 namespace UIInfoSuite2.UIElements;
 
@@ -99,7 +98,7 @@ public class ShowTravelingMerchant : IDisposable
     // Show text on hover
     if (ShouldDrawIcon() && (_travelingMerchantIcon?.containsPoint(Game1.getMouseX(), Game1.getMouseY()) ?? false))
     {
-      string hoverText = _helper.SafeGetString(LanguageKeys.TravelingMerchantIsInTown);
+      string hoverText = I18n.TravelingMerchantIsInTown();
       IClickableMenu.drawHoverText(Game1.spriteBatch, hoverText, Game1.dialogueFont);
     }
   }
