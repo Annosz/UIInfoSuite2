@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -173,16 +174,36 @@ public class ModEntry : Mod
   {
     if (_modConfig != null)
     {
-      if (Context.IsPlayerFree && _modConfig.OpenCalendarKeybind.JustPressed())
+      if (_modConfig.OpenCalendarKeybind.JustPressed())
       {
         helper.Input.SuppressActiveKeybinds(_modConfig.OpenCalendarKeybind);
-        Game1.activeClickableMenu = new Billboard();
+        ToggleBillboard(false);
       }
-      else if (Context.IsPlayerFree && _modConfig.OpenQuestBoardKeybind.JustPressed())
+      else if (_modConfig.OpenQuestBoardKeybind.JustPressed())
       {
         helper.Input.SuppressActiveKeybinds(_modConfig.OpenQuestBoardKeybind);
-        Game1.RefreshQuestOfTheDay();
-        Game1.activeClickableMenu = new Billboard(true);
+        ToggleBillboard(true);
+      }
+    }
+  }
+
+  private static void ToggleBillboard(bool shouldShowDailyQuest)
+  {
+    if (Context.IsPlayerFree)
+    {
+      Game1.activeClickableMenu = new Billboard(shouldShowDailyQuest);
+    }
+    else if (Game1.activeClickableMenu is Billboard billboard)
+    {
+      bool isRequestedBillboardCurrentlyOpen =
+        (bool)(
+          typeof(Billboard)
+            .GetField("dailyQuestBoard", BindingFlags.NonPublic | BindingFlags.Instance)
+            ?.GetValue(billboard) ?? false
+        ) == shouldShowDailyQuest;
+      if (isRequestedBillboardCurrentlyOpen)
+      {
+        Game1.activeClickableMenu.exitThisMenu();
       }
     }
   }
