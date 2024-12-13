@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -111,20 +111,17 @@ internal class ShowCropAndBarrelTime : IDisposable
       _currentTerrain.Value = terrain;
     }
 
-    // Make sure that _terrain is null before overwriting it because Tea Saplings are added to terrainFeatures and not IndoorPot.bush
-    if (_currentTerrain.Value != null || _currentTile.Value is not IndoorPot pot)
+    if (_currentTile.Value is IndoorPot pot)
     {
-      return;
-    }
+      if (pot.hoeDirt.Value != null)
+      {
+        _currentTerrain.Value = pot.hoeDirt.Value;
+      }
 
-    if (pot.hoeDirt.Value != null)
-    {
-      _currentTerrain.Value = pot.hoeDirt.Value;
-    }
-
-    if (pot.bush.Value != null)
-    {
-      _currentTerrain.Value = pot.bush.Value;
+      if (pot.bush.Value != null)
+      {
+        _currentTerrain.Value = pot.bush.Value;
+      }
     }
   }
 
