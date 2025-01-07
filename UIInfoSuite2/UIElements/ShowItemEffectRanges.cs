@@ -543,9 +543,9 @@ internal class ShowItemEffectRanges : IDisposable
       case ObjectsWithDistance.PrismaticSprinkler:
         return GetCircularMask(3.69, Math.Sqrt(18), false);
       case ObjectsWithDistance.MushroomLog:
-        return GetCircularMask(100, maxDisplaySquareRadius: 7);
+        return GetCircularMask(100, maxDisplaySquareRadius: 3);
       case ObjectsWithDistance.MossySeed:
-        return GetCircularMask(100, maxDisplaySquareRadius: 5);
+        return GetCircularMask(100, maxDisplaySquareRadius: 2);
       case ObjectsWithDistance.CherryBomb:
         return GetCircularMask(3.39);
       case ObjectsWithDistance.Bomb:
