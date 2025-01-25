@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -536,28 +536,39 @@ internal class ShowCropAndBarrelTime : IDisposable
 
       if (ApiManager.GetApi(ModCompat.CustomBush, out ICustomBushApi? customBushApi))
       {
-        if (customBushApi.TryGetCustomBush(bush, out ICustomBush? customBushData, out string? id))
+        if (customBushApi.TryGetBush(bush, out ICustomBush? customBush))
         {
           droppedItems.Clear();
-          willProduceThisSeason = customBushData.Seasons.Contains(Game1.season);
-          string displayName = customBushData.DisplayName;
+          willProduceThisSeason = customBush.IsInSeason;
+          string displayName = customBush.Data.DisplayName;
           if (displayName.Contains("LocalizedText"))
           {
             displayName = TokenParser.ParseText(displayName);
           }
 
-          bushName = $"{displayName} Bush";
-          ageToMature = customBushData.AgeToProduce;
-          inProductionPeriod = Game1.dayOfMonth >= customBushData.DayToBeginProducing;
+          bushName = $"{displayName}";
+          ageToMature = customBush.Data.GetAgeToMature();
+          inProductionPeriod = customBush.Stage.ItemsProduced.Any();
           daysUntilProductionPeriod = inProductionPeriod ? 0 : 22 - Game1.dayOfMonth;
 
-          if (customBushData.GetShakeOffItemIfReady(bush, out ParsedItemData? shakeOffItemData))
+          if (customBush.Item is not null)
           {
-            droppedItems.Add(new PossibleDroppedItem(Game1.dayOfMonth, shakeOffItemData, 1.0f, id));
+            droppedItems.Add(new PossibleDroppedItem(Game1.dayOfMonth, ItemRegistry.GetData(customBush.Item.ItemId), 1.0f, customBush.Data.Id));
           }
           else
           {
-            droppedItems = customBushApi.GetCustomBushDropItems(customBushData, id);
+            droppedItems = DropsHelper.GetGenericDropItems(
+              customBush.Stage.ItemsProduced,
+              customBush.Data.Id,
+              false,
+              customBush.Data.DisplayName,
+              BushDropConverter
+            );
+
+            DropInfo BushDropConverter(ICustomBushDrop input)
+            {
+              return new DropInfo(input.Condition, input.GetChance(), input.ItemId);
+            }
           }
         }
       }

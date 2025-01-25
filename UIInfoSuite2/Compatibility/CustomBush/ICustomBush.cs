@@ -1,36 +1,50 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics.CodeAnalysis;
 using StardewValley;
-using StardewValley.GameData;
 
 namespace UIInfoSuite2.Compatibility.CustomBush;
 
-/// <summary>Model used for custom bushes.</summary>
+/// <summary>Represents a distinct instance of a custom bush.</summary>
 public interface ICustomBush
 {
-  /// <summary>Gets the age needed to produce.</summary>
-  public int AgeToProduce { get; }
+  /// <summary>Gets the condition pertaining to the bush's current season.</summary>
+  public string? Condition { get; }
 
-  /// <summary>Gets the day of month to begin producing.</summary>
-  public int DayToBeginProducing { get; }
+  /// <summary>Gets the bush data.</summary>
+  public ICustomBushData Data { get; }
 
-  /// <summary>Gets the description of the bush.</summary>
-  public string Description { get; }
+  /// <summary>Gets the custom bush's id.</summary>
+  public string Id { get; }
 
-  /// <summary>Gets the display name of the bush.</summary>
-  public string DisplayName { get; }
+  /// <summary>Gets a value indicating whether the bush is in season.</summary>
+  public bool IsInSeason { get; }
 
-  /// <summary>Gets the default texture used when planted indoors.</summary>
-  public string IndoorTexture { get; }
+  /// <summary>Gets the current shake off item (if any).</summary>
+  public Item? Item { get; }
 
-  /// <summary>Gets the season in which this bush will produce its drops.</summary>
-  public List<Season> Seasons { get; }
+  /// <summary>Gets an offset to the bush sprite.</summary>
+  public int SpriteOffset { get; }
 
-  /// <summary>Gets the rules which override the locations that custom bushes can be planted in.</summary>
-  public List<PlantableRule> PlantableLocationRules { get; }
+  /// <summary>Gets the current bush stage.</summary>
+  public ICustomBushStage Stage { get; }
 
-  /// <summary>Gets the texture of the tea bush.</summary>
-  public string Texture { get; }
+  /// <summary>Gets the number of counted days in the stage.</summary>
+  public int StageCounter { get; }
 
-  /// <summary>Gets the row index for the custom bush's sprites.</summary>
-  public int TextureSpriteRow { get; }
+  /// <summary>Gets the bush's stage id.</summary>
+  public string StageId { get; }
+
+  /// <summary>Gets the bush's texture.</summary>
+  public Texture2D Texture { get; }
+
+  /// <summary>Tests a Game State Query condition, passing the relevant parameters.</summary>
+  /// <param name="condition">The condition to test.</param>
+  /// <returns>True if the condition is null or empty, or if the condition passes.</returns>
+  bool TestCondition(string? condition);
+
+  /// <summary>Try to produce an item drop.</summary>
+  /// <param name="drop">The drop to produce.</param>
+  /// <param name="item">The item produced from the drop.</param>
+  /// <returns>True if the drop could be produced.</returns>
+  bool TryProduceDrop(ICustomBushDrop drop, [NotNullWhen(true)] out Item? item);
 }
