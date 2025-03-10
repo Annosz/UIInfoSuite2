@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
+using Leclair.Stardew.BetterGameMenu;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -8,6 +11,8 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
+
+using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
 
 namespace UIInfoSuite2.UIElements;
@@ -56,28 +61,18 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
       _helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
     }
   }
-#endregion
+  #endregion
 
-
-#region Event subscriptions
-  private void OnUpdateTicked(object sender, EventArgs e)
+  #region Event subscriptions
+  private void OnUpdateTicked(object? sender, EventArgs e)
   {
     // Get hovered and hold item
     _hoverItem.Value = Tools.GetHoveredItem();
-    if (Game1.activeClickableMenu is not GameMenu gameMenu)
-    {
-      return;
-    }
-
-    List<IClickableMenu> menuList = gameMenu.pages;
-
-    if (menuList[0] is InventoryPage)
-    {
+    if (Tools.GetCurrentMenuPage() is InventoryPage)
       _heldItem.Value = Game1.player.CursorSlotItem;
-    }
   }
 
-  private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
+  private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
   {
     if (e.Button == SButton.MouseLeft)
     {
@@ -89,13 +84,12 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
     }
   }
 
-  private void OnRenderedActiveMenu(object sender, EventArgs e)
+  private void OnRenderedActiveMenu(object? sender, EventArgs e)
   {
     if (_hoverItem.Value == null &&
-        Game1.activeClickableMenu is GameMenu gameMenu &&
-        gameMenu.currentTab == 0 &&
+        Tools.GetCurrentMenuPage() is InventoryPage &&
         _heldItem.Value == null &&
-        gameMenu.GetChildMenu() == null)
+        Game1.activeClickableMenu.GetChildMenu() == null)
     {
       DrawBillboard();
     }
@@ -131,8 +125,7 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
 
   private void ActivateBillboard()
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu &&
-        gameMenu.currentTab == 0 &&
+    if (Tools.GetCurrentMenuPage() is InventoryPage &&
         _heldItem.Value == null &&
         _showBillboardButton.Value.containsPoint(
           (int)Utility.ModifyCoordinateForUIScale(Game1.getMouseX()),

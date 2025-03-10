@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+
+using Leclair.Stardew.BetterGameMenu;
+
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
+
+using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Infrastructure.Extensions;
 using UIInfoSuite2.UIElements;
@@ -453,6 +458,11 @@ internal class ModOptionsPageHandler : IDisposable
         $"{GetType().Name}: Our tab was added back as the final step of the window resize workaround"
       );
     }
+  }
+
+  internal ModOptionsPage GetMenuInstance()
+  {
+    return new ModOptionsPage(_optionsElements, _helper.Events);
   }
 
   private void OnUpdateTicked(object? sender, EventArgs e)

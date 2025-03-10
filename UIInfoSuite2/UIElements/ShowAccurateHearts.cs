@@ -1,19 +1,24 @@
 ﻿using System;
+
+using Leclair.Stardew.BetterGameMenu;
+
 using Microsoft.Xna.Framework;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
+
+using UIInfoSuite2.Compatibility;
+using UIInfoSuite2.Infrastructure;
 
 namespace UIInfoSuite2.UIElements;
 
 internal class ShowAccurateHearts : IDisposable
 {
 #region Properties
-  private SocialPage? _socialPage;
   private readonly IModEvents _events;
 
     // @formatter:off
-    private readonly int[][] _numArray =
+    private static readonly int[][] _numArray =
     {
       new[] { 1, 1, 0, 1, 1 },
       new[] { 1, 1, 1, 1, 1 },
@@ -36,69 +41,46 @@ internal class ShowAccurateHearts : IDisposable
 
   public void ToggleOption(bool showAccurateHearts)
   {
-    _events.Display.MenuChanged -= OnMenuChanged;
     _events.Display.RenderedActiveMenu -= OnRenderedActiveMenu;
 
     if (showAccurateHearts)
     {
-      _events.Display.MenuChanged += OnMenuChanged;
       _events.Display.RenderedActiveMenu += OnRenderedActiveMenu;
     }
   }
 #endregion
 
 #region Event subscriptions
-  private void OnRenderedActiveMenu(object sender, RenderedActiveMenuEventArgs e)
+  private void OnRenderedActiveMenu(object? sender, RenderedActiveMenuEventArgs e)
   {
-    if (_socialPage == null)
+    if (Tools.GetCurrentMenuPage() is not SocialPage socialPage)
     {
-      GetSocialPage();
       return;
     }
 
-    if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.currentTab == 2)
-    {
-      DrawHeartFills();
+    DrawHeartFills(socialPage);
 
+    if (Game1.activeClickableMenu is GameMenu gameMenu)
+    {
       string hoverText = gameMenu.hoverText;
       IClickableMenu.drawHoverText(Game1.spriteBatch, hoverText, Game1.smallFont);
     }
   }
-
-  private void OnMenuChanged(object sender, MenuChangedEventArgs e)
-  {
-    GetSocialPage();
-  }
 #endregion
 
 #region Logic
-  private void GetSocialPage()
+  private static void DrawHeartFills(SocialPage? socialPage)
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu)
-    {
-      foreach (IClickableMenu? menu in gameMenu.pages)
-      {
-        if (menu is SocialPage page)
-        {
-          _socialPage = page;
-          break;
-        }
-      }
-    }
-  }
-
-  private void DrawHeartFills()
-  {
-    if (_socialPage == null)
+    if (socialPage == null)
     {
       return;
     }
 
-    var yOffset = 0;
+    int yOffset = 0;
 
-    for (int i = _socialPage.slotPosition; i < _socialPage.slotPosition + 5 && i < _socialPage.SocialEntries.Count; ++i)
+    for (int i = socialPage.slotPosition; i < socialPage.slotPosition + 5 && i < socialPage.SocialEntries.Count; ++i)
     {
-      string internalName = _socialPage.SocialEntries[i].InternalName;
+      string internalName = socialPage.SocialEntries[i].InternalName;
       if (Game1.player.friendshipData.TryGetValue(internalName, out Friendship friendshipValues) &&
           friendshipValues.Points > 0 &&
           friendshipValues.Points <
@@ -114,9 +96,9 @@ internal class ShowAccurateHearts : IDisposable
     }
   }
 
-  private void DrawEachIndividualSquare(int friendshipLevel, int friendshipPoints, int yPosition)
+  private static void DrawEachIndividualSquare(int friendshipLevel, int friendshipPoints, int yPosition)
   {
-    var numberOfPointsToDraw = (int)(friendshipPoints / 12.5);
+    int numberOfPointsToDraw = (int)(friendshipPoints / 12.5);
     int num2;
 
     if (friendshipLevel >= 10)
@@ -129,9 +111,9 @@ internal class ShowAccurateHearts : IDisposable
       num2 = 32 * friendshipLevel;
     }
 
-    for (var i = 3; i >= 0 && numberOfPointsToDraw > 0; --i)
+    for (int i = 3; i >= 0 && numberOfPointsToDraw > 0; --i)
     {
-      for (var j = 0; j < 5 && numberOfPointsToDraw > 0; ++j, --numberOfPointsToDraw)
+      for (int j = 0; j < 5 && numberOfPointsToDraw > 0; ++j, --numberOfPointsToDraw)
       {
         if (_numArray[i][j] == 1)
         {

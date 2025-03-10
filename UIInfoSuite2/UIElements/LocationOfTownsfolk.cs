@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Leclair.Stardew.BetterGameMenu;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -10,6 +12,8 @@ using StardewValley;
 using StardewValley.Menus;
 using StardewValley.Quests;
 using StardewValley.WorldMaps;
+
+using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Infrastructure.Extensions;
 using UIInfoSuite2.Options;
@@ -55,6 +59,13 @@ internal class LocationOfTownsfolk : IDisposable
       _helper.Events.Input.ButtonPressed += OnButtonPressed_ForSocialPage;
       _helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
     }
+
+    if (ApiManager.GetApi<IBetterGameMenuApi>(ModCompat.BetterGameMenu, out var bgm))
+    {
+      bgm.OffPageCreated(BetterGameMenu_OnPageCreated);
+      if (showLocations)
+        bgm.OnPageCreated(BetterGameMenu_OnPageCreated);
+    }
   }
 
   public void Dispose()
@@ -69,9 +80,15 @@ internal class LocationOfTownsfolk : IDisposable
     InitializeProperties();
   }
 
+  private void BetterGameMenu_OnPageCreated(IPageCreatedEvent e)
+  {
+    if (e.Page is SocialPage)
+      InitializeProperties();
+  }
+
   private void OnButtonPressed_ForSocialPage(object? sender, ButtonPressedEventArgs e)
   {
-    if (Game1.activeClickableMenu is GameMenu &&
+    if (Tools.GetCurrentMenuPage() is SocialPage &&
         e.Button is SButton.MouseLeft or SButton.ControllerA or SButton.ControllerX)
     {
       CheckSelectedBox(e);
@@ -80,7 +97,7 @@ internal class LocationOfTownsfolk : IDisposable
 
   private void OnRenderedActiveMenu_DrawSocialPageOptions(object? sender, RenderedActiveMenuEventArgs e)
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.currentTab == GameMenu.socialTab)
+    if (Tools.GetCurrentMenuPage() is SocialPage)
     {
       DrawSocialPageOptions();
     }
@@ -88,9 +105,9 @@ internal class LocationOfTownsfolk : IDisposable
 
   private void OnRenderedActiveMenu_DrawNPCLocationsOnMap(object? sender, RenderedActiveMenuEventArgs e)
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.currentTab == GameMenu.mapTab)
+    if (Tools.GetCurrentMenuPage() is MapPage mapPage)
     {
-      DrawNPCLocationsOnMap(gameMenu);
+      DrawNPCLocationsOnMap(mapPage);
     }
   }
 
@@ -124,25 +141,40 @@ internal class LocationOfTownsfolk : IDisposable
       }
     }
   }
-#endregion
+  #endregion
 
-#region Logic
+  #region Logic
+  private static SocialPage? GetSocialPage()
+  {
+    if (Game1.activeClickableMenu is GameMenu gm)
+    {
+      foreach (var page in gm.pages)
+      {
+        if (page is SocialPage socialPage)
+          return socialPage;
+      }
+    }
+
+    if (ApiManager.GetApi<IBetterGameMenuApi>(ModCompat.BetterGameMenu, out var bgm) &&
+        bgm.ActiveMenu != null &&
+        bgm.ActiveMenu.TryGetPage(nameof(BetterGameMenuTabs.Social), out var sp)
+    )
+      return sp as SocialPage;
+
+    return null;
+  }
+
   private void InitializeProperties()
   {
-    if (Game1.activeClickableMenu is GameMenu gameMenu)
+    if (Tools.IsGameMenuOpen())
     {
       _friendNames.Clear();
-      foreach (IClickableMenu? menu in gameMenu.pages)
-      {
-        if (menu is SocialPage socialPage)
+      var socialPage = GetSocialPage();
+      if (socialPage != null) {
+        _socialPage = socialPage;
+        foreach (SocialPage.SocialEntry? SocialEntries in socialPage.SocialEntries)
         {
-          _socialPage = socialPage;
-          foreach (SocialPage.SocialEntry? SocialEntries in socialPage.SocialEntries)
-          {
-            _friendNames.Add(SocialEntries.InternalName);
-          }
-
-          break;
+          _friendNames.Add(SocialEntries.InternalName);
         }
       }
 
@@ -266,7 +298,7 @@ internal class LocationOfTownsfolk : IDisposable
     }
   }
 
-  private void DrawNPCLocationsOnMap(GameMenu gameMenu)
+  private void DrawNPCLocationsOnMap(MapPage mapPage)
   {
     var namesToShow = new List<string>();
     foreach (NPC character in _townsfolk)
@@ -293,7 +325,7 @@ internal class LocationOfTownsfolk : IDisposable
     //The cursor needs to show up in front of the character faces
     Tools.DrawMouseCursor();
 
-    string? hoverText = ((MapPage)gameMenu.pages[gameMenu.currentTab]).hoverText;
+    string? hoverText = mapPage.hoverText;
     IClickableMenu.drawHoverText(Game1.spriteBatch, hoverText, Game1.smallFont);
   }
 

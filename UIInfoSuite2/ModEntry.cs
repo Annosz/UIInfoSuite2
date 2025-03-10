@@ -1,4 +1,7 @@
 ﻿using System;
+
+using Leclair.Stardew.BetterGameMenu;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -49,6 +52,7 @@ public class ModEntry : Mod
   private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
   {
     SoundHelper.Instance.Initialize(Helper);
+    RegisterBetterGameMenuTab();
 
     // get Generic Mod Config Menu's API (if it's installed)
     var configMenu = ApiManager.TryRegisterApi<IGenericModConfigMenuApi>(Helper, ModCompat.Gmcm, "1.6.0");
@@ -112,9 +116,45 @@ public class ModEntry : Mod
       setValue: value => _modConfig.ShowAllRange = value
       );
   }
-#endregion
+  #endregion
 
-#region Event subscriptions
+  #region Better Game Menu
+
+  private void RegisterBetterGameMenuTab()
+  {
+    var api = ApiManager.TryRegisterApi<IBetterGameMenuApi>(Helper, ModCompat.BetterGameMenu, "0.1.0");
+    if (api is null)
+      return;
+
+    api.RegisterTab(
+      id: ModManifest.UniqueID,
+      order: (int) BetterGameMenuTabs.Exit + 100,
+      getDisplayName: I18n.OptionsTabTooltip,
+      getIcon: () => (api.CreateDraw(Game1.mouseCursors, new Microsoft.Xna.Framework.Rectangle(32, 672, 16, 16), 3f), true),
+      priority: 0,
+      getPageInstance: menu => _modOptionsPageHandler.GetMenuInstance(),
+      getTabVisible: () => _modConfig.ShowOptionsTabInMenu && _modOptionsPageHandler != null,
+      onResize: input =>
+      {
+        ModOptionsPageState? state = null;
+        if (input.OldPage is ModOptionsPage mop)
+        {
+          state = new();
+          mop.SaveState(state);
+        }
+
+        var result = _modOptionsPageHandler.GetMenuInstance();
+        if (state is not null)
+          result.LoadState(state);
+
+        return result;
+      }
+    );
+  }
+
+  #endregion
+
+  #region Event subscriptions
   private void OnReturnedToTitle(object sender, ReturnedToTitleEventArgs e)
   {
     // Unload if the main player quits.

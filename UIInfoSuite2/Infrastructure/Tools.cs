@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Leclair.Stardew.BetterGameMenu;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -10,6 +13,9 @@ using StardewValley.GameData.FruitTrees;
 using StardewValley.Menus;
 using StardewValley.TerrainFeatures;
 using StardewValley.WorldMaps;
+
+using UIInfoSuite2.Compatibility;
+
 using SObject = StardewValley.Object;
 
 namespace UIInfoSuite2.Infrastructure;
@@ -87,21 +93,42 @@ public static class Tools
     }
   }
 
+  public static IClickableMenu? GetCurrentMenuPage()
+  {
+    if (Game1.activeClickableMenu is GameMenu gameMenu)
+    {
+      return gameMenu.GetCurrentPage();
+    }
+    if (ApiManager.GetApi<IBetterGameMenuApi>(ModCompat.BetterGameMenu, out var bgm))
+    {
+      return bgm.ActiveMenu?.CurrentPage;
+    }
+    return null;
+  }
+
+  public static bool IsGameMenuOpen()
+  {
+    return Game1.activeClickableMenu is GameMenu || (ApiManager.GetApi<IBetterGameMenuApi>(ModCompat.BetterGameMenu, out var bgm) && bgm.ActiveMenu != null);
+  }
+
   public static Item? GetHoveredItem()
   {
     Item? hoverItem = null;
+    var page = GetCurrentMenuPage();
 
     if (Game1.activeClickableMenu == null && Game1.onScreenMenus != null)
     {
       hoverItem = Game1.onScreenMenus.OfType<Toolbar>().Select(tb => tb.hoverItem).FirstOrDefault(hi => hi is not null);
     }
-
-    if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.GetCurrentPage() is InventoryPage inventory)
+    else if (page is InventoryPage inventory)
     {
       hoverItem = inventory.hoveredItem;
     }
-
-    if (Game1.activeClickableMenu is ItemGrabMenu itemMenu)
+    else if (page is CraftingPage crafting)
+    {
+      hoverItem = crafting.hoverItem;
+    }
+    else if (Game1.activeClickableMenu is ItemGrabMenu itemMenu)
     {
       hoverItem = itemMenu.hoveredItem;
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using Leclair.Stardew.BetterGameMenu;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
@@ -6,12 +8,14 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 
+using UIInfoSuite2.Compatibility;
+using UIInfoSuite2.Infrastructure;
+
 namespace UIInfoSuite2.UIElements;
 
 internal class ShowTodaysGifts : IDisposable
 {
 #region Properties
-  private SocialPage? _socialPage;
   private readonly IModHelper _helper;
 #endregion
 
@@ -28,12 +32,10 @@ internal class ShowTodaysGifts : IDisposable
 
   public void ToggleOption(bool showTodaysGift)
   {
-    _helper.Events.Display.MenuChanged -= OnMenuChanged;
     _helper.Events.Display.RenderedActiveMenu -= OnRenderedActiveMenu;
 
     if (showTodaysGift)
     {
-      _helper.Events.Display.MenuChanged += OnMenuChanged;
       _helper.Events.Display.RenderedActiveMenu += OnRenderedActiveMenu;
     }
   }
@@ -42,68 +44,43 @@ internal class ShowTodaysGifts : IDisposable
 #region Event subscriptions
   private void OnRenderedActiveMenu(object? sender, RenderedActiveMenuEventArgs e)
   {
-    if (_socialPage == null)
+    if (Tools.GetCurrentMenuPage() is not SocialPage socialPage)
     {
-      GetSocialPage();
       return;
     }
 
-    if (Game1.activeClickableMenu is GameMenu gameMenu && gameMenu.currentTab == GameMenu.socialTab)
-    {
-      DrawTodaysGifts();
+    DrawTodaysGifts(socialPage);
 
+    if (Game1.activeClickableMenu is GameMenu gameMenu)
+    {
       string hoverText = gameMenu.hoverText;
       IClickableMenu.drawHoverText(Game1.spriteBatch, hoverText, Game1.smallFont);
     }
   }
+  #endregion
 
-  private void OnMenuChanged(object? sender, MenuChangedEventArgs e)
+  #region Logic
+  private static void DrawTodaysGifts(SocialPage? socialPage)
   {
-    GetSocialPage();
-  }
-#endregion
-
-#region Logic
-  private void GetSocialPage()
-  {
-    if (Game1.activeClickableMenu is not GameMenu gameMenu)
+    if (socialPage == null)
     {
       return;
     }
 
-    foreach (IClickableMenu? menu in gameMenu.pages)
-    {
-      if (menu is not SocialPage page)
-      {
-        continue;
-      }
+    int yOffset = 25;
 
-      _socialPage = page;
-      break;
-    }
-  }
-
-  private void DrawTodaysGifts()
-  {
-    if (_socialPage == null)
-    {
-      return;
-    }
-
-    var yOffset = 25;
-
-    for (int i = _socialPage.slotPosition; i < _socialPage.slotPosition + 5 && i < _socialPage.SocialEntries.Count; ++i)
+    for (int i = socialPage.slotPosition; i < socialPage.slotPosition + 5 && i < socialPage.SocialEntries.Count; ++i)
     {
       int yPosition = Game1.activeClickableMenu.yPositionOnScreen + 130 + yOffset;
       yOffset += 112;
-      string internalName = _socialPage.SocialEntries[i].InternalName;
+      string internalName = socialPage.SocialEntries[i].InternalName;
       if (Game1.player.friendshipData.TryGetValue(internalName, out Friendship? data) &&
           data.GiftsToday != 0 &&
           data.GiftsThisWeek < 2)
       {
         Game1.spriteBatch.Draw(
           Game1.mouseCursors,
-          new Vector2(_socialPage.xPositionOnScreen + 384 + 296 + 4, yPosition + 6),
+          new Vector2(socialPage.xPositionOnScreen + 384 + 296 + 4, yPosition + 6),
           new Rectangle(106, 442, 9, 9),
           Color.LightGray,
           0.0f,

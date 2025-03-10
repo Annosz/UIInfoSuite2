@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using StardewModdingAPI;
 
@@ -9,6 +10,7 @@ public static class ModCompat
   public const string CustomBush = "furyx639.CustomBush";
   public const string Gmcm = "spacechase0.GenericModConfigMenu";
   public const string DeluxeJournal = "MolsonCAD.DeluxeJournal";
+  public const string BetterGameMenu = "leclair.bettergamemenu";
 }
 
 public static class ApiManager
@@ -37,7 +39,17 @@ public static class ApiManager
       return null;
     }
 
-    var api = helper.ModRegistry.GetApi<T>(modId);
+    T? api;
+    try
+    {
+      // This can throw if the API cannot be mapped to type T by Pintail.
+      api = helper.ModRegistry.GetApi<T>(modId);
+    } catch (Exception ex)
+    {
+      ModEntry.MonitorObject.Log($"Could not get API for mod {modId} due to error: {ex}", LogLevel.Warn);
+      api = null;
+    }
+
     if (api is null)
     {
       if (warnIfNotPresent)
