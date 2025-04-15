@@ -1,18 +1,58 @@
 {
   // GUI - Game Menu
   "OptionsTabTooltip": "Opções do UI Info Suite 2",
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "Exibir opções no menu do jogo",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "Ativa uma aba extra no menu do jogo, onde você pode configurar todas as opções deste mod.",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "Aplicar configurações padrão deste save",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "Novos personagens herdarão as configurações deste arquivo de salvamento.",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "Atalho para abrir o calendário",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "Abre a aba do calendário.",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "Atalho para abrir o quadro de missões",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "Abre o quadro de missões.",
+  "Keybinds.Subtitle.ShowRange.displayedName": "Exibir alcance dos efeitos dos itens",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "Como: espantalho, aspersor, cabana dos Junimos, colmeia, tronco de cogumelos e sementeira coberta de musgo.",
+  "Keybinds.ShowOneRange.DisplayedName": "Mostrar alcance do item atual",
+  "Keybinds.ShowOneRange.Tooltip": "Quando o mouse passar sobre o item desejado, exibirá seu alcance.",
+  "Keybinds.ShowAllRange.DisplayedName": "Mostrar alcance de todos os itens",
+  "Keybinds.ShowAllRange.Tooltip": "Ao passar o mouse sobre o item desejado, mostrará o alcance de todos os itens similares.",
   //GUI - Billboard
   "Billboard": "Quadro de avisos",
   "Calendar": "Calendário",
+  "SlayerGoals": "Metas de erradicação de monstros",
   //GUI - Seed shop
   "HarvestPrice": "Preço da Colheita",
   //Production
   "Days": "dias",
   "Hours": "horas",
   "Minutes": "minutos",
+  "MachineProcessing": "Processando",
+  "MachineDone": "Concluído",
   //Harvest
   "DaysToMature": "dias para amadurecer",
   "ReadyToHarvest": "Pronto para colher!",
+  "With": "com",
+  "Fertilized": "adubado",
+  "Watered": "Regado",
+  "NotWatered": "Não regado",
+  "DoesNotProduceThisSeason": "Não produz nesta estação",
+  //Tree
+  "Stump": "toco",
+  "Tree": " Árvore",
+  "stage": "Estágio",
+  "Oak": "Carvalho",
+  "Maple": "Bordo",
+  "Pine": "Pinheiro",
+  "Palm": "Palmeira",
+  "Mushroom": "Cogumelo",
+  "Mahogany": "Mogno",
+  "PalmJungle": "Palmeira (Selva)",
+  "GreenRainType1": "Chuva Verde Tipo 1",
+  "GreenRainType2": "Chuva Verde Tipo 2",
+  "GreenRainType3": "Chuva Verde Tipo 3",
+  "Mystic": "Místico",
+  "VmvBirch": "(VMV) Bétula",
+  "SVEBirch": "(SVE) Bétula",
+  "SVEFir": "(SVE) Abeto",
   //Display icons - General
   "TodaysRecipe": "Receita de hoje: ",
   "TravelingMerchantIsInTown": "O mercador está na cidade!",
@@ -52,6 +92,8 @@
   "HideAnimalPetOnMaxFriendship": "Esconder na amizade máxima",
   "ShowCropAndBarrelTooltip": "Mostrar tempo de colheita e produção",
   "ShowItemEffectRanges": "Exibe alcance do espantalho e aspersor",
+  "ButtonControlShow": "Pressione LeftCtrl para exibir o alcance do item atual; LeftAlt para exibir todos os alcances",
+  "ShowBombRange": "Exibir alcance de destruição das bombas",
   "ShowExtraItemInformation": "Exibir informações extras sobre os items",
   "ShowHarvestPricesInShop": "Mostrar preços de colheita na loja",
   //Settings - Tabs info
@@ -72,5 +114,6 @@
   "ShowSeasonalBerry": "Mostrar coletáveis sazonais",
   "ShowSeasonalBerryHazelnut": "Mostrar avelãs nas árvores",
   //Others
-  "LevelUp": "Subir de nível"
+  "LevelUp": "Subir de nível",
+  "TrackOnMap": "Rastrear no mapa"
 }
