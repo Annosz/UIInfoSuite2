@@ -1,18 +1,60 @@
 {
   // GUI - Game Menu
-   "OptionsTabTooltip": "Konfiguracja UI Info Suite 2",
+  "OptionsTabTooltip": "Opcje UI Info Suite 2",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "Pokaż opcje w menu wewnątrz gry",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "Włącza dodatkową zakładkę w menu wewnątrz gry, gdzie możesz skonfigurować wszystkie opcje tego moda.",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "Zastosuj domyślne ustawienia z tego zapisu",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "Nowe postacie przejmą ustawienia moda z tego pliku zapisu.",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "Klawisz otwierania kalendarza",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "Otwiera zakładkę kalendarza.",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "Klawisz otwierania tablicy ogłoszeń",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "Otwiera tablicę ogłoszeń.",
+  "Keybinds.Subtitle.ShowRange.displayedName": "Pokaż zasięg efektów przedmiotów",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "Takie jak: strach na wróble, spryskiwacz, Chatka Junimo, ul, grzybowy pień i omszałe nasiono.",
+  "Keybinds.ShowOneRange.DisplayedName": "Pokaż zasięg bieżącego przedmiotu",
+  "Keybinds.ShowOneRange.Tooltip": "Po najechaniu myszką na przedmiot, pokaże jego zasięg.",
+  "Keybinds.ShowAllRange.DisplayedName": "Pokaż zasięg wszystkich przedmiotów",
+  "Keybinds.ShowAllRange.Tooltip": "Po najechaniu myszką na przedmiot, pokaże wszystkie zasięgi.",
   //GUI - Billboard
   "Billboard": "Tablica Ogłoszeń",
   "Calendar": "Kalendarz",
+  "SlayerGoals": "Cele Likwidacji Potworów",
   //GUI - Seed shop
   "HarvestPrice": "Cena za plon",
   //Production
   "Days": "dni",
   "Hours": "godzin",
   "Minutes": "minut",
+  "MachineProcessing": "Przetwarzanie",
+  "MachineDone": "Skończone",
   //Harvest
   "DaysToMature": "dni do dojrzałości",
   "ReadyToHarvest": "Gotowe do zbioru!",
+  "With": "zastosowano",
+  "Fertilized": "nawieziono",
+  "Watered": "Podlane",
+  "NotWatered": "Niepodlane",
+  "DoesNotProduceThisSeason": "Nie produkuje o tej porze roku",
+  //Tree
+  "Stump": "pniak",
+  // This space is required for languages that use a space between words, delete otherwise (e.g. Korean)
+  "Tree": " ",
+  "stage": "Faza wzrostu",
+  "Oak": "Dąb",
+  "Maple": "Klon",
+  "Pine": "Sosna",
+  "Palm": "Palma",
+  "Mushroom": "Wielki Grzyb",
+  "Mahogany": "Mahoniowiec",
+  "PalmJungle": "Palma (Dżunglowa)",
+  "GreenRainType1": "Omszałe drzewo 1",
+  "GreenRainType2": "Omszałe drzewo 2",
+  "GreenRainType3": "Omszałe drzewo 3",
+  "Mystic": "Mistyczne drzewo",
+  "VmvBirch": "(VMV) Brzoza",
+  "SVEBirch": "(SVE) Brzoza",
+  "SVEFir": "(SVE) Jodła",
   //Display icons - General
   "TodaysRecipe": "Dzisiejszy przepis: ",
   "TravelingMerchantIsInTown": "Wędrowny handlarz jest w miasteczku!",
@@ -52,6 +94,8 @@
   "HideAnimalPetOnMaxFriendship": "Ukryj na maks. poziomie miłości",
   "ShowCropAndBarrelTooltip": "Pokaż czas uprawy i produkcji",
   "ShowItemEffectRanges": "Pokaż zasięg strachów i zraszaczy",
+  "ButtonControlShow": "Naciśnij LewyCtrl, aby pokazać zasięg bieżącego przedmiotu\nLewyCtrl+LewyAlt, aby pokazać zasięg wszystkich przedmiotów",
+  "ShowBombRange": "Pokazuj zasięg niszczenia bomby",
   "ShowExtraItemInformation": "Pokaż info o przedmiocie po najechaniu",
   "ShowHarvestPricesInShop": "Pokaż ceny plonów w sklepie",
   //Settings - Tabs info
@@ -72,5 +116,6 @@
   "ShowSeasonalBerry": "Pokaż sezonowe dary lasu do zebrania",
   "ShowSeasonalBerryHazelnut": "Pokaż ikonę orzechów laskowych",
   //Others
-  "LevelUp": "Awans"
+  "LevelUp": "Awans",
+  "TrackOnMap": "Śledź na mapie"
 }
