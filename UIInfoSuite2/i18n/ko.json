@@ -1,9 +1,10 @@
 {
   // GUI - Game Menu
-  // "OptionsTabTooltip": "UI Info Suite 2 옵션",
+  "OptionsTabTooltip": "UI Info Suite 2 옵션",
   //GUI - Billboard
   "Billboard": "게시판",
   "Calendar": "달력",
+  "SlayerGoals": "몬스터 박멸 목표",
   //GUI - Seed shop
   "HarvestPrice": "수확 가격",
   //Production
@@ -17,6 +18,8 @@
   "ReadyToHarvest": "수확 가능!",
   "With": "효과:",
   "Fertilized": "비료",
+  "Watered": "물 줬음",
+  "NotWatered": "물 안줬음",
   "DoesNotProduceThisSeason": "이번 계절에는 생산하지 않음",
   //Tree
   "Stump": "그루터기",
@@ -36,11 +39,11 @@
   //Display icons - General
   "TodaysRecipe": "오늘의 레시피: ",
   "TravelingMerchantIsInTown": "행상인이 방문 중!",
-  "RainNextDay": "내일은 비가 올 것입니다",
-  "ThunderstormNextDay": "내일은 뇌우가 올 것입니다",
-  "SnowNextDay": "내일은 눈이 올 것입니다",
-  "IslandRainNextDay": "내일은 비가 올 것입니다",
-  "IslandThunderstormNextDay": "내일은 뇌우가 올 것입니다",
+  "RainNextDay": "내일은 비가 올 것입니다.",
+  "ThunderstormNextDay": "내일은 뇌우가 올 것입니다.",
+  "SnowNextDay": "내일은 눈이 올 것입니다.",
+  "IslandRainNextDay": "내일은 비가 올 것입니다.",
+  "IslandThunderstormNextDay": "내일은 뇌우가 올 것입니다.",
   "DaysUntilToolIsUpgraded": "{1} 완성까지 {0}일 남음",
   "ToolIsFinishedBeingUpgraded": "{0} 완성!",
   "NpcBirthday": "{0}의 생일!",
@@ -56,12 +59,12 @@
   "LuckyButNotTooLucky": "운이 좋은 것 같지만... 아주 좋은 것은 아닙니다.",
   "NotFeelingLuckyAtAll": "오늘은 운이 좋지 않은것 같습니다...",
   "MaybeStayHome": "아마도 오늘은 집에 있어야 할 것 같습니다...",
-  "LuckStatus1": "오늘은 운이 좋은 것 같다!",
-  "LuckStatus2": "오늘은 운이 약간 좋은 것 같다!",
-  "LuckStatus3": "오늘은 스스로 하기에 달려있다.",
-  "LuckStatus4": "오늘은 정령들의 기분이 완벽히 중립적이다.",
-  "LuckStatus5": "오늘은 운이 따라주지 않는 것 같다.",
-  "LuckStatus6": "오늘은 집에 있는 편이 좋을 것 같다...",
+  "LuckStatus1": "오늘은 운이 좋은 것 같습니다!",
+  "LuckStatus2": "오늘은 운이 약간 좋은 것 같습니다!",
+  "LuckStatus3": "오늘은 스스로 하기에 달려있습니다.",
+  "LuckStatus4": "오늘은 정령들의 기분이 완벽히 중립적입니다.",
+  "LuckStatus5": "오늘은 운이 따라주지 않는 것 같습니다.",
+  "LuckStatus6": "오늘은 집에 있는 편이 좋을 것 같습니다...",
   //Settings - General
   "ShowLevelUpAnimation": "레벨 업 애니메이션 표시",
   "ShowExperienceBar": "경험치 바 표시",
@@ -72,6 +75,8 @@
   "HideAnimalPetOnMaxFriendship": "친밀도 최대 시 숨김",
   "ShowCropAndBarrelTooltip": "작물 및 설비의 남은 시간 표시",
   "ShowItemEffectRanges": "허수아비 및 스프링클러 범위 표시",
+  "ButtonControlShow": "현재 항목 범위 표시는 왼쪽 Ctrl 키, 모든 항목 범위 표시는 왼쪽 Alt 키를 누르세요.",
+  "ShowBombRange": "폭탄 파괴 범위 표시",
   "ShowExtraItemInformation": "아이템의 추가 정보 표시",
   "ShowHarvestPricesInShop": "상점에서 수확 가격 표시",
   //Settings - Tabs info
@@ -92,5 +97,6 @@
   "ShowSeasonalBerry": "사계절 채집물 표시",
   "ShowSeasonalBerryHazelnut": "헤이즐넛이 있는 나무 표시",
   //Others
-  "LevelUp": "레벨 업"
+  "LevelUp": "레벨 업",
+  "TrackOnMap": "지도에서 추적"
 }
