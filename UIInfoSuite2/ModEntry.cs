@@ -173,16 +173,27 @@ public class ModEntry : Mod
   {
     if (_modConfig != null)
     {
-      if (Context.IsPlayerFree && _modConfig.OpenCalendarKeybind.JustPressed())
+      if (_modConfig.OpenCalendarKeybind.JustPressed())
       {
-        helper.Input.SuppressActiveKeybinds(_modConfig.OpenCalendarKeybind);
-        Game1.activeClickableMenu = new Billboard();
+        if (Game1.activeClickableMenu is Billboard && Game1.activeClickableMenu.readyToClose())
+        {
+          Game1.exitActiveMenu();
+        }
+        else if (Context.IsPlayerFree)
+        {
+          Game1.activeClickableMenu = new Billboard();
+        }
       }
-      else if (Context.IsPlayerFree && _modConfig.OpenQuestBoardKeybind.JustPressed())
+      else if (_modConfig.OpenQuestBoardKeybind.JustPressed())
       {
-        helper.Input.SuppressActiveKeybinds(_modConfig.OpenQuestBoardKeybind);
-        Game1.RefreshQuestOfTheDay();
-        Game1.activeClickableMenu = new Billboard(true);
+        if (Game1.activeClickableMenu is Billboard && Game1.activeClickableMenu.readyToClose())
+        {
+          Game1.exitActiveMenu();
+        }
+        else if (Context.IsPlayerFree)
+        {
+          Game1.activeClickableMenu = new Billboard(true);
+        }
       }
     }
   }
