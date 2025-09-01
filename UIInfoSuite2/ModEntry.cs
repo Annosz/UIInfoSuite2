@@ -8,6 +8,7 @@ using UIInfoSuite2.Compatibility;
 using UIInfoSuite2.Compatibility.CustomBush;
 using UIInfoSuite2.Infrastructure;
 using UIInfoSuite2.Options;
+using UIInfoSuite2.UIElements;
 
 namespace UIInfoSuite2;
 
@@ -173,26 +174,50 @@ public class ModEntry : Mod
   {
     if (_modConfig != null)
     {
+      var currentMenu = Game1.activeClickableMenu;
+
       if (_modConfig.OpenCalendarKeybind.JustPressed())
       {
-        if (Game1.activeClickableMenu is Billboard && Game1.activeClickableMenu.readyToClose())
+        helper.Input.SuppressActiveKeybinds(_modConfig.OpenCalendarKeybind);
+
+        if (currentMenu is QuestBillboard)
+        {
+          Game1.exitActiveMenu();
+          Game1.delayedActions.Add(new DelayedAction(1, () => // open in the next frame
+          {
+            Game1.activeClickableMenu = new CalendarBillboard();
+          }));
+        }
+        else if (currentMenu is Billboard) // is CalendarBillboard or Billboard(false)
         {
           Game1.exitActiveMenu();
         }
         else if (Context.IsPlayerFree)
         {
-          Game1.activeClickableMenu = new Billboard();
+          Game1.activeClickableMenu = new CalendarBillboard();
         }
       }
       else if (_modConfig.OpenQuestBoardKeybind.JustPressed())
       {
-        if (Game1.activeClickableMenu is Billboard && Game1.activeClickableMenu.readyToClose())
+        helper.Input.SuppressActiveKeybinds(_modConfig.OpenQuestBoardKeybind);
+
+        if (currentMenu is CalendarBillboard)
+        {
+          Game1.exitActiveMenu();
+          Game1.delayedActions.Add(new DelayedAction(1, () => // open in the next frame
+          {
+            Game1.RefreshQuestOfTheDay();
+            Game1.activeClickableMenu = new QuestBillboard();
+          }));
+        }
+        else if (currentMenu is Billboard) // is QuestBillboard or Billboard(true)
         {
           Game1.exitActiveMenu();
         }
         else if (Context.IsPlayerFree)
         {
-          Game1.activeClickableMenu = new Billboard(true);
+          Game1.RefreshQuestOfTheDay();
+          Game1.activeClickableMenu = new QuestBillboard();
         }
       }
     }

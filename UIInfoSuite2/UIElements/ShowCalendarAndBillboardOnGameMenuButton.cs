@@ -144,10 +144,15 @@ internal class ShowCalendarAndBillboardOnGameMenuButton : IDisposable
         Game1.questOfTheDay.currentObjective = "wat?";
       }
 
-      Game1.activeClickableMenu = new Billboard(
-        !(Utility.ModifyCoordinateForUIScale(Game1.getMouseX()) <
+      if (Utility.ModifyCoordinateForUIScale(Game1.getMouseX()) <
           _showBillboardButton.Value.bounds.X + _showBillboardButton.Value.bounds.Width / 2)
-      );
+      {
+          Game1.activeClickableMenu = new CalendarBillboard();
+      }
+      else
+      {
+          Game1.activeClickableMenu = new QuestBillboard();
+      }
     }
   }
 #endregion
