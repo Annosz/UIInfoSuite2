@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -152,7 +153,8 @@ internal class LuckOfDay : IDisposable
       // Rewrite the text, but keep the color
       if (ShowExactValue)
       {
-        _hoverText.Value = string.Format(I18n.DailyLuckValue(), Game1.player.DailyLuck.ToString("N3"));
+        double percentValue = Math.Truncate(Game1.player.DailyLuck * 1000) / 10.0;
+        _hoverText.Value = string.Format(I18n.DailyLuckValue(), percentValue.ToString("0.0"));
       }
     }
   }
