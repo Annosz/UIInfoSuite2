@@ -1,9 +1,25 @@
 {
   // GUI - Game Menu
-  // "OptionsTabTooltip": "UI Info Suite 2 옵션",
+  "OptionsTabTooltip": "UI Info Suite 2 옵션",
+  // some config options
+  "Bool.ShowOptionsTabInMenu.DisplayedName": "게임 내 메뉴에서 옵션 보기",
+  "Bool.ShowOptionsTabInMenu.Tooltip": "게임 내 메뉴에 추가 탭을 활성화하여, 이 모드와 관련된 모든 옵션을 설정할 수 있게 합니다.",
+  "Text.ApplyDefaultSettingsFromThisSave.DisplayedName": "이 세이브에 현재 설정값 적용",
+  "Text.ApplyDefaultSettingsFromThisSave.Tooltip": "새 캐릭터들은 이 세이브 파일에 담긴 모드 설정을 그대로 이어받게 됩니다.",
+  "Keybinds.OpenCalendarKeybind.DisplayedName": "달력 열기 키 지정",
+  "Keybinds.OpenCalendarKeybind.Tooltip": "달력 탭을 엽니다.",
+  "Keybinds.OpenQuestBoardKeybind.DisplayedName": "퀘스트 보드 열기 키 지정",
+  "Keybinds.OpenQuestBoardKeybind.Tooltip": "퀘스트 보드를 엽니다.",
+  "Keybinds.Subtitle.ShowRange.displayedName": "아이템 효과 범위 표시",
+  "Keybinds.Subtitle.ShowRange.Tooltip": "허수아비, 스프링클러, 주니모 오두막, 양봉장, 버섯 통나무, 이끼 낀 씨앗 등이 이에 해당합니다.",
+  "Keybinds.ShowOneRange.DisplayedName": "현재 아이템 범위 표시",
+  "Keybinds.ShowOneRange.Tooltip": "표시하려는 아이템 위로 마우스를 가져가면 범위가 표시됩니다.",
+  "Keybinds.ShowAllRange.DisplayedName": "모든 아이템 범위 표시",
+  "Keybinds.ShowAllRange.Tooltip": "표시하려는 아이템 위로 마우스를 가져가면 모든 범위가 표시됩니다.",
   //GUI - Billboard
   "Billboard": "게시판",
   "Calendar": "달력",
+  "SlayerGoals": "몬스터 섬멸 목표",
   //GUI - Seed shop
   "HarvestPrice": "수확 가격",
   //Production
@@ -16,10 +32,13 @@
   "DaysToMature": "일 남음",
   "ReadyToHarvest": "수확 가능!",
   "With": "효과:",
-  "Fertilized": "비료",
+  "Fertilized": "비료 뿌림",
+  "Watered": "물줌",
+  "NotWatered": "물주지 않음",
   "DoesNotProduceThisSeason": "이번 계절에는 생산하지 않음",
   //Tree
   "Stump": "그루터기",
+  // This space is required for languages that use a space between words, delete otherwise (e.g. Korean)
   "Tree": "나무",
   "stage": "단계: ",
   "Oak": "참",
@@ -33,6 +52,9 @@
   "GreenRainType2": "녹색 비 타입 2 ",
   "GreenRainType3": "녹색 비 타입 3 ",
   "Mystic": "신비한 ",
+  "VmvBirch": "(VMV)자작",
+  "SVEBirch": "(SVE)자작",
+  "SVEFir": "(SVE)전",
   //Display icons - General
   "TodaysRecipe": "오늘의 레시피: ",
   "TravelingMerchantIsInTown": "행상인이 방문 중!",
@@ -72,6 +94,8 @@
   "HideAnimalPetOnMaxFriendship": "친밀도 최대 시 숨김",
   "ShowCropAndBarrelTooltip": "작물 및 설비의 남은 시간 표시",
   "ShowItemEffectRanges": "허수아비 및 스프링클러 범위 표시",
+  "ButtonControlShow": "왼쪽 Ctrl 키를 눌러 현재 아이템의 범위 표시, 왼쪽 Alt 키를 눌러 모든 아이템의 범위 표시",
+  "ShowBombRange": "폭탄의 파괴 범위 표시",
   "ShowExtraItemInformation": "아이템의 추가 정보 표시",
   "ShowHarvestPricesInShop": "상점에서 수확 가격 표시",
   //Settings - Tabs info
@@ -92,5 +116,6 @@
   "ShowSeasonalBerry": "사계절 채집물 표시",
   "ShowSeasonalBerryHazelnut": "헤이즐넛이 있는 나무 표시",
   //Others
-  "LevelUp": "레벨 업"
+  "LevelUp": "레벨 업",
+  "TrackOnMap": "지도에서 추적"
 }
